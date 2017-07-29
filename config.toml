@@ -1,0 +1,7 @@
+baseURL = "http://wampsharp.net/"
+languageCode = "en-us"
+title = "WampSharp"
+
+[params]
+description = "A C# implementation of WAMP (The Web Application Messaging Protocol)"
+copyright    = "Copyright (c) 2013-2017, Elad Zelingher; All rights reserved."
