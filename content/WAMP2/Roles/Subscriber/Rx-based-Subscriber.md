@@ -40,9 +40,98 @@ GetSubject allows you to subscribe to a topic of a WAMP realm, given the type of
 
 If a generic type is specified, only the first argument in the Arguments parameter of the EVENT message is deserialized.
 
-Specifying no generic type will a return a IWampSubject, that is a IObservable of a IWampSerializedEvent. IWampSerializedEvent is an interface representing an incoming WAMP EVENT message. It has properties of type ISerializedValue that can be deserialized.
+To handle other parameters of the EVENT message, one can use the IWampEventValueTupleConverter or IWampSubject overloads. These are described in the following sections.
 
-### IWampSubject example
+### Tuples support
+
+The interface IWampEventValueTupleConverter is responsible for converting a IWampSerializedEvent instance to a specified tuple and a specified tuple instance to a IWampEvent.
+
+Luckily enough, in order to implement this interface, it suffices to derive from WampEventValueTupleConverter<> and specify the desired tuple type. Nothing else needs to be done.
+
+(This might seem a bit odd, but that's the best way I'm aware of for preserving ValueTuple element names after compilation)
+
+Then, just pass an instance of your IWampEventValueTupleConverter to the overload of IWampRealmServiceProvider's GetSubject method, which receives the topic's uri and an instance of IWampEventValueTupleConverter, in order to receive a ISubject<> instance of your desired tuple type.
+
+```csharp
+public async Task Run()
+{
+	DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+
+	IWampChannel channel =
+		factory.CreateJsonChannel("ws://localhost:8080/ws", "realm1");
+
+	await channel.Open();
+
+	ISubject<(int, int)> topic1Subject =
+		channel.RealmProxy.Services.GetSubject
+				("com.myapp.topic1",
+				new MyPositionalTupleEventConverter());
+
+	topic1Subject.Subscribe(value =>
+	{
+		(int number1, int number2) = value;
+		Console.WriteLine($">com.myapp.topic1: Got event: number1:{number1}, number2:{number2}");
+	});
+
+	ISubject<(int number1, int number2, string c, ComplexContract d)> topic2Subject =
+		channel.RealmProxy.Services.GetSubject
+				("com.myapp.topic2",
+				new MyKeywordTupleEventConverter());
+
+	topic2Subject.Subscribe(value =>
+	{
+		(int number1, int number2, string c, ComplexContract d) = value;
+		Console.WriteLine($">com.myapp.topic2: Got event: number1:{number1}, number2:{number2}, c:{c}, d:{d}");
+	});
+}
+
+public class MyPositionalTupleEventConverter : WampEventValueTupleConverter<(int, int)>
+{
+}
+
+public class MyKeywordTupleEventConverter : WampEventValueTupleConverter<(int number1, int number2, string c, ComplexContract d)>
+{
+}
+
+public class ComplexContract
+{
+    [JsonProperty("counter")]
+    public int Counter { get; set; }
+
+    [JsonProperty("foo")]
+    public int[] Foo { get; set; }
+
+    public override string ToString()
+    {
+        return string.Format("counter: {0}, foo: [{1}]",
+            Counter,
+            string.Join(", ", Foo));
+    }
+}
+```
+
+This code can consume events published by the following Javascript code:
+
+```javascript
+var counter = 0;
+
+setInterval(function () {
+    var obj = {'counter': counter, 'foo': [1, 2, 3]};
+
+    session.publish('com.myapp.topic1', [randint(0, 100), 23], {});
+    session.publish('com.myapp.topic2', [], {number1: randint(0, 100), number2: 23, c: "Hello", d: obj});
+
+    counter += 1;
+
+    console.log("events published");
+}, 1000);
+```
+
+> This example is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/complex) AutobahnJS sample.
+
+### IWampSubject
+
+Specifying no generic type to the GetSubject method will a return a IWampSubject, that is a IObservable of a IWampSerializedEvent. IWampSerializedEvent is an interface representing an incoming WAMP EVENT message. It has properties of type ISerializedValue that can be deserialized.
 
 ```csharp
 public static void Main(string[] args)

@@ -67,6 +67,48 @@ public static async Task Run()
 
 Both placing attributes on a class method and placing attributes on an interface implemented by the class are supported.
 
+### Instance providers
+
+IWampRealmServiceProvider's RegisterCallee method has some overloads which allow you to specify an instance provider for your callee service instance, that is a Func<> delegate that returns an instance of your callee service provider.
+
+This allows you to control yourself the lifecycle of the callee service instance. You can of course use an dependency injection framework to help you manage that.
+
+For instance, using [Ninject](http://www.ninject.org/):
+
+```csharp
+public static async Task Run()
+{
+    IKernel kernel = new StandardKernel();
+
+    kernel.Bind<IAddCalculator>().To<Calculator>();
+
+    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+
+	IWampChannel channel =
+		factory.CreateJsonChannel("ws://127.0.0.1:8080/ws", "realm1");
+
+	await channel.Open();
+
+    await channel.RealmProxy.Services.RegisterCallee(() => kernel.Get<IAddCalculator>());
+}
+
+public interface IAddCalculator
+{
+    [WampProcedure("com.arguments.add2")]
+    int Add2(int x, int y);
+}
+
+public class Calculator : IAddCalculator
+{
+    public int Add2(int x, int y)
+    {
+        return (x + y);
+    }
+}
+```
+
+> Note: if you're using Ninject, you're recomended to use [Ninject.Extensions.Factory](https://github.com/ninject/Ninject.Extensions.Factory) which allows you to get typed factories instances or Func<> instances without being aware about the dependency injection container.
+
 ### Default parameter values
 
 A method can have default value parameters. These will be used in case the user sends only part of the method's parameters. Example:
@@ -103,44 +145,75 @@ public class SlowSquareService
 
 >Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/slowsquare) AutobahnJS sample
 
-### out/ref parameters
+### Tuples support
 
- For synchronous methods, out/ref parameters are supported. 
- >Note: this is not supported for asynchronous methods.
- 
- Example:
+C# 7.0 tuples are supported as return values of reflection-based callee methods. The tuple will be serialized to either the arguments keywords or to the arguments array of the YIELD message, depending on whether the returned tuple has named elements or positional elements (tuples having elements which are partially named are not supported).
+
+For example: A reflection-based callee that returns a tuple:
 
 ```csharp
-public class ComplexResultService
+public interface IComplexResultService
 {
     [WampProcedure("com.myapp.add_complex")]
-    public void AddComplex(int a, int ai, int b, int bi, out int c, out int ci)
-    {
-        c = a + b;
-        ci = ai + bi;
-    }
-}
-```
+    (int c, int ci) AddComplex(int a, int ai, int b, int bi);
 
->Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex) AutobahnJS sample
-
-### Multivalued results
-
-Multi-valued results: in order to return an multivalued array in the RESULT/YIELD WAMPv2 message, return an array from a rpc method and place above it a [return: WampResult(CollectionResultTreatment.Multivalued)] attribute. Example:
-
-```csharp
-public class MultivaluedResultService
-{
     [WampProcedure("com.myapp.split_name")]
-    [return: WampResult(CollectionResultTreatment.Multivalued)]
-    public string[] SplitName(string fullname)
+    (string, string) SplitName(string fullname);
+}
+
+public class ComplexResultService : IComplexResultService
+{
+    public (int c, int ci) AddComplex(int a, int ai, int b, int bi)
+    {
+       return (a + b, ai + bi);
+    }
+
+    public (string, string) SplitName(string fullname)
     {
         string[] splitted = fullname.Split(' ');
-        return splitted;
+
+        string forename = splitted[0];
+        string surname = splitted[1];
+
+        return (forename, surname);
     }
 }
 ```
->Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex) AutobahnJS sample
+> Note: as usual, you can put the WampProcedureAttributes on the methods themselves instead of implementing an interface, i.e:
+```csharp
+[WampProcedure("com.myapp.add_complex")]
+public (int c, int ci) AddComplex(int a, int ai, int b, int bi)
+{
+   // ...
+}
+
+[WampProcedure("com.myapp.split_name")]
+public (string, string) SplitName(string fullname)
+{
+   // ...
+}
+```
+
+Which can be consumed from [AutobahnJS](https://github.com/crossbario/autobahn-js):
+
+```javascript
+session.call('com.myapp.add_complex', [2, 3, 4, 5]).then(
+    function (res) {
+        console.log("Result: " + res.kwargs.c + " + " + res.kwargs.ci + "i");
+    }
+);
+
+session.call('com.myapp.split_name', ['Homer Simpson']).then(
+    function (res) {
+        console.log("Forename: " + res.args[0] + ", Surname: " + res.args[1]);
+    }
+;)
+```
+
+>Note:  The samples are based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex) AutobahnJS/AutobahnPython sample
+
+
+> Note: this feature can be combined with other features, such as async method support or progressive call results.
 
 ### Exception support
 
@@ -250,6 +323,47 @@ public async Task Run()
 
 > Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/progress) AutobahnJS sample
 
+### out/ref parameters
+
+For synchronous methods, out/ref parameters are supported. 
+
+> Note: this is not supported for asynchronous methods.
+ 
+ Example:
+
+```csharp
+public class ComplexResultService
+{
+    [WampProcedure("com.myapp.add_complex")]
+    public void AddComplex(int a, int ai, int b, int bi, out int c, out int ci)
+    {
+        c = a + b;
+        ci = ai + bi;
+    }
+}
+```
+
+>Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex) AutobahnJS sample
+
+### Multivalued results
+
+Multi-valued results: in order to return an multivalued array in the RESULT/YIELD WAMPv2 message, return an array from a rpc method and place above it a [return: WampResult(CollectionResultTreatment.Multivalued)] attribute. Example:
+
+```csharp
+public class MultivaluedResultService
+{
+    [WampProcedure("com.myapp.split_name")]
+    [return: WampResult(CollectionResultTreatment.Multivalued)]
+    public string[] SplitName(string fullname)
+    {
+        string[] splitted = fullname.Split(' ');
+        return splitted;
+    }
+}
+```
+>Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex) AutobahnJS sample
+
+
 ### WampInvocationContext
 
 WampInvocationContext allows you to get the invocation details provided with the current invocation. It currently contains the caller identification (if present) and whether the caller requested a progressive call.
@@ -278,7 +392,7 @@ public class LongOpService : ILongOpService
 }
 ```
 
-### Registration customization
+## Registration customization
 
 The RegisterCallee method of IWampRealmServiceProvider has an overload that receives an "interceptor" instance. The "interceptor" allows customizing the registration being performed.
 

@@ -104,48 +104,92 @@ Console.WriteLine("Orders 2: {0}", string.Join(", ", orders));
 
 >Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/arguments) AutobahnJS sample
 
-### out/ref parameters
+### Tuples support
 
-For synchronous methods, out/ref parameters are supported.
-> Note: this is not supported for asynchronous methods.
+Reflection-based callers support C# 7.0 tuple return values. You can simply declare a method returning a C# 7.0 tuple in your callee proxy interface. The tuple will be deserialized either from the arguments keywords or from the arguments array of the RESULT message, depending on whether the returned tuple has named elements or positional elements. (tuples having elements which are partially named are not supported)
 
-Example:
+For example, declare the following callee proxy interface:
 
 ```csharp
-public interface IComplexResultService
+public interface IComplexResultServiceProxy
 {
+	[WampProcedure("com.myapp.add_complex")]
+	Task<(int c, int ci)> AddComplexAsync(int a, int ai, int b, int bi);
+
+	[WampProcedure("com.myapp.split_name")]
+    Task<(string, string)> SplitNameAsync(string fullname);
+
     [WampProcedure("com.myapp.add_complex")]
-    void AddComplex(int a, int ai, int b, int bi, out int c, out int ci);
-}
-```
-Call example:
+    (int c, int ci) AddComplex(int a, int ai, int b, int bi);
 
-```csharp
-int ci;
-int c;
-proxy.AddComplex(2, 3, 4, 5, out c, out  ci);
-```
->Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex) AutobahnJS sample
-
-### Multi-valued results
-
-In order to get an multivalued array from the RESULT/YIELD WAMPv2 message, set the return value of the rpc method to an array and place above it a [return: WampResult(CollectionResultTreatment.Multivalued)] attribute. Example:
-
-```csharp
-public interface IMultivaluedResultService
-{
     [WampProcedure("com.myapp.split_name")]
-    [return: WampResult(CollectionResultTreatment.Multivalued)]
-    string[] SplitName(string fullname);
+    (string, string) SplitName(string fullname);
 }
 ```
 
-Call example:
+And then obtain a callee proxy and simply call its methods:
 
 ```csharp
-string[] splitted = proxy.SplitName("Homer Simpson");
+public async Task Run()
+{
+    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+
+    IWampChannel channel =
+        factory.CreateJsonChannel("ws://localhost:8080/ws", "realm1");
+
+    await channel.Open();
+
+    IComplexResultServiceProxy proxy =
+        channel.RealmProxy.Services.GetCalleeProxy<IComplexResultServiceProxy>();
+
+    (string forename, string surname) = await proxy.SplitNameAsync("Homer Simpson");
+    // Synchronous version: 
+    // (string forename, string surname) = proxy.SplitName("Homer Simpson");
+
+    Console.WriteLine($"Forename: {forename}, Surname: {surname}");
+
+    (int c, int ci) = await proxy.AddComplexAsync(2, 3, 4, 5);
+    // Synchronous version: 
+    // (int c, int ci) = proxy.AddComplex(2, 3, 4, 5);
+
+    Console.WriteLine($"Result: {c} + {ci}i");
+}
 ```
->Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex) AutobahnJS sample
+
+This code can consume the following code written in Javascript:
+
+```javascript
+function add_complex(args, kwargs) {
+    return new autobahn.Result([], {c: args[0] + args[2], ci: args[1] + args[3]});
+}
+
+function split_name(args) {
+    var splitted = args[0].split(" ");
+    var forename = splitted[0];
+    var surname = splitted[1];
+    return new autobahn.Result([forename, surname]);
+}
+
+session.register('com.myapp.add_complex', add_complex).then(
+    function (registration) {
+        console.log("Procedure registered:", registration.id);
+    },
+    function (error) {
+        console.log("Registration failed:", error);
+    }
+);
+
+session.register('com.myapp.split_name', split_name).then(
+    function (registration) {
+        console.log("Procedure registered:", registration.id);
+    },
+    function (error) {
+        console.log("Registration failed:", error);
+    }
+);
+```
+
+>Note:  The samples are based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex) AutobahnJS/AutobahnPython sample
 
 ### Exception support
 You can catch a WampException in order to treat a ERROR message.
@@ -205,7 +249,51 @@ public async Task Run()
 
 >Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/progress) AutobahnJS sample
 
-### Registration customization
+### out/ref parameters
+
+For synchronous methods, out/ref parameters are supported.
+
+> Note: this is not supported for asynchronous methods.
+
+Example:
+
+```csharp
+public interface IComplexResultService
+{
+    [WampProcedure("com.myapp.add_complex")]
+    void AddComplex(int a, int ai, int b, int bi, out int c, out int ci);
+}
+```
+Call example:
+
+```csharp
+int ci;
+int c;
+proxy.AddComplex(2, 3, 4, 5, out c, out  ci);
+```
+>Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex) AutobahnJS sample
+
+### Multi-valued results
+
+In order to get an multivalued array from the RESULT/YIELD WAMPv2 message, set the return value of the rpc method to an array and place above it a [return: WampResult(CollectionResultTreatment.Multivalued)] attribute. Example:
+
+```csharp
+public interface IMultivaluedResultService
+{
+    [WampProcedure("com.myapp.split_name")]
+    [return: WampResult(CollectionResultTreatment.Multivalued)]
+    string[] SplitName(string fullname);
+}
+```
+
+Call example:
+
+```csharp
+string[] splitted = proxy.SplitName("Homer Simpson");
+```
+>Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex) AutobahnJS sample
+
+## Call customization
 
 The GetCalleeProxy method of IWampRealmServiceProvider now has an overload that receives an "interceptor" instance. The "interceptor" allows customizing the call being performed.
 
