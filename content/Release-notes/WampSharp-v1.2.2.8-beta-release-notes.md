@@ -1,7 +1,7 @@
 +++
 title = "WampSharp v1.2.2.8-beta release notes"
 categories = ["release notes"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2015-06-13T10:25:07+09:00"
 +++
 
 ## Breaking changes
