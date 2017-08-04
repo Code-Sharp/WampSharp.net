@@ -1,24 +1,18 @@
++++
+title = "WampSharp v1.2.5.21-beta release notes"
+categories = ["release notes"]
+date = "2017-03-05T10:25:07+09:00"
++++
+
 ## WampSharp v1.2.5.21-beta release notes
 
-**Contents**
-
-1. [C# 7.0 tuples support](#c-70-tuples-support)
-    * [Reflection-based callee tuples support](#reflection-based-callee-tuples-support)
-    * [Reflection-based caller tuples support](#reflection-based-caller-tuples-support)
-    * [Rx-based publish/subscribe tuples support](#rx-based-publishsubscribe-tuples-support)
-        * [Rx-based publisher tuples support](#rx-based-publisher-tuples-support-sample)
-        * [Rx-based subscriber tuples support](#rx-based-subscriber-tuples-support-sample)
-2. [Other features](#other-features)
-    * [Instance providers for reflection-based callee](#instance-providers-for-reflection-based-callee)
-    * [.NET Standard WebSocket4Net support](#net-standard-websocket4net-support)
-    * [Structured logging](#structured-logging)
-
-### C# 7.0 tuples support
+## C# 7.0 tuples support
 
 This verion mainly focuses on [C# 7.0 tuples](https://blogs.msdn.microsoft.com/dotnet/2016/08/24/whats-new-in-csharp-7-0/) support.
+
 > Note: C# 7.0 tuples syntax is currently supported only by [Visual Studio "15" Preview 4](https://www.visualstudio.com/en-us/news/releasenotes/vs15-relnotes). You can download it [here](https://www.visualstudio.com/en-us/downloads/visual-studio-next-downloads-vs.aspx).
 
-#### Reflection-based callee tuples support
+### Reflection-based callee tuples support
 
 From this version, you can return a C# 7.0 tuple from a reflection-based callee method. The tuple will be serialized to either the arguments keywords or to the arguments array of the YIELD message, depending on whether the returned tuple has named elements or positional elements. (tuples having elements which are partially named are not supported)
 
@@ -54,19 +48,19 @@ public class ComplexResultService : IComplexResultService
 ```
 > Note: as usual, you can put the WampProcedureAttributes on the methods themselves instead of implementing an interface, i.e:
 >
->```csharp
->[WampProcedure("com.myapp.add_complex")]
->public (int c, int ci) AddComplex(int a, int ai, int b, int bi)
->{
->   // ...
->}
->
->[WampProcedure("com.myapp.split_name")]
->public (string, string) SplitName(string fullname)
->{
->   // ...
->}
->```
+```csharp
+[WampProcedure("com.myapp.add_complex")]
+public (int c, int ci) AddComplex(int a, int ai, int b, int bi)
+{
+   // ...
+}
+
+[WampProcedure("com.myapp.split_name")]
+public (string, string) SplitName(string fullname)
+{
+   // ...
+}
+```
 
 
 Which can be consumed from [AutobahnJS](https://github.com/crossbario/autobahn-js):
@@ -87,7 +81,7 @@ session.call('com.myapp.split_name', ['Homer Simpson']).then(
 
 >Note:  The samples are based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex) AutobahnJS/AutobahnPython sample
 
-#### Reflection-based caller tuples support
+### Reflection-based caller tuples support
 
 Reflection-based callers also support C# 7.0 tuple return values from this version. You can simply declare a method returning a C# 7.0 tuple in your callee proxy interface.
 
@@ -173,7 +167,7 @@ session.register('com.myapp.split_name', split_name).then(
 ```
 >Note:  The samples are based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex) AutobahnJS/AutobahnPython sample
 
-#### Rx-based publish/subscribe tuples support
+### Rx-based publish/subscribe tuples support
 
 This version also introduces Rx-based publish/subscribe C# 7.0 tuple support. This allows to handle topics that have complex arguments in a strongly typed manner using ISubject<> api.
 
@@ -187,7 +181,7 @@ Luckily enough, in order to implement this interface it is sufficient to derive 
 
 Then, just pass an instance of your IWampEventValueTupleConverter to the new overload of IWampRealmServiceProvider's GetSubject method, which receives the topic's uri and an instance of IWampEventValueTupleConverter, in order to receive a ISubject<> instance of your desired tuple type.
 
-##### Rx-based subscriber tuples support sample
+#### Rx-based subscriber tuples support sample
 
 ```csharp
 public async Task Run()
@@ -265,7 +259,7 @@ setInterval(function () {
 ```
 > This example is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/complex) AutobahnJS sample.
 
-##### Rx-based publisher tuples support sample
+#### Rx-based publisher tuples support sample
 
 ```csharp
 public async Task Run()
@@ -349,9 +343,9 @@ session.subscribe('com.myapp.topic2', on_topic2);
 
 > This example is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/complex) AutobahnJS sample.
 
-### Other features
+## Other features
 
-#### Instance providers for reflection-based callee
+### Instance providers for reflection-based callee
 
 From this version, new overloads for IWampRealmServiceProvider's RegisterCallee method were added. These overloads allow you to specify an instance provider for your callee service instance, that is a Func<> delegate that returns an instance of your callee service provider.
 
@@ -393,12 +387,12 @@ public class Calculator : IAddCalculator
 
 > Note: if you're using Ninject, you're recomended to use [Ninject.Extensions.Factory](https://github.com/ninject/Ninject.Extensions.Factory) which allows you to get typed factories instances or Func<> instances without being aware about the dependency injection container.
 
-#### .NET Standard WebSocket4Net support
+### .NET Standard WebSocket4Net support
 
 [WebSocket4Net](https://github.com/kerryjiang/WebSocket4Net) has been ported to .NET Standard 1.3 recently. From this version WampSharp.WebSocket4Net is supported for .NET Standard 1.3 as well.
 
 This could be an alternative for running WampSharp over WebSockets on non-Windows platforms for now, until an update for .NET Core which supports WebSockets on non-Windows platforms is released.
 
-#### Structured logging
+### Structured logging
 
 From this version, some formatted logs are written using [structured logging](https://github.com/serilog/serilog/wiki/Structured-Data). These include properties such as session ids, incoming WAMP Json/MsgPack messages and more. This feature can be leveraged by [Serilog](https://serilog.net/).

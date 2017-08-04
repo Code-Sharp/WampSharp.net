@@ -1,28 +1,12 @@
-## WampSharp v1.2.1.6-beta release notes
++++
+title = "WampSharp v1.2.1.6-beta release notes"
+categories = ["release notes"]
+date = "2017-03-05T10:25:07+09:00"
++++
 
-**Contents**
+## Api changes
 
-1. [Api changes](#api-changes)
-	* [IAsyncDisposable](#IAsyncDisposable)
-	* [Other changes](#other-changes)
-2. [New features](#new-features)
-    * [vtortola.WebSocketListener support](#vtortolawebsocketlistener-support)
-    * [RawSocket transport support](#rawsocket-transport-support)
-    * [Progressive calls](#progressive-calls)
-    * [Caller identification](#caller-identification)
-    * [WampInvocationContext](#wampinvocationcontext)
-    * [Attribute based pub/sub](#attribute-based-pubsub)
-    * [WampEventContext](#wampeventcontext)
-    * [Registration customization](#registration-customization)
-    * [Authentication](#authentication)
-3. [Internal changes](#internal-changes)
-	* [Router IWampRealmServiceProvider](#router-iwamprealmserviceprovider)
-	* [Fleck transport](#fleck-transport)
-
-
-###Api changes
-
-####IAsyncDisposable
+### IAsyncDisposable
 
 A new type called IAsyncDisposable is introduced in the library. It's similar to IDisposable, but returns a Task.
 
@@ -42,14 +26,14 @@ Task&lt;IAsyncDisposable&gt; is returned from some methods:
 
 The IAsyncDisposable mentioned above's Task completes when the router sends a UNSUBSCRIBED/UNREGISTERED message corresponding to the sent request.
 
-#### Other changes
+### Other changes
 
 * SubscriptionRemoveEventArgs renamed to WampSubscriptionRemoveEventArgs.
 * WampConnectionBrokenException moved to namespace WampSharp.V2.Core.Contracts.
 
-### New features
+## New features
 
-#### vtortola.WebSocketListener support
+### vtortola.WebSocketListener support
 
 This version has support for [vtortola.WebSocketListener](http://www.github.com/vtortola/WebSocketListener). In order to use it, install the WampSharp.Vtortola package. Then create a WampHost and register the VtortolaWebSocketTransport:
 
@@ -70,7 +54,7 @@ host.Open();
 
 This listener supports [per message deflate](http://tools.ietf.org/html/draft-ietf-hybi-permessage-compression-17#section-8). To enable it, pass perMessageDeflate = true, in the transport's ctor.
 
-#### RawSocket transport support
+### RawSocket transport support
 
 This version has router-side only support for [RawSocket transport](https://github.com/wamp-proto/wamp-proto/blob/BEFORE_REPLACE_SPEC_WITH_RFC/spec/advanced.md#rawsocket-transport). In order to use it, install the WampSharp.RawSocket package. Then create a WampHost and register the RawSocketTransport.
 Example:
@@ -92,7 +76,7 @@ host.Open();
 
 > Note: The current implemented version of RawSocket protocol is the original version (before revision). This is the version also implemented by AutobahnPython/AutobahnCpp clients.
 
-#### Progressive calls
+### Progressive calls
 
 From this version, progressive calls are supported.
 In order to use progressive calls as a Caller, declare in your callee service a [WampProcedure] method having a [WampProgressiveCall] attribute and a IProgress&lt;T&gt; as the last parameter.
@@ -150,21 +134,18 @@ public class LongOpService : ILongOpService
 ```
 
 > Note: you can put the attributes on the method itself instead of implementing an interface, i.e:
->
->```csharp
-> public class LongOpService
->{
->    [WampProcedure("com.myapp.longop")]
->    [WampProgressiveResultProcedure]
->    public async Task<int> LongOp(int n, IProgress<int> progress)
->    {
->	    // ...
->    }
-> }
->```
-
-Then register it to the realm regularly:
-
+```csharp
+ public class LongOpService
+{
+    [WampProcedure("com.myapp.longop")]
+    [WampProgressiveResultProcedure]
+    public async Task<int> LongOp(int n, IProgress<int> progress)
+    {
+	    // ...
+    }
+ }
+```
+> Then register it to the realm regularly:
 ```csharp
 public async Task Run()
 {
@@ -185,7 +166,7 @@ public async Task Run()
 
 >Note:  The samples are based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/progress) AutobahnJS sample
 
-#### Caller identification
+### Caller identification
 
 From this version, it is possible to get/supply caller identification details. According to WAMP2 specification, a Callee can request to get caller identification details (by specifying disclose_caller = true on registration), and a Caller can request to disclose its identification (by specifying disclose_me = true on call request).
 
@@ -269,7 +250,7 @@ public class SquareService
 > Note: The samples are based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/options) AutobahnJS sample
 
 
-#### WampInvocationContext
+### WampInvocationContext
 
 WampInvocationContext allows you to get the invocation details provided with the current invocation. It currently contains the caller identification (if present) and whether the caller requested a progressive call.
 Example:
@@ -297,7 +278,7 @@ public class LongOpService : ILongOpService
 }
 ```
 
-#### Attribute based pub/sub
+### Attribute based pub/sub
 
 Allows to use WAMPv2 pub/sub features in a similar fashion as reflection rpc.
 
@@ -469,7 +450,7 @@ public static async Task Run()
 
 >Note:  The samples are based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/complex) AutobahnJS sample, but are a bit different (WampSharp doesn't support publishing both positional arguments and keyword arguments with this feature)
 
-#### WampEventContext
+### WampEventContext
 
 As illustrated in last sample, you can use in pub/sub based subscribers WampEventContext.Current in order to get details about the current received event:
 
@@ -491,7 +472,7 @@ public class MySubscriber
 
 >Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/options) AutobahnJS sample.
 
-#### Registration customization
+### Registration customization
 
 The RegisterCallee, GetCalleeProxy, RegisterSubscriber and RegisterPublisher methods of IWampRealmServiceProvider now all have overloads that receive an "interceptor" instance. The "interceptors" allow customizing the request being performed.
 
@@ -559,7 +540,7 @@ In addition, the interceptors allow modifying the options sent to each request.
 
 > Note: these interceptors are still "static", i.e: they don't allow returning a value that depends on the publication/call parameters.
 
-####Authentication
+### Authentication
 
 Client-side authentication is now supported. In order to use client authentication, you need to implement an interface named IWampClientAuthenticator. Then, pass it to CreateChannel/CreateJsonChannel/CreateMsgpackChannel overloads of DefaultChannelFactory.
 In IWampClientAuthenticator we supply the supported authentication methods and the authenticationid, these are passed in the HELLO message to the router (as details.authmethods, details.authid). We also implement Authenticate method, which sends an AUTHENTICATE message to the router upon CHALLENGE.
@@ -648,11 +629,11 @@ public async Task Run()
 }
 ```
 
->Note:  The sample is based on [this](https://github.com/crossbario/crossbarexamples/tree/master/authenticate/ticket) AutobahnJS sample
+>Note:  The sample is based on [this](https://github.com/crossbario/crossbar-examples/tree/master/authentication/ticket) AutobahnJS sample
 
-### Internal Changes
+## Internal Changes
 
-#### Router IWampRealmServiceProvider
+### Router IWampRealmServiceProvider
 
 From this version, WampHost's Realms' Service property is implemented differently - it is implemented as a WAMP client with in-memory transport. That means that the WampHost communicates with the IWampRealmServiceProvider using "serialization", which adds a bit overhead. There are a couple of reasons for this change:
 * This allows me to reuse code, instead of maintaining two different implementations of IWampRealmServiceProvider - one for the router and one for the client.
@@ -660,8 +641,6 @@ From this version, WampHost's Realms' Service property is implemented differentl
 * It makes the code more consistent - whether if it runs in the router or as a client.
 * WAMPv2 [discourages](https://github.com/wamp-proto/wamp-proto/tree/BEFORE_REPLACE_SPEC_WITH_RFC/spec/basic.md#application-code) routers to run application code.
 
-#### Fleck transport
+### Fleck transport
 
 From this version, Fleck 0.12.0.40 is used. This version of Fleck has feedback for message send to clients. WampSharp uses this feedback and assures that messages are sent serially per client - i.e:  a message will only be sent after the previous one has been received by the client. This should avoid some race conditions and should implement [ordering-guarantees](https://github.com/wamp-proto/wamp-proto/tree/BEFORE_REPLACE_SPEC_WITH_RFC/spec/basic.md#ordering-guarantees) better.
-
-> Written with [StackEdit](https://stackedit.io/).

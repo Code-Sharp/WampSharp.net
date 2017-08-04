@@ -1,28 +1,14 @@
-## WampSharp v1.2.2.8-beta release notes
++++
+title = "WampSharp v1.2.2.8-beta release notes"
+categories = ["release notes"]
+date = "2017-03-05T10:25:07+09:00"
++++
 
-**Contents**
+## Breaking changes
 
-1. [Breaking changes](#breaking-changes)
-	* [Library split up](#library-split-up)
-	 * [WampSharp.Default split up](#wampsharpdefault-split-up)
-	 * [WAMPv1 split up](#wampv1-split-up)
-2. [New features](#new-features)
-    * [Portable Class Library Support](#portable-class-library-support)
-    * [Logging support](#logging-support)
-    * [WampChannelReconnector](#wampchannelreconnector)
-    * [WAMP-CRA authentication](#wamp-cra-authentication)
-    * [Pattern based subscriptions](#pattern-based-subscriptions)
-    * [Shared registrations](#shared-registrations)
-    * [Pattern based registrations](#pattern-based-registrations)
-3. [Internal changes](#internal-changes)
-	* [Performance improvements](#performance-improvements)
-	* [Bug fixes](#bug-fixes)
+### Library split up
 
-###Breaking changes
-
-####Library split up
-
-##### WampSharp.Default split up
+#### WampSharp.Default split up
 
 WampSharp.Default.dll has been split up into a couple of libraries. This allows you to consume only the libraries you are interested in:
 
@@ -37,9 +23,9 @@ In addition the following packages exist:
 * WampSharp.Default.Router - adds DefaultWampHost which uses WampSharp.Fleck, WampSharp.NewtonsoftJson and WampSharp.NewtonsoftMsgpack.
 * WampSharp.Default - references both WampSharp.Default.Client and WampSharp.Default.Router.
 
-> Note: You don't have to consume the WampSharp.Default.Client/WampSharp.Default.Router libraries, you can always use directly [WampChannel](https://github.com/Code-Sharp/WampSharp/wiki/WampChannel) or [WampHost](https://github.com/Code-Sharp/WampSharp/wiki/WampHost) if you're interested only in some of the dependencies.
+> Note: You don't have to consume the WampSharp.Default.Client/WampSharp.Default.Router libraries, you can always use directly [WampChannel]({{< ref "WAMP2\Client\WampChannel.md" >}}) or [WampHost]({{< ref "WAMP2\Host\WampHost.md" >}}) if you're interested only in some of the dependencies.
 
-##### WAMPv1 split up
+#### WAMPv1 split up
 
 From this version, WAMPv1 support has been moved to a dedicated dll name WampSharp.WAMP1.dll. The types DefaultWampHost, DefaultWampCraHost and DefaultWampChannelFactory (and some extension methods of IWampChannelFactory) are located in WampSharp.WAMP1.Default.dll.
 
@@ -47,22 +33,22 @@ In order to update a WAMP1 application to this version, please uninstall WampSha
 
 Please also note that [WAMPv1 is deprecated](https://groups.google.com/forum/#!msg/autobahnws/k-Jo8NnFtjA/qxnmFp2qGkMJ), and you're encouraged to upgrade your application to WAMPv2.
 
-### New features
+## New features
 
-####Portable Class Library Support
+### Portable Class Library Support
 From this version, Portable Class Library is supported (to be precise, Windows Phone 8.1 and Windows 8.1 platforms).
 
 In order to use WampSharp in these platforms, simply install WampSharp.Default.Client and use DefaultWampChannelFactory as usual. Note that currently only Json serialization is supported in these platforms.
 
 The WampSharp implementation of a WebSocket client for these platforms is located in WampSharp.Windows and is called MessageWebSocketTextConnection (based on the [MessageWebSocket class](https://msdn.microsoft.com/library/windows/apps/br226842)).
 
-####Logging support
+### Logging support
 
 From this version, some logs are written by the library. Logging is supported by the [LibLog](https://github.com/damianh/LibLog) project. In order to enable logs, just install your favorite logging library that [LibLog supports](https://github.com/damianh/LibLog/wiki), and configure it. Logs will be written to "WampSharp." prefixed loggers automatically.
 
 This is an initial logs works. You are welcome to request some other logs from this library - please comment [here](https://github.com/Code-Sharp/WampSharp/issues/6) about logs that you are interested in.
 
-####WampChannelReconnector
+### WampChannelReconnector
 
 Available from WampSharp v1.2.1.7-beta, defines a mechanism for reconnecting to a remote router.
 
@@ -100,7 +86,7 @@ public static async Task Run()
 
 ```
 
-####WAMP-CRA Authentication
+### WAMP-CRA Authentication
 
 [WAMP-CRA](http://crossbar.io/docs/WAMP-CRA-Authentication/) client side authentication is now supported. In order to use it, instantiate a new instance of WampCraAuthenticator and pass it to the channel factory.
 Example:
@@ -228,9 +214,9 @@ public class Mul2Service
 }
 ```
 
->Note:  The sample is based on [this](https://github.com/crossbario/crossbarexamples/tree/master/authenticate/wampcra) AutobahnJS sample
+>Note:  The sample is based on [this](https://github.com/crossbario/crossbar-examples/tree/master/authentication/wampcra/static) AutobahnJS sample
 
-#### Pattern based subscriptions
+### Pattern based subscriptions
 
 This version has support for [pattern based subscriptions](http://crossbar.io/docs/Pattern-Based-Subscriptions/), for both router side and client side.
 
@@ -301,7 +287,7 @@ public class Subscriber3
 ```
 > Note: this sample is based on [this](https://github.com/crossbario/crossbarexamples/tree/master/patternsubs) Autobahn sample
 
-#### Shared registrations
+### Shared registrations
 
 From this version [shared registrations](http://crossbar.io/docs/Shared-Registrations/) are supported both on router and client sides.
 
@@ -369,7 +355,7 @@ public class MyComponent
 > Note: this sample is based on [this](https://github.com/crossbario/crossbarexamples/tree/master/sharedregs) Autobahn sample
 
 
-#### Pattern-based registrations
+### Pattern-based registrations
 
 From this version [pattern-based registrations](http://crossbar.io/docs/Pattern-Based-Registrations/) are supported both on router and client sides.
 
@@ -443,9 +429,9 @@ public class Callee3
 > Note: this sample is based on [this](https://github.com/crossbario/crossbarexamples/tree/master/patternregs) Autobahn sample
 
 
-### Internal Changes
+## Internal Changes
 
-####Performance improvements
+### Performance improvements
 
 This version introduces some optimizations:
 
@@ -453,8 +439,6 @@ This version introduces some optimizations:
 * Serialization optimizations - serializing entire WampMessages instead of serializing each element of the array separately.
 * Pub/Sub subscriber black and whitelisting, publisher exclusion calculation optimizations using HashSets.
 
-####Bug fixes
+### Bug fixes
 
 This version contains a couple of bug fixes, mainly [SUBSCRIBE fixes](https://github.com/Code-Sharp/WampSharp/issues/67).
-
-> Written with [StackEdit](https://stackedit.io/).

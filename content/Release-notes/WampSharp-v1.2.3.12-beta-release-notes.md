@@ -1,28 +1,20 @@
-## WampSharp v1.2.3.12-beta release notes
++++
+title = "WampSharp v1.2.3.12-beta release notes"
+categories = ["release notes"]
+date = "2017-03-05T10:25:07+09:00"
++++
 
-**Contents**
+## New features
 
-1. [New features](#new-features)
-    * [Router side authentication](#router-side-authentication)
-    * [WampChannelFactory fluent syntax](#wampchannelfactory-fluent-syntax)
-    * [RawSocket rewrite](#rawsocket-rewrite)
-    * [Meta-api descriptor service](#meta-api-descriptor-service)
-2. [Bug fixes](#bug-fixes)
-	* [Uri verification (Issue #84)](#uri-verification-issue-84)
-	* [StackOverflowException (Issue #92)](#stackoverflowexception-issue-92)
-	* [Stress issues](#stress-issues-91-93-and-others)
+### Router side authentication
 
-### New features
+From this version, [router-side authentication]({{< ref "WAMP2\Router\Router-side-authentication.md" >}}) is supported. Also [WAMP-CRA is supported]({{< ref "WAMP2\Router\WAMP-CRA-router-side-authentication.md" >}}).
 
-####Router side authentication
-
-From this version, [router-side authentication](../WAMP2/Router/Router-side-authentication.md) is supported. Also [WAMP-CRA is supported](../WAMP2/Router/WAMP-CRA-router-side-authentication.md).
-
-Also, [Cookie based authenticators are supported](../WAMP2/Router/Cookie-based-router-side-authentication.md).
+Also, [Cookie based authenticators are supported]({{< ref "WAMP2\Router\Cookie-based-router-side-authentication.md" >}}).
 
 Currently authentication details (authid, authmethod and authrole) are forwarded to callees if the caller is disclosed. These are accessible via WampInvocationContext. This might change according to the [WAMP spec decision](https://github.com/wamp-proto/wamp-proto/issues/57).
 
-####WampChannelFactory fluent syntax
+### WampChannelFactory fluent syntax
 
 This version introduces new api to obtain a IWampChannel. The api is fluent and allows customization.
 
@@ -67,7 +59,7 @@ await channel.Open();
 
 The actual reason this api is introduced is for RawSocket channels, see RawSocket section.
 
-####RawSocket rewrite
+### RawSocket rewrite
 
 This version includes a total rewrite of [RawSocket transport](https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_transport_rawsocket.md). The current rewrite implements the [revised RawSocket transport spec](https://github.com/tavendo/AutobahnPython/issues/291) and is implemented using the framework's TcpListener class, instead of [SuperSocket](https://github.com/kerryjiang/SuperSocket).
 
@@ -85,7 +77,7 @@ host.RegisterTransport(transport,
 ```
 
 
-#####RawSocket client transport
+#### RawSocket client transport
 
 The RawSocket rewrite made it easier to use the same codebase in order to implement a RawSocket client transport. In order to obtain a RawSocket IWampChannel, you can use the fluent syntax api:
 
@@ -116,15 +108,16 @@ IWampChannel channel =
            .Build();
 ```
 
-> Note: currently [crossbar](crossbar.io) and Autobahn variants [don't implement RawSocket's ping/pongs](https://github.com/crossbario/crossbar/issues/381). Therefore, auto-ping is disabled by default. You can enable it manually, both for router-side transport (by passing to the RawSocketTransport constructor an non-null auto-ping interval) and for client-side transport (as in the sample).
+> Note: currently [crossbar](https://crossbar.io) and Autobahn variants [don't implement RawSocket's ping/pongs](https://github.com/crossbario/crossbar/issues/381). Therefore, auto-ping is disabled by default. You can enable it manually, both for router-side transport (by passing to the RawSocketTransport constructor an non-null auto-ping interval) and for client-side transport (as in the sample).
 
-####Meta-api descriptor service
+### Meta-api descriptor service
 
-From this version WAMP meta-api is implemented (i.e. [session meta api](https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_pubsub_session_meta_api.md), [registration meta api](https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_rpc_registration_meta_api.md) and [subscription meta api](https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_pubsub_subscription_meta_api.md)). It is possible both to consume WAMP meta-api from a WampSharp client, and to expose it from a WampSharp router.
+From this version WAMP meta-api is implemented (i.e. [session meta api](https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_session_meta_api.md), [registration meta api](https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_rpc_registration_meta_api.md) and [subscription meta api](https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_pubsub_subscription_meta_api.md)). It is possible both to consume WAMP meta-api from a WampSharp client, and to expose it from a WampSharp router.
 
-##### Exposing meta-api
+#### Exposing meta-api
 
 In order to expose meta-api, you can call an extension method of IWampHostedRealm, named "HostMetaApiService". This method returns an IDisposable which you can dispose in order to unregister the meta-api service.
+
 > Note: it is important to call HostMetaApiService before hosting any other components (callees/subscribers), since otherwise the meta-api service isn't be able to track components registered before it.
 
 ```csharp
@@ -137,7 +130,7 @@ IDisposable disposable = realm.HostMetaApiService();
 host.Open();
 ```
 
-##### Consuming meta-api
+#### Consuming meta-api
 
 In order to consume meta-api, you can use declare the WAMP meta-api contracts yourself and consume it with plain WampSharp client-side code. In order to save that amount of work, a client-side api is provided which allows you to consume the meta-api without having to write any contracts yourself. This is api is available via an extension method of IWampRealmProxy which is named "GetMetaApiServiceProxy".
 
@@ -176,11 +169,11 @@ private static async Task Run()
 }
 ```
 
-### Bug fixes
+## Bug fixes
 
-#### Uri verification ([Issue #84](https://github.com/Code-Sharp/WampSharp/issues/84))
+### Uri verification ([Issue #84](https://github.com/Code-Sharp/WampSharp/issues/84))
 
-This is related to [the corresponding part of the spec](https://github.com/wamp-proto/wamp-proto/blob/master/rfc/draft-oberstet-hybi-tavendo-wamp.md#uris-uris) which discusses valid uris. From this version, WampSharp router verifies that uris are valid as in the spec. The default behavior is loose/relaxed uri verification. You can change that behavior by passing a IWampUriValidator to the WampHost constructor. For example:
+This is related to [the corresponding part of the spec](https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/basic/bp_uris.md) which discusses valid uris. From this version, WampSharp router verifies that uris are valid as in the spec. The default behavior is loose/relaxed uri verification. You can change that behavior by passing a IWampUriValidator to the WampHost constructor. For example:
 
 ```csharp
 WampHost host =
@@ -192,14 +185,12 @@ host.Open();
 
 You can also implement yourself IWampUriValidator in order to define yourself what uris are valid. (Your implementation should be a subset of the loose/relaxed uri definition, but this isn't forced)
 
-#### StackOverflowException ([Issue #92](https://github.com/Code-Sharp/WampSharp/issues/92))
+### StackOverflowException ([Issue #92](https://github.com/Code-Sharp/WampSharp/issues/92))
 
 It turns out that using the WampSharp router resulted sometimes in a StackOverflowException. The reason for this is related to Reactive Extensions implementation of the Merge operator which uses recursion.. WampSharp used the Merge operator as a queue mechanism for sending messages serially per client. When a large number of messages was gathered for a client and then a client suddenly disconnected, this resulted in a large recursion stack which resulted in a StackOverflowException. It turns out that this is a [known rx issue](https://github.com/Reactive-Extensions/Rx.NET/issues/19).
 
 In order to solve this issue, WampSharp's queue mechanism was replaced with a [different implementation (Ix-Async based)](https://github.com/Code-Sharp/WampSharp/commit/e476bb9a63c4198bbf763ab9ecd0e55593901a7b).
 
-#### Stress issues ([#91](https://github.com/Code-Sharp/WampSharp/issues/91) [#93](https://github.com/Code-Sharp/WampSharp/issues/93) and [others](https://github.com/nj4x/WampSharpTests))
+### Stress issues ([#91](https://github.com/Code-Sharp/WampSharp/issues/91) [#93](https://github.com/Code-Sharp/WampSharp/issues/93) and [others](https://github.com/nj4x/WampSharpTests))
 
 Thanks to [@nj4x](https://github.com/nj4x/) another couple of multi-threaded issues related to high stress issues were detected and fixed.
-
-> Written with [StackEdit](https://stackedit.io/).

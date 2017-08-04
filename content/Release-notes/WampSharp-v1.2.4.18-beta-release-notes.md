@@ -1,18 +1,12 @@
-## WampSharp v1.2.4.18-beta release notes
++++
+title = "WampSharp v1.2.4.18-beta release notes"
+categories = ["release notes"]
+date = "2017-03-05T10:25:07+09:00"
++++
 
-**Contents**
+## New features
 
-1. [New features](#new-features)
-    * [.NET Standard support](#net-standard-support)
-    * [ASP.NET Core support](#aspnet-core-support)
-2. [Other changes](#other-changes)
-	* [Internal changes](#internal-changes)
-    * [Windows Phone issues](#windows-phone-issues)
-    * [Dependencies update](#dependencies-update)
-
-### New features
-
-#### .NET Standard support
+### .NET Standard support
 
 This verion mainly focuses on .NET Standard support. WampSharp now supports [.NET Standard 1.3](https://github.com/dotnet/corefx/blob/v1.0.0/Documentation/architecture/net-platform-standard.md) which means that it is compatible with .NET Framework 4.6, [NET Core](http://dot.net), Universal Windows Platform 10 and Mono/Xamarin platforms.
 
@@ -24,7 +18,7 @@ Regarding WebSockets:
 
 **Note**: WampSharp.Default.Router isn't present yet since I'm not aware of any standalone .NET Standard compatible WebSocket server (such as Fleck or Vtortola/WebSocketListener).
 
-#### ASP.NET Core support
+### ASP.NET Core support
 
 This version introduces ASP.NET core support. In order to use it, you need to create [a new empty ASP.NET Core project](https://docs.asp.net/en/latest/getting-started.html).
 
@@ -71,21 +65,21 @@ public class Startup
 }
 ```
 
-This code hosts a WampSharp Router in a ASP.NET Core application under the "/ws" path. The WampSharp relevant code begins in the line declaring the WampHost variable. ASP.NET Core runs by default from port 5000, so you'll need to access "ws://localhost:5000/ws". You can change the default port in various ways, such as calling ".UseUrls("http://127.0.0.1:8080")" on the WebHostBuilder in your Main.
+This code hosts a WampSharp Router in a ASP.NET Core application under the "/ws" path. The WampSharp relevant code begins in the line declaring the WampHost variable. ASP.NET Core runs by default from port 5000, so you'll need to access "ws://localhost:5000/ws". You can change the default port in various ways, such as calling `".UseUrls("http://127.0.0.1:8080")"` on the WebHostBuilder in your Main.
 
-### Other changes
+## Other changes
 
-#### Internal changes
+### Internal changes
 
 RawSocket implementation now uses [System.Buffers](https://www.nuget.org/packages/System.Buffers/) instead of [Microsoft.IO.RecyclableMemoryStream](https://www.nuget.org/packages/Microsoft.IO.RecyclableMemoryStream/), since the [latter is not .NET Standard compatible](https://github.com/Microsoft/Microsoft.IO.RecyclableMemoryStream/issues/11).
 
 Message queue is now powered by [System.Threading.Tasks.Dataflow](https://www.nuget.org/packages/System.Threading.Tasks.Dataflow) for all supported platforms, except for .NET Framework 4.0, which still uses an [Ix-Async](https://www.nuget.org/packages/Ix-Async) based message queue.
 
-#### Windows Phone issues
+### Windows Phone issues
 
 Windows Phone issues ([#122](https://github.com/Code-Sharp/WampSharp/issues/122), [#109](https://github.com/Code-Sharp/WampSharp/issues/109)) should now be resolved. The latter by replacing the message queue with Dataflow.
 
-#### Dependencies update
+### Dependencies update
 
 The following dependencies have been updated: System.Collections.Immutable, vtortola.WebSocketListener, WebSocket4Net, Newtonsoft.Msgpack. In addition, [Reactive Extensions](https://github.com/Reactive-Extensions/Rx.NET) has been updated to version 3.0, which means that WampSharp now refers System.Reactive.* packages instead of Rx-* packages.
 
