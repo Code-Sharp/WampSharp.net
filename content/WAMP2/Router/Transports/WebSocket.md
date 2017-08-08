@@ -142,7 +142,7 @@ protected void Application_Start()
 }
 ```
 
-## Microsoft.Owin
+## WampSharp.Owin
 
 A transport for [Microsoft.Owin](https://github.com/aspnet/AspNetKatana/).
 

@@ -23,7 +23,7 @@ In addition the following packages exist:
 * WampSharp.Default.Router - adds DefaultWampHost which uses WampSharp.Fleck, WampSharp.NewtonsoftJson and WampSharp.NewtonsoftMsgpack.
 * WampSharp.Default - references both WampSharp.Default.Client and WampSharp.Default.Router.
 
-> Note: You don't have to consume the WampSharp.Default.Client/WampSharp.Default.Router libraries, you can always use directly [WampChannel]({{< ref "WAMP2\Client\WampChannel.md" >}}) or [WampHost]({{< ref "WAMP2\Host\WampHost.md" >}}) if you're interested only in some of the dependencies.
+> Note: You don't have to consume the WampSharp.Default.Client/WampSharp.Default.Router libraries, you can always use directly [WampChannel]({{< ref "WAMP2\Client\WampChannel.md" >}}) or [WampHost]({{< ref "WAMP2\Router\WampHost.md" >}}) if you're interested only in some of the dependencies.
 
 #### WAMPv1 split up
 

@@ -4,8 +4,6 @@ categories = ["release notes"]
 date = "2016-08-29T10:25:07+09:00"
 +++
 
-## WampSharp v1.2.5.21-beta release notes
-
 ## C# 7.0 tuples support
 
 This verion mainly focuses on [C# 7.0 tuples](https://blogs.msdn.microsoft.com/dotnet/2016/08/24/whats-new-in-csharp-7-0/) support.
