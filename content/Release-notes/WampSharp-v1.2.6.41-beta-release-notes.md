@@ -12,11 +12,11 @@ A few router-side WebSockets transports have been added in this version. These i
 
 ### CANCEL support
 
-CANCEL support has been added to Crossbar [recently](https://github.com/crossbario/crossbar/pull/1111). From this version, WampSharp supports rpc cancellations, both on router-side and on client-side.
+CANCEL support has been added to [Crossbar](http://crossbar.io/) [recently](https://github.com/crossbario/crossbar/pull/1111). From this version, WampSharp supports rpc cancellations, both on router-side and on client-side.
 
 #### Reflection based caller/callee cancellation support
 
-Cancellation is supported for reflection based caller and callee via the [CancellationToken api](https://msdn.microsoft.com/en-us/library/system.threading.cancellationtoken(v=vs.110).aspx). In order to declare a callee procedure which supports cancellation, declare an async method which receive as the last argument of the procedure a Cancellation token:
+Cancellation is supported for reflection based caller and callee via the [CancellationToken api](https://msdn.microsoft.com/en-us/library/system.threading.cancellationtoken(v=vs.110).aspx). In order to declare a callee procedure which supports cancellation, declare an async method which receives as its last argument a CancellationToken:
 
 ```csharp
 public class CancellableOpService
@@ -112,3 +112,44 @@ cancellationTokenSource.Cancel();
 
 await invocationTask.ConfigureAwait(false);
 ```
+
+### Subscriber authid/authrole based black/white-listing ([Issue #119](https://github.com/Code-Sharp/WampSharp/issues/119))
+
+From this version, [subscriber authid/authrole based black/white-listing](http://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#rfc.section.14.4.1.3) is supported.
+
+Usage example:
+
+```csharp
+// Alice
+IWampTopicProxy aliceHeartBeat =
+    aliceChannel.RealmProxy.TopicContainer.GetTopicByUri("public.heartbeat.alice");
+
+aliceHeartBeat.Publish(new PublishOptions() { ExcludeMe = false, ExcludeAuthenticationIds = new string[] { "bob" } }, new object[] { "From C#" });
+
+// Bob
+IWampTopicProxy bobHeartBeat =
+    bobChannel.RealmProxy.TopicContainer.GetTopicByUri("public.heartbeat.bob");
+
+bobHeartBeat.Publish(new PublishOptions() { ExcludeAuthenticationRoles = new string[] { "beta" } }, new object[] { "From C#" });
+
+// Carol
+IWampTopicProxy carolHeartBeat =
+    carolChannel.RealmProxy.TopicContainer.GetTopicByUri("public.heartbeat.carol");
+
+carolHeartBeat.Publish(new PublishOptions(), new object[] { "From C#" });
+
+// Dave
+IWampTopicProxy daveHeartBeat =
+    daveChannel.RealmProxy.TopicContainer.GetTopicByUri("public.heartbeat.dave");
+
+daveHeartBeat.Publish(new PublishOptions() { ExcludeAuthenticationIds = new string[] { "alice", "bob" } }, new object[] { "From C#" });
+
+// Erin
+IWampTopicProxy erinHeartBeat =
+    erinChannel.RealmProxy.TopicContainer.GetTopicByUri("public.heartbeat.erin");
+
+erinHeartBeat.Publish(new PublishOptions() { ExcludeMe = false, EligibleAuthenticationIds = new string[] { "alice", "bob", "dave" } }, new object[] { "From C#" });
+erinHeartBeat.Publish(new PublishOptions() { ExcludeMe = false, EligibleAuthenticationRoles = new string[] { "beta" } }, new object[] { "From C#" });
+```
+
+> The code is based on [this sample](https://github.com/crossbario/crossbar-examples/tree/master/exclude_subscribers).
