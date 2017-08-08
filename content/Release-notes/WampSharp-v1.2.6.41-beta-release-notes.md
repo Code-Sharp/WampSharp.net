@@ -10,9 +10,9 @@ date= "2017-08-08T14:39:35+03:00"
 
 A few router-side WebSockets transports have been added in this version. These include [HttpListener based transport]({{< ref "WAMP2\Router\Transports\WebSocket.md" >}}#wampsharp-httplistener), [ASP.NET based transport]({{< ref "WAMP2\Router\Transports\WebSocket.md" >}}#wampsharp-aspnet-websockets-server) and [Microsoft.Owin based transport]({{< ref "WAMP2\Router\Transports\WebSocket.md" >}}#wampsharp-owin).
 
-### CANCEL support
+### CANCEL/INTERRUPT support
 
-CANCEL support has been added to [Crossbar](http://crossbar.io/) [recently](https://github.com/crossbario/crossbar/pull/1111). From this version, WampSharp supports rpc cancellations, both on router-side and on client-side.
+CANCEL/INTERRUPT support has been added to [Crossbar](http://crossbar.io/) [recently](https://github.com/crossbario/crossbar/pull/1111). From this version, WampSharp supports rpc cancellations, both on router-side and on client-side.
 
 #### Reflection based caller/callee cancellation support
 
