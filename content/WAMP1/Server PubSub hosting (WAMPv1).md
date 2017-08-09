@@ -1,11 +1,17 @@
-## Server PubSub hosting (WAMPv1)
++++
+title = "Server PubSub hosting (WAMPv1)"
+categories = ["wamp1"]
+tags = ["wamp1"]
+date = "2017-03-05T10:25:07+09:00"
++++
 
 WampSharp contains a Pub/Sub mechanism.
 
-### Declaring topics
+## Declaring topics
 All WampSharp server-side topics are contained in a WampTopicContainer. This is a property of the DefaultWampHost (called TopicContainer).
 
 There are two types of topics:
+
 * Temporary topics - created automatically when a subscriber subscribes to them, deleted when no one is subscribed.
 * Persistent topics - created once by the application, never deleted.
 
@@ -13,7 +19,7 @@ In order to subscribe to new created topics, the WampTopicContainer has a TopicC
 
 In order to create a persistent topic, call CreateTopicByUri, and pass true for the persistent parameter.
 
-### About topics
+## About topics
 Topics are rx Subjects, that means that they are both observable and observers. That means you can both subscribe to them and send them messages.
 
 In order to subscribe to a topic, Use reactive extensions subscribe extension method. This will allow you to be notified about events published to topic.

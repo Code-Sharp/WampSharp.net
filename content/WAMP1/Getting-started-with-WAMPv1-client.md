@@ -1,21 +1,25 @@
-## Getting started with WAMPv1 client
++++
+title = "Getting started with WAMPv1 client"
+categories = ["wamp1"]
+tags = ["wamp1"]
+date = "2017-03-05T10:25:07+09:00"
++++
 
-###Before you begin
-Raise up a WampHost such as in the [[Getting started tutorial|Getting started with WAMPv1]].
+## Before you begin
+Raise up a WampHost such as in the [Getting started tutorial]({{<ref "WAMP1\Getting-started-with-WAMPv1.md">}}).
 
 This tutorial will work against it.
 
-###Create a console application
+## Create a console application
 Create a new Console Application in Visual Studio.
 
 Open Package Manager Console (Tools -> Library Package Manager -> Package Manager Console) and enter the command
-<code>
-Install-Package WampSharp.Default -Pre
-</code>
+
+> Install-Package WampSharp.Default -Pre
 
 This will install the pre-release version of WampSharp.
 
-###Creating a channel factory
+## Creating a channel factory
 
 In order to create a channel factory use DefaultWampChannelFactory's default constructor.
 
@@ -23,7 +27,7 @@ In order to create a channel factory use DefaultWampChannelFactory's default con
 DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
 ```
 
-###Obtaining a channel
+## Obtaining a channel
 
 A channel is an object that represents a WAMP session, and provides services for server communication.
 In order to obtain a channel, use the channel factory you've created earlier and call CreateChannel extension method:
@@ -41,7 +45,7 @@ channel.Open();
 // Task channelOpen = channel.OpenAsync();
 ```
 
-### Consuming RPC methods
+## Consuming RPC methods
 In order to consume a WAMP RPC method, we first need to declare an interface representing our service contract:
 For instance
 
@@ -72,7 +76,7 @@ Task<int> asyncFive = asyncProxy.Add(2, 3);
 Console.WriteLine("2 + 3 = " + asyncFive.Result);
 ```
 
-### Consuming PubSub topics capabilities
+## Consuming PubSub topics capabilities
 In order to use pub/sub capabilities, we call channel's GetSubject method: this method has a generic type parameter representing the type of the event published to the Subject. In addition, this method receives the uri of the topic we want to subscribe/publish to.
 
 We first create the event type:
@@ -127,7 +131,7 @@ And unsubscribe from it:
 subscription.Dispose();
 ```
 
-### A complete sample
+## A complete sample
 
 ```csharp
 using System;

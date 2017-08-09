@@ -1,11 +1,15 @@
-## Getting started with WAMPv1
++++
+title = "Getting started with WAMPv1"
+categories = ["wamp1"]
+tags = ["wamp1"]
+date = "2017-03-05T10:25:07+09:00"
++++
 
 Create a new Console Application in Visual Studio.
 
 Open Package Manager Console (Tools -> Library Package Manager -> Package Manager Console) and enter the command
-<code>
-Install-Package WampSharp.Default -Pre
-</code>
+
+> Install-Package WampSharp.Default -Pre
 
 This will install the pre-release version of WampSharp.
 
@@ -52,7 +56,8 @@ namespace MyNamespace
 }
 ```
 
-Compile and run. <br />
+Compile and run.
+
 Congratulations! you've just hosted your first WampSharp service!
 
 Try it! enter this [autobahnjs demo client](http://autobahn.ws/static/file/autobahnjs.html) with a modern browser (Firefox or Chrome for instance). Open the web developer console (CTRL+Shift+I in Firefox and Chrome) - press the "Call Procedure" button - this calls your Add method with the parameters (23, 7).

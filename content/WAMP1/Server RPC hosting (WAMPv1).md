@@ -1,8 +1,13 @@
-## Server RPC hosting (WAMPv1)
++++
+title = "Server RPC hosting (WAMPv1)"
+categories = ["wamp1"]
+tags = ["wamp1"]
+date = "2017-03-05T10:25:07+09:00"
++++
 
-As you've seen in [The getting started tutorial](Getting-started-with-WAMPv1.md), WampSharp allows you to host RPC services and consume them from a WAMP client.
+As you've seen in [The getting started tutorial]({{<ref "WAMP1\Getting-started-with-WAMPv1.md">}}), WampSharp allows you to host RPC services and consume them from a WAMP client.
 
-###Declaring RPC services
+## Declaring RPC services
 
 In order to declare a RPC service, just place a [WampRpcMethod] attribute above a method you want to expose. You can place the attribute either on the implemented method itself, or on a method belonging to an interface the RPC service implements.
 
@@ -10,19 +15,19 @@ The WampRpcMethod receives a ProcUri in its constructor - that is used as an ide
 
 The ProcUri can be relative to base uri or absolute.
 
-###Hosting RPC services
+## Hosting RPC services
 
 Hosting RPC services is done using the DefaultWampHost's Host method. The method receives an instance of the service to host and a baseUri that methods ProcUri will be relative to.
 
 _Note_: the same instance of the service is used for all RPC clients.
 
-###Asynchronous services
+## Asynchronous services
 
 WampSharp supports both synchronous and asynchronous RPC services.
 
 In order to declare an asynchronous service, just declare a method that returns a Task<>. When the task is complete, its result will be sent to the client.
 
-###Error calls
+## Error calls
 
 WampSharp allows to send CALLERROR to clients using the exception mechanism, just throw an exception (or set a Task's exception in asynchronous version) and a CALLERROR will be sent.
 
