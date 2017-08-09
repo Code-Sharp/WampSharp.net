@@ -636,6 +636,7 @@ public async Task Run()
 ### Router IWampRealmServiceProvider
 
 From this version, WampHost's Realms' Service property is implemented differently - it is implemented as a WAMP client with in-memory transport. That means that the WampHost communicates with the IWampRealmServiceProvider using "serialization", which adds a bit overhead. There are a couple of reasons for this change:
+
 * This allows me to reuse code, instead of maintaining two different implementations of IWampRealmServiceProvider - one for the router and one for the client.
 * It makes the router hosted components first class citizens - each realm internal client has now a session id (available via IHostedRealm.SessionId).
 * It makes the code more consistent - whether if it runs in the router or as a client.
