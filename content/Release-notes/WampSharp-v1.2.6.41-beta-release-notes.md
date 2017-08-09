@@ -156,9 +156,9 @@ erinHeartBeat.Publish(new PublishOptions() { ExcludeMe = false, EligibleAuthenti
 
 ### Testament service
 
-From this version, [Testament feature](http://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#rfc.section.14.4.11) is supported.
+From this version, the [Testament feature](http://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#rfc.section.14.4.11) is supported.
 
-This feature allows a client to request a router to publish some predefined events when the client disconnects.
+This feature allows a client to request the router to publish some predefined events when the client disconnects.
 
 In order to enable it from router-side, call HostTestamentService extension method of the relevant realm (this is similiar to the [Router-side meta-api usage]({{< ref "WAMP2\Meta-api-service.md" >}}#exposing-meta-api)):
 
@@ -228,7 +228,7 @@ private static async Task Run()
 
 ### Event Retention support
 
-From this version WampSharp supports [Event Retention](https://github.com/wamp-proto/wamp-proto/blob/da34d9bd833beeb6f9cc8bc89faf8138d710aa78/rfc/text/advanced/ap_pubsub_event_retention.md), both on router-side and on client-side. This feature allows new subscribers of a given topic to receive upon their subscription the lastest retained event published to the topic before they subscribed to it.
+From this version WampSharp supports [Event Retention](https://github.com/wamp-proto/wamp-proto/blob/da34d9bd833beeb6f9cc8bc89faf8138d710aa78/rfc/text/advanced/ap_pubsub_event_retention.md), both on router-side and on client-side. This feature allows new subscribers of a given topic to receive upon subscribe the lastest retained event published to the topic before they subscribed to it.
 
 A subscriber can indicate that it is interested in getting the retained event by specifying `GetRetained = true` in the SubscribeOptions argument.  
 
@@ -334,8 +334,10 @@ private static async Task Run()
 > **Note**: These samples only demonstrate the reflection-based api, but this also works with other overloads receiving SubscribeOptions/PublishOptions
 
 
-## Breaking changes
+## Internal/Breaking changes
 
-* In order to support CANCEL/INTERRUPT, `IWampRpcOperation` Invoke methods now return `IWampCancellableInvocation`. If you don't want to support cancellation, you can simply return null from these methods.
-* The following properties of `InvocationDetails` have been removed: `AuthenticationRole`, `AuthenticationId`, `AuthenticationMethod`. Instead, the following properties are available: `CallerAuthenticationRole`, `CallerAuthenticationId`. Similarly, the following properties of `EventDetails` have been removed: `AuthenticationRole`, `AuthenticationId`, `AuthenticationMethod`. Instead, the following properties are available: `PublisherAuthenticationRole`, `PublisherAuthenticationId`. This has been done in order to make WampSharp compatible with the [recent changes](https://github.com/wamp-proto/wamp-proto/issues/57#issuecomment-234710359) done in Crossbar and Autobahn variants.
-* 
+* In order to support CANCEL/INTERRUPT, `IWampRpcOperation`'s `Invoke` methods now return `IWampCancellableInvocation`. If you don't want to support cancellation, you can simply return `null` from these methods.
+* The following properties of `InvocationDetails` have been removed: `AuthenticationRole`, `AuthenticationId`, `AuthenticationMethod`. Instead, the following properties are available: `CallerAuthenticationRole`, `CallerAuthenticationId`. Similarly, the following properties of `EventDetails` have been removed: `AuthenticationRole`, `AuthenticationId`, `AuthenticationMethod`. Instead, the following properties are available: `PublisherAuthenticationRole`, `PublisherAuthenticationId`.
+This has been done in order to make WampSharp compatible with the [recent changes](https://github.com/wamp-proto/wamp-proto/issues/57#issuecomment-234710359) done in Crossbar and Autobahn variants.
+* Publishing to a topic having no subscribers no longer throws an exception and no longer sends a publish error to the publisher if the latter has requested publication acknowledgement. This is also Crossbar's behavior regarding topics without subscribers. This change also resolves [Issue #192](https://github.com/Code-Sharp/WampSharp/issues/192) implicitly.
+* [LibLog](https://github.com/damianh/LibLog/) has been modified with some performance optimizations (see Pull Requests [#140](https://github.com/damianh/LibLog/pull/140) [#141](https://github.com/damianh/LibLog/pull/141)).
