@@ -39,7 +39,7 @@ public class CancellableOpService
 }
 ```
 
-> _Note_: This works also with progressive call results:
+> **Note**: This works also with progressive call results:
 ```csharp
 public class LongCancellableOpService
 {
@@ -89,7 +89,7 @@ cancellationTokenSource.Cancel();
 await invocationTask.ConfigureAwait(false);
 ```
 
-> _Note_: This works also with progressive call results:
+> **Note**: This works also with progressive call results:
 ```csharp
 public interface ILongCancellableOpService
 {
@@ -152,7 +152,7 @@ erinHeartBeat.Publish(new PublishOptions() { ExcludeMe = false, EligibleAuthenti
 erinHeartBeat.Publish(new PublishOptions() { ExcludeMe = false, EligibleAuthenticationRoles = new string[] { "beta" } }, new object[] { "From C#" });
 ```
 
-> The sample code is based on [this sample](https://github.com/crossbario/crossbar-examples/tree/master/exclude_subscribers).
+> The sample code is based on [this Crossbar sample](https://github.com/crossbario/crossbar-examples/tree/db85ad1b7f517d5ab46bf239559fa9155e599817/exclude_subscribers).
 
 ### Testament service
 
@@ -224,4 +224,111 @@ private static async Task Run()
 }
 ```
 
-> This sample is based on this [crossbar example](https://github.com/crossbario/crossbar-examples/tree/240c1f015990a859683a74de40e51a9f9ab3b5f9/pubsub/testament).
+> This sample is based on this [Crossbar example](https://github.com/crossbario/crossbar-examples/tree/240c1f015990a859683a74de40e51a9f9ab3b5f9/pubsub/testament).
+
+### Event Retention support
+
+From this version WampSharp supports [Event Retention](https://github.com/wamp-proto/wamp-proto/blob/da34d9bd833beeb6f9cc8bc89faf8138d710aa78/rfc/text/advanced/ap_pubsub_event_retention.md), both on router-side and on client-side. This feature allows new subscribers of a given topic to receive upon their subscription the lastest retained event published to the topic before they subscribed to it.
+
+A subscriber can indicate that it is interested in getting the retained event by specifying `GetRetained = true` in the SubscribeOptions argument.  
+
+A publisher can indicate that it is interested in retaining a publication by specifying `Retain = true` in the PublisherOptions argument.
+
+An example for a subscription which requests getting a retained event (Using [Reflection-based Subscriber]({{< ref "WAMP2\Roles\Subscriber\Reflection-based-Subscriber.md" >}})):
+
+```csharp
+public class MySubscriber
+{
+    [WampTopic("com.example.topic1")]
+    public void OnCounter(int counter)
+    {
+        EventDetails details = WampEventContext.Current.EventDetails;
+
+        if (details.Retained == true)
+        {
+            Console.WriteLine("RETAINED event received! " + counter);
+        }
+        else
+        {
+            Console.WriteLine("regular event received " + counter);
+        }
+    }
+}
+
+private static async Task Run()
+{
+    WampChannelFactory channelFactory = new WampChannelFactory();
+
+    IWampChannel channel =
+        channelFactory.ConnectToRealm("realm1")
+                      .WebSocketTransport("ws://127.0.0.1:8080/ws")
+                      .JsonSerialization()
+                      .Build();
+
+    await channel.Open().ConfigureAwait(false);
+
+    try
+    {
+        IAsyncDisposable disposable =
+            await channel.RealmProxy.Services.RegisterSubscriber(new MySubscriber(),
+                                                                 new SubscriberRegistrationInterceptor(
+                                                                     new SubscribeOptions()
+                                                                     {
+                                                                         GetRetained = true
+                                                                     }))
+                         .ConfigureAwait(false);
+
+        Console.WriteLine("subscribed successfully");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("failed to subscribed: " + ex);
+        throw;
+    }
+}
+```
+
+An example for a publisher which publishes retained events (Using [Reflection-based Publisher]({{< ref "WAMP2\Roles\Publisher\Reflection-based-Publisher.md" >}})):
+
+```csharp
+public class MyPublisher
+{
+    public MyPublisher()
+    {
+        IObservable<long> timer =
+            Observable.Timer(TimeSpan.FromMilliseconds(0),
+                             TimeSpan.FromMilliseconds(2000));
+
+        timer.Select((x, i) => i)
+             .Subscribe(i => OnCounter(i));
+    }
+
+    [WampTopic("com.example.topic1")]
+    public event Action<int> Counter;
+
+    protected virtual void OnCounter(int obj)
+    {
+        Counter?.Invoke(obj);
+    }
+}
+
+private static async Task Run()
+{
+    WampChannelFactory channelFactory = new WampChannelFactory();
+
+    IWampChannel channel =
+        channelFactory.ConnectToRealm("realm1")
+                      .WebSocketTransport("ws://127.0.0.1:8080/ws")
+                      .JsonSerialization()
+                      .Build();
+
+    await channel.Open().ConfigureAwait(false);
+
+    channel.RealmProxy.Services.RegisterPublisher(new MyPublisher(),
+        new PublisherRegistrationInterceptor(new PublishOptions(){Retain = true}));
+}
+```
+
+> **Note**: These samples are based on this [Crossbar example](https://github.com/crossbario/crossbar-examples/tree/4d498d72ecc3d46a35f146c7c9244d5319cf7cb5/pubsub/retained).
+
+> **Note**: These samples only demonstrate the reflection-based api, but this also works with other overloads receiving SubscribeOptions/PublishOptions
