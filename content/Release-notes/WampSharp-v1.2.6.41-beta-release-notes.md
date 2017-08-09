@@ -332,3 +332,10 @@ private static async Task Run()
 > **Note**: These samples are based on this [Crossbar example](https://github.com/crossbario/crossbar-examples/tree/4d498d72ecc3d46a35f146c7c9244d5319cf7cb5/pubsub/retained).
 
 > **Note**: These samples only demonstrate the reflection-based api, but this also works with other overloads receiving SubscribeOptions/PublishOptions
+
+
+## Breaking changes
+
+* In order to support CANCEL/INTERRUPT, `IWampRpcOperation` Invoke methods now return `IWampCancellableInvocation`. If you don't want to support cancellation, you can simply return null from these methods.
+* The following properties of `InvocationDetails` have been removed: `AuthenticationRole`, `AuthenticationId`, `AuthenticationMethod`. Instead, the following properties are available: `CallerAuthenticationRole`, `CallerAuthenticationId`. Similarly, the following properties of `EventDetails` have been removed: `AuthenticationRole`, `AuthenticationId`, `AuthenticationMethod`. Instead, the following properties are available: `PublisherAuthenticationRole`, `PublisherAuthenticationId`. This has been done in order to make WampSharp compatible with the [recent changes](https://github.com/wamp-proto/wamp-proto/issues/57#issuecomment-234710359) done in Crossbar and Autobahn variants.
+* 
