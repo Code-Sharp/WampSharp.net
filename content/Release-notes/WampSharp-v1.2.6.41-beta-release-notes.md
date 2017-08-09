@@ -152,7 +152,7 @@ erinHeartBeat.Publish(new PublishOptions() { ExcludeMe = false, EligibleAuthenti
 erinHeartBeat.Publish(new PublishOptions() { ExcludeMe = false, EligibleAuthenticationRoles = new string[] { "beta" } }, new object[] { "From C#" });
 ```
 
-> The sample code is based on [this Crossbar sample](https://github.com/crossbario/crossbar-examples/tree/db85ad1b7f517d5ab46bf239559fa9155e599817/exclude_subscribers).
+> The sample code is based on [this Crossbar example](https://github.com/crossbario/crossbar-examples/tree/db85ad1b7f517d5ab46bf239559fa9155e599817/exclude_subscribers).
 
 ### Testament service
 
