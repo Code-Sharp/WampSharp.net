@@ -2,7 +2,7 @@
 title = "Meta-api descriptor service"
 categories = ["client", "router"]
 tags = ["client", "router", "services"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 WampSharp implements WAMP meta-api (i.e. [session meta api](https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_session_meta_api.md), [registration meta api](https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_rpc_registration_meta_api.md) and [subscription meta api](https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_pubsub_subscription_meta_api.md)). It is possible both to consume WAMP meta-api from a WampSharp client, and to expose it from a WampSharp router.

@@ -2,7 +2,7 @@
 title = "Raw Caller"
 categories = ["caller"]
 tags = ["caller", "raw api"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 The callee proxy is the easiest way to consume WAMP caller capabilities, but it is limited to C# features. In some cases you might want to handle a RESULT message differently. For these cases, the Raw callback api exists.

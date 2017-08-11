@@ -2,7 +2,7 @@
 title = "Rx-based Publisher"
 categories = ["publisher"]
 tags = ["publisher", "rx"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 **Rx-based Publisher** allows you to publish events to a topic of a WAMP router realm, using [Reactive Extensions](http://reactivex.io/) Observer api.

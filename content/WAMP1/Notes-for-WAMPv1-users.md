@@ -2,7 +2,7 @@
 title = "Notes for WAMP1 users"
 categories = ["wamp1"]
 tags = ["wamp1"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 If you are using WampSharp with WAMPv1 support and want to update to WAMPv2 version (without updating the protocol to WAMPv2) please read the following notes:

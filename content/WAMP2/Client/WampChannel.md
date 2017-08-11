@@ -2,7 +2,7 @@
 title = "WampChannel"
 categories = ["client"]
 tags = ["client"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 A WampChannel is an object that represents a WAMP client session to a remote router.

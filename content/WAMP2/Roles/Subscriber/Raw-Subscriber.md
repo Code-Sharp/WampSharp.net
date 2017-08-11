@@ -2,7 +2,7 @@
 title = "Raw Subscriber"
 categories = ["subscriber"]
 tags = ["subscriber", "raw api"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 Like other roles, subscriber also has a raw version, which allows you treat EVENT messages as you like. In order to use it, you need to implement the IWampRawTopicClientSubscriber interface.

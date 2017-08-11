@@ -2,7 +2,7 @@
 title = "WampHost"
 categories = ["router"]
 tags = ["router"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 A WampHost is an object that hosts a WampSharp router.

@@ -2,7 +2,7 @@
 title = "Router-side authentication"
 categories = ["router", "authentication"]
 tags = ["router", "authentication"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 This page describes router-side authentication.

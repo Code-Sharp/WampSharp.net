@@ -2,7 +2,7 @@
 title = "Client-side authentication"
 categories = ["client", "authentication"]
 tags = ["client", "authentication"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 Client-side authentication is supported. In order to use client authentication, you need to implement an interface named IWampClientAuthenticator. Then, pass it to CreateChannel/CreateJsonChannel/CreateMsgpackChannel overloads of DefaultChannelFactory.

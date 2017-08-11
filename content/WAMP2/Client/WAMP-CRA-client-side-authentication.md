@@ -2,7 +2,7 @@
 title = "WAMP-CRA client side authentication"
 categories = ["client", "authentication"]
 tags = ["client", "authentication", "wampcra"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 

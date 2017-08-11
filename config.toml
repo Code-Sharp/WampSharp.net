@@ -1,4 +1,4 @@
-baseURL = "http://wampsharp.net/"
+baseURL = "http://wampsharp.net"
 languageCode = "en-us"
 title = "WampSharp"
 

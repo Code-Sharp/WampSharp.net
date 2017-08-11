@@ -2,7 +2,7 @@
 title = "Cookie based router-side authentication"
 categories = ["router", "authentication"]
 tags = ["router", "authentication"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 It is possible to build authenticators that are cookie-based. In order to that, one needs to implement an interface named ICookieAuthenticatorFactory and pass it to DefaultWampAuthenticationHost's constructor, (or to FleckAuthenticatedWebSocketTransport/VtortolaAuthenticatedWebSocketTransport constructors).

@@ -2,7 +2,7 @@
 title = "Reflection-based Subscriber"
 categories = ["subscriber"]
 tags = ["subscriber", "reflection"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 **Reflection-based Subscriber** allows to use WAMPv2 subscriber features in a similar fashion as [Reflection based Callee]({{< ref "WAMP2\Roles\Callee\Reflection-based-Callee.md" >}}).

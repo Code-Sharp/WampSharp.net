@@ -2,7 +2,7 @@
 title = "Server RPC hosting (WAMPv1)"
 categories = ["wamp1"]
 tags = ["wamp1"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 As you've seen in [The getting started tutorial]({{<ref "WAMP1\Getting-started-with-WAMPv1.md">}}), WampSharp allows you to host RPC services and consume them from a WAMP client.

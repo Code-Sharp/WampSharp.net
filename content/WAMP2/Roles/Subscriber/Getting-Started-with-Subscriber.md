@@ -2,7 +2,7 @@
 title = "Getting started with Subscriber"
 categories = ["getting started", "subscriber"]
 tags = ["subscriber"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 Before you start, see [Getting started with WAMPv2]({{< ref "WAMP2\Getting-started-with-WAMPv2.md" >}}) and create a WampChannel/WampHost your subscriber will use.

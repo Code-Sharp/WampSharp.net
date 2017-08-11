@@ -2,7 +2,7 @@
 title = "Raw Callee"
 categories = ["callee"]
 tags = ["callee", "raw api"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 WampSharp provides a lower level api that allows to deal with rpc operations as they are sent/received, which is called Raw callee.

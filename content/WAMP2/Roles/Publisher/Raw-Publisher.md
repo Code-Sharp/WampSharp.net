@@ -2,7 +2,7 @@
 title = "Raw Publisher"
 categories = ["publisher"]
 tags = ["publisher", "raw api"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 If you want to get feedbacks for publications, you can use publisher raw api.

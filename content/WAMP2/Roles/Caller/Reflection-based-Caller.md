@@ -2,7 +2,7 @@
 title = "Reflection-based Caller"
 categories = ["caller"]
 tags = ["caller", "reflection"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 **Reflection-based Caller** (or **"Callee proxy"**) allows you to call callee methods of a WAMP realm, by declaring an interface with methods decorated with a [WampProcedure] attribute.

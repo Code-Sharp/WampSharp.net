@@ -2,7 +2,7 @@
 title = "WAMP-CRA router-side authentication"
 categories = ["router", "authentication"]
 tags = ["router", "authentication", "wampcra"]
-date = "2017-03-05T10:25:07+09:00"
+date = "2017-07-30T00:16:09+03:00"
 +++
 
 [WAMP-CRA](https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_authentication_cra.md) router side authentication is supported. It is available as an abstract class named WampCraSessionAuthenticator which inherits from the [WampSessionAuthenticator class]({{< ref "WAMP2\Router\Router-side-authentication.md" >}}). The class has two abstract properties needed to be implemented: AuthenticationChallenge and Secret - the AuthenticationChallenge is the challenge to be sent upon CHALLENGE message, the Secret is the secret used to compute the signature
