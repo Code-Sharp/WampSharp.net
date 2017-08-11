@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Getting Started on WampSharp</title>
+    <link>http://wampsharp.net/categories/getting-started/</link>
+    <description>Recent content in Getting Started on WampSharp</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright (c) 2013-2017, Elad Zelingher; All rights reserved.</copyright>
+    <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
+    
+	<atom:link href="http://wampsharp.net/categories/getting-started/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Getting started with Callee</title>
+      <link>http://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/</guid>
+      <description>Before you begin, see Getting started with WAMPv2 and create a WampChannel/WampHost your calleee will be registered to.
+About Callee role WAMPv2 defines a Callee role, that is a role that can register a remote procedure call to the router (using the REGISTER/UNREGISTER messages). The callee&amp;rsquo;s procedure can be invoked by the router (using the INVOCATION message). The callee can respond with a result or an error to the router (using the YIELD/ERROR message).</description>
+    </item>
+    
+    <item>
+      <title>Getting started with Caller</title>
+      <link>http://wampsharp.net/wamp2/roles/caller/getting-started-with-caller/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/roles/caller/getting-started-with-caller/</guid>
+      <description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your caller will use.
+About Caller role WAMPv2 defines a Caller role, that is a role that can call a remote procedure call registered by a Callee (using the CALL messages). The caller can receive a response with a result or an error from the router (using the RESULT/ERROR message).
+Callee proxy The Callee proxy is the easiest way to call rpc methods of a WAMP router.</description>
+    </item>
+    
+    <item>
+      <title>Getting started with Publisher</title>
+      <link>http://wampsharp.net/wamp2/roles/publisher/getting-started-with-publisher/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/roles/publisher/getting-started-with-publisher/</guid>
+      <description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your publisher will use.
+About Publisher role WAMPv2 defines a Publisher role, that is a role that can publish events to a WAMP realm&amp;rsquo;s topic.
+WampSubject The WampSubject is the easiest way to publish to a topic of a WAMP router.
+In order to use it, call the GetSubject method of the Services property
+of the IWampRealm/IWampRealmProxy instance with a generic type representing the type you want to send to the router.</description>
+    </item>
+    
+    <item>
+      <title>Getting started with Subscriber</title>
+      <link>http://wampsharp.net/wamp2/roles/subscriber/getting-started-with-subscriber/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/roles/subscriber/getting-started-with-subscriber/</guid>
+      <description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your subscriber will use.
+About Subscriber role WAMPv2 defines a Subscriber role, that is a role that can subscribe to a WAMP realm&amp;rsquo;s topic. The subscriber will be notified about events published to the topic by publishers.
+WampSubject The WampSubject is the easiest way to subscribe to a topic of a WAMP router.
+In order to use it, call the GetSubject method of the Services property</description>
+    </item>
+    
+    <item>
+      <title>Getting started with WAMPv2</title>
+      <link>http://wampsharp.net/wamp2/getting-started-with-wampv2/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/getting-started-with-wampv2/</guid>
+      <description>Create a new Console Application in Visual Studio.
+Install WampSharp:
+Go to Tools -&amp;gt; NuGet Package Manager -&amp;gt; Package Manager Console.
+Enter in the Package Manager Console
+ Install-Package WampSharp.Default -Pre
+ Now WampSharp is installed on your project.
+About realms WAMPv2 protocol consists of the idea of realms. A WAMP realm, can be thought as a domain, where uris are mapped to procedures/topics.
+WampSharp WAMPv2 api is based on the realm idea.</description>
+    </item>
+    
+  </channel>
+</rss>

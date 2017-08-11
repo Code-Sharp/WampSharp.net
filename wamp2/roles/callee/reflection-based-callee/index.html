@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="alternate" href="/index.xml" type="application/rss+xml" title="WampSharp">
+		<link rel="icon" href="http://wampsharp.net/favicon.ico">
+		<title>Reflection-based Callee - WampSharp</title>
+		
+		<link rel="stylesheet" href="http://wampsharp.net/css/highlight/default.css">
+		<link rel="stylesheet" href="http://wampsharp.net/css/bootstrap.min.css">
+		<link rel="stylesheet" href="http://wampsharp.net/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="http://wampsharp.net/css/theme.css">
+		<link rel="stylesheet" href="http://wampsharp.net/css/bootie-docs.css">
+		<link rel="stylesheet" href="http://wampsharp.net/css/site.css">
+	</head>
+
+<body role="document">
+
+	
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="http://wampsharp.net/">WampSharp</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li ><a href="http://wampsharp.net/">Home</a></li>
+			
+			
+				
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Categories<span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+						
+							<li><a href="http://wampsharp.net/categories/authentication">Authentication</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/callee">Callee</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/caller">Caller</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/client">Client</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/getting-started">Getting-Started</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/publisher">Publisher</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/release-notes">Release-Notes</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/roadmap">Roadmap</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/router">Router</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/subscriber">Subscriber</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/wamp1">Wamp1</a></li>
+						
+						</ul>
+					</li>
+				
+				</ul>
+				
+			</div>
+		</div>
+	</nav>
+
+<div class="container">
+
+
+<div class="row">
+	<div class="col-sm-8 doc-main">
+		<main role="main">
+			<article>
+				<a id="title"></a>
+				<h1 class="doc-entry-title">Reflection-based Callee</h1>
+				<div class="doc-entry-meta">
+					<span><time datetime="2017-07-30">July 30, 2017</time></span>
+				</div>
+				<section>
+					
+
+<p><strong>Reflection-based Callee</strong> allows you to register classes instances with method decorated with a [WampProcedure] attribute as remote procedure operation to a WAMP realm.</p>
+
+<h2 id="basic-usage">Basic usage</h2>
+
+<pre><code class="language-csharp">public interface IArgumentsService
+{
+    [WampProcedure(&quot;com.arguments.ping&quot;)]
+    void Ping();
+
+    [WampProcedure(&quot;com.arguments.add2&quot;)]
+    int Add2(int a, int b);
+
+    [WampProcedure(&quot;com.arguments.stars&quot;)]
+    string Stars(string nick = &quot;somebody&quot;, int stars = 0);
+}
+
+public class ArgumentsService : IArgumentsService
+{
+    public void Ping()
+    {
+    }
+
+    public int Add2(int a, int b)
+    {
+        return a + b;
+    }
+
+    public string Stars(string nick = &quot;somebody&quot;, int stars = 0)
+    {
+        return string.Format(&quot;{0} starred {1}x&quot;, nick, stars);
+    }
+}
+
+
+public static async Task Run()
+{
+    const string location = &quot;ws://127.0.0.1:8080/&quot;;
+
+    DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
+
+    IWampChannel channel = channelFactory.CreateJsonChannel(location, &quot;realm1&quot;);
+
+    await channel.Open().ConfigureAwait(false);
+
+    IArgumentsService instance = new ArgumentsService();
+
+    IWampRealmProxy realm = channel.RealmProxy;
+
+    IAsyncDisposable disposable =
+        await realm.Services.RegisterCallee(instance).ConfigureAwait(false);
+
+    // Call await disposable.DisposeAsync().ConfigureAwait(false);
+    // to unregister
+}
+
+</code></pre>
+
+<h2 id="supprted-features">Supprted features</h2>
+
+<p>Both placing attributes on a class method and placing attributes on an interface implemented by the class are supported.</p>
+
+<h3 id="instance-providers">Instance providers</h3>
+
+<p>IWampRealmServiceProvider&rsquo;s RegisterCallee method has some overloads which allow you to specify an instance provider for your callee service instance, that is a Func&lt;&gt; delegate that returns an instance of your callee service provider.</p>
+
+<p>This allows you to control yourself the lifecycle of the callee service instance. You can of course use an dependency injection framework to help you manage that.</p>
+
+<p>For instance, using <a href="http://www.ninject.org/">Ninject</a>:</p>
+
+<pre><code class="language-csharp">public static async Task Run()
+{
+    IKernel kernel = new StandardKernel();
+
+    kernel.Bind&lt;IAddCalculator&gt;().To&lt;Calculator&gt;();
+
+    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+
+    IWampChannel channel =
+        factory.CreateJsonChannel(&quot;ws://127.0.0.1:8080/ws&quot;, &quot;realm1&quot;);
+
+    await channel.Open();
+
+    await channel.RealmProxy.Services.RegisterCallee(() =&gt; kernel.Get&lt;IAddCalculator&gt;());
+}
+
+public interface IAddCalculator
+{
+    [WampProcedure(&quot;com.arguments.add2&quot;)]
+    int Add2(int x, int y);
+}
+
+public class Calculator : IAddCalculator
+{
+    public int Add2(int x, int y)
+    {
+        return (x + y);
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>Note: if you&rsquo;re using Ninject, you&rsquo;re recomended to use <a href="https://github.com/ninject/Ninject.Extensions.Factory">Ninject.Extensions.Factory</a> which allows you to get typed factories instances or Func&lt;&gt; instances without being aware about the dependency injection container.</p>
+</blockquote>
+
+<h3 id="default-parameter-values">Default parameter values</h3>
+
+<p>A method can have default value parameters. These will be used in case the user sends only part of the method&rsquo;s parameters. Example:</p>
+
+<pre><code class="language-csharp">public interface IArgumentsService
+{
+    [WampProcedure(&quot;com.arguments.stars&quot;)]
+    string Stars(string nick = &quot;somebody&quot;, int stars = 0);
+}
+</code></pre>
+
+<h3 id="async-method-support">Async method support</h3>
+
+<p>A method returning a Task&lt;&gt; will be awaited. Example:</p>
+
+<pre><code class="language-csharp">public class SlowSquareService
+{
+    [WampProcedure(&quot;com.math.slowsquare&quot;)]
+    public async Task&lt;int&gt; SlowSquare(int x)
+    {
+        await Task.Delay(1000);
+        return x * x;
+    }
+
+    [WampProcedure(&quot;com.math.square&quot;)]
+    public int Square(int x)
+    {
+        return x * x;
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/slowsquare">this</a> AutobahnJS sample</p>
+</blockquote>
+
+<h3 id="tuples-support">Tuples support</h3>
+
+<p>C# 7.0 tuples are supported as return values of reflection-based callee methods. The tuple will be serialized to either the arguments keywords or to the arguments array of the YIELD message, depending on whether the returned tuple has named elements or positional elements (tuples having elements which are partially named are not supported).</p>
+
+<p>For example: A reflection-based callee that returns a tuple:</p>
+
+<pre><code class="language-csharp">public interface IComplexResultService
+{
+    [WampProcedure(&quot;com.myapp.add_complex&quot;)]
+    (int c, int ci) AddComplex(int a, int ai, int b, int bi);
+
+    [WampProcedure(&quot;com.myapp.split_name&quot;)]
+    (string, string) SplitName(string fullname);
+}
+
+public class ComplexResultService : IComplexResultService
+{
+    public (int c, int ci) AddComplex(int a, int ai, int b, int bi)
+    {
+       return (a + b, ai + bi);
+    }
+
+    public (string, string) SplitName(string fullname)
+    {
+        string[] splitted = fullname.Split(' ');
+
+        string forename = splitted[0];
+        string surname = splitted[1];
+
+        return (forename, surname);
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>Note: as usual, you can put the WampProcedureAttributes on the methods themselves instead of implementing an interface, i.e:</p>
+
+<pre><code class="language-csharp">[WampProcedure(&quot;com.myapp.add_complex&quot;)]
+public (int c, int ci) AddComplex(int a, int ai, int b, int bi)
+{
+   // ...
+}
+
+[WampProcedure(&quot;com.myapp.split_name&quot;)]
+public (string, string) SplitName(string fullname)
+{
+   // ...
+}
+</code></pre>
+</blockquote>
+
+<p>Which can be consumed from <a href="https://github.com/crossbario/autobahn-js">AutobahnJS</a>:</p>
+
+<pre><code class="language-javascript">session.call('com.myapp.add_complex', [2, 3, 4, 5]).then(
+    function (res) {
+        console.log(&quot;Result: &quot; + res.kwargs.c + &quot; + &quot; + res.kwargs.ci + &quot;i&quot;);
+    }
+);
+
+session.call('com.myapp.split_name', ['Homer Simpson']).then(
+    function (res) {
+        console.log(&quot;Forename: &quot; + res.args[0] + &quot;, Surname: &quot; + res.args[1]);
+    }
+;)
+</code></pre>
+
+<blockquote>
+<p>Note:  The samples are based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex">this</a> AutobahnJS/AutobahnPython sample</p>
+
+<p>Note: this feature can be combined with other features, such as async method support or progressive call results.</p>
+</blockquote>
+
+<h3 id="exception-support">Exception support</h3>
+
+<p>throw a WampException/WampRpcRuntimeException in order to send a ERROR message.</p>
+
+<p>Example:</p>
+
+<pre><code class="language-csharp">[WampProcedure(&quot;com.myapp.checkname&quot;)]
+public void CheckName(string name)
+{
+    if (new[] {&quot;foo&quot;, &quot;bar&quot;}.Contains(name))
+    {
+        throw new WampException(&quot;com.myapp.error.reserved&quot;);
+    }
+
+    if (name.ToLower() != name.ToUpper())
+    {
+        throw new WampException(&quot;com.myapp.error.mixed_case&quot;, name.ToLower(), name.ToUpper());
+    }
+
+    if ((name.Length &lt; 3) || (name.Length &gt; 10))
+    {
+        object[] arguments = new object[] {};
+
+        IDictionary&lt;string, object&gt; argumentKeywords =
+            new Dictionary&lt;string, object&gt;()
+                {
+                    {&quot;min&quot;, 3},
+                    {&quot;max&quot;, 10}
+                };
+
+        throw new WampException(&quot;com.myapp.error.invalid_length&quot;, arguments, argumentKeywords);
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/errors">this</a> AutobahnJS sample</p>
+</blockquote>
+
+<h3 id="progressive-call-results">Progressive call results</h3>
+
+<p>In order to use progressive call result as a Callee, declare in your callee service a [WampProcedure] method having a [WampProgressiveResultProcedure] attribute and a IProgress&lt;T&gt; as the last parameter.</p>
+
+<blockquote>
+<p>Note that the method return type should be Task&lt;T&gt; where this is the same T as in the IProgress&lt;T&gt; of the last parameter.</p>
+</blockquote>
+
+<p>Example:</p>
+
+<pre><code class="language-csharp">public interface ILongOpService
+{
+    [WampProcedure(&quot;com.myapp.longop&quot;)]
+    [WampProgressiveResultProcedure]
+    Task&lt;int&gt; LongOp(int n, IProgress&lt;int&gt; progress);
+}
+</code></pre>
+
+<p>create a service with that implements that interface.
+In order to report progress, call the progress Report method. Example:</p>
+
+<pre><code class="language-csharp">public class LongOpService : ILongOpService
+{
+    public async Task&lt;int&gt; LongOp(int n, IProgress&lt;int&gt; progress)
+    {
+        for (int i = 0; i &lt; n; i++)
+        {
+            progress.Report(i);
+            await Task.Delay(100);
+        }
+
+        return n;
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>Note: you can put the attributes on the method itself instead of implementing an interface, i.e:</p>
+
+<pre><code class="language-csharp">public class LongOpService
+{
+    [WampProcedure(&quot;com.myapp.longop&quot;)]
+    [WampProgressiveResultProcedure]
+    public async Task&lt;int&gt; LongOp(int n, IProgress&lt;int&gt; progress)
+    {
+        // ...
+    }
+ }
+</code></pre>
+
+<p>Then register it to the realm regularly:</p>
+
+<pre><code class="language-csharp">public async Task Run()
+{
+    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+
+    IWampChannel channel = factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+
+    await channel.Open();
+
+    ILongOpService service = new LongOpService();
+
+    IAsyncDisposable disposable =
+        await channel.RealmProxy.Services.RegisterCallee(service);
+
+    Console.WriteLine(&quot;Registered LongOpService&quot;);
+}
+</code></pre>
+
+<p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/progress">this</a> AutobahnJS sample</p>
+</blockquote>
+
+<h3 id="out-ref-parameters">out/ref parameters</h3>
+
+<p>For synchronous methods, out/ref parameters are supported.</p>
+
+<blockquote>
+<p>Note: this is not supported for asynchronous methods.</p>
+</blockquote>
+
+<p>Example:</p>
+
+<pre><code class="language-csharp">public class ComplexResultService
+{
+    [WampProcedure(&quot;com.myapp.add_complex&quot;)]
+    public void AddComplex(int a, int ai, int b, int bi, out int c, out int ci)
+    {
+        c = a + b;
+        ci = ai + bi;
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex">this</a> AutobahnJS sample</p>
+</blockquote>
+
+<h3 id="multivalued-results">Multivalued results</h3>
+
+<p>Multi-valued results: in order to return an multivalued array in the RESULT/YIELD WAMPv2 message, return an array from a rpc method and place above it a [return: WampResult(CollectionResultTreatment.Multivalued)] attribute. Example:</p>
+
+<pre><code class="language-csharp">public class MultivaluedResultService
+{
+    [WampProcedure(&quot;com.myapp.split_name&quot;)]
+    [return: WampResult(CollectionResultTreatment.Multivalued)]
+    public string[] SplitName(string fullname)
+    {
+        string[] splitted = fullname.Split(' ');
+        return splitted;
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex">this</a> AutobahnJS sample</p>
+</blockquote>
+
+<h3 id="wampinvocationcontext">WampInvocationContext</h3>
+
+<p>WampInvocationContext allows you to get the invocation details provided with the current invocation. It currently contains the caller identification (if present) and whether the caller requested a progressive call.
+Example:</p>
+
+<pre><code class="language-csharp">public class LongOpService : ILongOpService
+{
+    public async Task&lt;int&gt; LongOp(int n, IProgress&lt;int&gt; progress)
+    {
+        InvocationDetails details =
+            WampInvocationContext.Current.InvocationDetails;
+
+        for (int i = 0; i &lt; n; i++)
+        {
+            if (details.ReceiveProgress == true)
+            {
+                progress.Report(i);                    
+            }
+
+            await Task.Delay(100);
+        }
+
+        return n;
+    }
+}
+</code></pre>
+
+<h2 id="registration-customization">Registration customization</h2>
+
+<p>The RegisterCallee method of IWampRealmServiceProvider has an overload that receives an &ldquo;interceptor&rdquo; instance. The &ldquo;interceptor&rdquo; allows customizing the registration being performed.</p>
+
+<p>This allows customizing the register options and the procedure uri sent upon REGISTER message.</p>
+
+<p>The following sections discuss register options modifications that can be used in order to leverage WAMP advanced profile features.</p>
+
+<h3 id="caller-identification">Caller identification</h3>
+
+<p>It is possible to get caller identification details. According to WAMP2 specification, a Callee can request to get caller identification details (by specifying <code>disclose_caller = true</code> on registration).</p>
+
+<p>Specifying this is possible on callee registration.</p>
+
+<p>Callee registration example:</p>
+
+<pre><code class="language-csharp">public async Task Run()
+{
+    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+
+    IWampChannel channel =
+        factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+
+    await channel.Open();
+
+    SquareService service = new SquareService();
+
+    var registerOptions =
+        new RegisterOptions
+        {
+            DiscloseCaller = true
+        };
+
+    IAsyncDisposable disposable =
+        await channel.RealmProxy.Services.RegisterCallee(service,
+            new CalleeRegistrationInterceptor(registerOptions));
+}
+</code></pre>
+
+<p>In order to obtain these details as a Callee, access WampInvocationContext.Current.</p>
+
+<p>Sample:</p>
+
+<pre><code class="language-csharp">public class SquareService
+{
+    [WampProcedure(&quot;com.myapp.square&quot;)]
+    public int Square(int n)
+    {
+        InvocationDetails details =
+            WampInvocationContext.Current.InvocationDetails;
+
+        Console.WriteLine(&quot;Someone is calling me: &quot; + details.Caller);
+
+        return n*n;
+    }
+}
+
+</code></pre>
+
+<blockquote>
+<p>Note: This sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/options">this</a> AutobahnJS sample</p>
+</blockquote>
+
+<h3 id="shared-registrations">Shared registrations</h3>
+
+<p><a href="http://crossbar.io/docs/Shared-Registrations/">Shared registrations</a> are supported.</p>
+
+<p>In order to use shared registrations, pass to the Register methods, RegisterOptions with a desired Invoke (the policy to be used). The possible options are: single/first/last/random/roundrobin (there exists a static class named WampInvokePolicy with these values).</p>
+
+<p>Example:</p>
+
+<pre><code class="language-csharp">public async Task Run()
+{
+    DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
+
+    IWampChannel channel =
+        channelFactory.CreateJsonChannel
+            (&quot;ws://127.0.0.1:8080/ws&quot;,
+             &quot;realm1&quot;);
+
+    TaskCompletionSource&lt;string&gt; identTask = new TaskCompletionSource&lt;string&gt;();
+
+    channel.RealmProxy.Monitor.ConnectionEstablished += (sender, args) =&gt;
+    {
+        string ident =
+            string.Format(&quot;MyComponent (PID {0}, Session {1})&quot;,
+                          Process.GetCurrentProcess().Id,
+                          args.SessionId);
+
+        identTask.SetResult(ident);
+    };
+
+    await channel.Open().ConfigureAwait(false);
+
+    string identValue = await identTask.Task;
+
+    await channel.RealmProxy.Services.RegisterCallee(new MyComponent(identValue),
+        new CalleeRegistrationInterceptor(new RegisterOptions()
+        {
+            Invoke = WampInvokePolicy.Roundrobin
+        }))
+        .ConfigureAwait(false);
+}
+
+public class MyComponent
+{
+    private readonly string mIdent;
+
+    public MyComponent(string ident)
+    {
+        mIdent = ident;
+    }
+
+    [WampProcedure(&quot;com.example.add2&quot;)]
+    public object Add2(double x, double y)
+    {
+        Console.WriteLine(&quot;add2 called on {0}&quot;, mIdent);
+
+        return new
+        {
+            result = x + y,
+            ident = mIdent
+        };
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>Note: this sample is based on <a href="https://github.com/crossbario/crossbarexamples/tree/master/sharedregs">this</a> Autobahn sample</p>
+</blockquote>
+
+<h3 id="pattern-based-registrations">Pattern-based registrations</h3>
+
+<p><a href="http://crossbar.io/docs/Pattern-Based-Registrations/">Pattern-based registrations</a> are supported.</p>
+
+<p>In order to use pattern-based registrations, pass to the Register methods, RegisterOptions with a desired Match (the match pattern to be used). The possible options are: exact/prefix/wildcard. (these values are also available in a static class named WampMatchPattern)</p>
+
+<p>Example:</p>
+
+<pre><code class="language-csharp">public static async Task Run()
+{
+    DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
+
+    IWampChannel channel =
+        channelFactory.CreateJsonChannel(&quot;ws://127.0.0.1:8080/ws&quot;,
+            &quot;realm1&quot;);
+
+    await channel.Open().ConfigureAwait(false);
+
+    await channel.RealmProxy.Services.RegisterCallee(new Callee1())
+        .ConfigureAwait(false);
+
+    await channel.RealmProxy.Services.RegisterCallee
+        (new Callee2(),
+         new CalleeRegistrationInterceptor(new RegisterOptions
+         {
+             Match = WampMatchPattern.Prefix
+         }))
+         .ConfigureAwait(false);
+
+    await channel.RealmProxy.Services.RegisterCallee
+        (new Callee3(),
+         new CalleeRegistrationInterceptor(new RegisterOptions
+         {
+             Match = WampMatchPattern.Wildcard
+         }))
+         .ConfigureAwait(false);
+}
+
+public class Callee1
+{
+    [WampProcedure(&quot;com.example.procedure1&quot;)]
+    public void Endpoint1(string message)
+    {
+        Console.WriteLine(&quot;endpoint1: msg = '{0}', procedure = '{1}'&quot;, message,
+                          WampInvocationContext.Current.InvocationDetails.Procedure);
+    }
+}
+
+public class Callee2
+{
+    [WampProcedure(&quot;com.example&quot;)]
+    public void Endpoint2(string message)
+    {
+        Console.WriteLine(&quot;endpoint2: msg = '{0}', procedure = '{1}'&quot;, message,
+                          WampInvocationContext.Current.InvocationDetails.Procedure);
+    }             
+}
+
+public class Callee3
+{
+    [WampProcedure(&quot;com..procedure1&quot;)]
+    public void Endpoint3(string message)
+    {
+        Console.WriteLine(&quot;endpoint3: msg = '{0}', procedure = '{1}'&quot;, message,
+                          WampInvocationContext.Current.InvocationDetails.Procedure);
+    }             
+}
+
+</code></pre>
+
+<blockquote>
+<p>Note: this sample is based on <a href="https://github.com/crossbario/crossbarexamples/tree/master/patternregs">this</a> Autobahn sample</p>
+</blockquote>
+
+				</section>
+			</article>
+		</main>
+	</div> 
+
+	
+
+<div class="col-sm-3 col-sm-offset-1 doc-sidebar">
+	<div id="sidebar">
+	<div class="sidebar-module">
+		<div class="sidebar-toc">
+			<h4 class="sidebar-heading">Table of Contents</h4>
+			<ul>
+				<li><strong><a href="#title">Reflection-based Callee</a></strong></li>
+			</ul>
+			<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#basic-usage">Basic usage</a></li>
+<li><a href="#supprted-features">Supprted features</a>
+<ul>
+<li><a href="#instance-providers">Instance providers</a></li>
+<li><a href="#default-parameter-values">Default parameter values</a></li>
+<li><a href="#async-method-support">Async method support</a></li>
+<li><a href="#tuples-support">Tuples support</a></li>
+<li><a href="#exception-support">Exception support</a></li>
+<li><a href="#progressive-call-results">Progressive call results</a></li>
+<li><a href="#out-ref-parameters">out/ref parameters</a></li>
+<li><a href="#multivalued-results">Multivalued results</a></li>
+<li><a href="#wampinvocationcontext">WampInvocationContext</a></li>
+</ul></li>
+<li><a href="#registration-customization">Registration customization</a>
+<ul>
+<li><a href="#caller-identification">Caller identification</a></li>
+<li><a href="#shared-registrations">Shared registrations</a></li>
+<li><a href="#pattern-based-registrations">Pattern-based registrations</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+		</div>
+	</div>
+	<div class="sidebar-module">
+		<h4 class="sidebar-heading">Pages in Categories</h4>
+		<ul class="sidebar-category-list">
+		
+			<li>
+				<a href="http://wampsharp.net/categories/authentication">
+					<span class="doc-list-category">Authentication</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/client/client-side-authentication/">Client-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/router/cookie-based-router-side-authentication/">Cookie based router-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/router/router-side-authentication/">Router-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/client/wamp-cra-client-side-authentication/">WAMP-CRA client side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/router/wamp-cra-router-side-authentication/">WAMP-CRA router-side authentication</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/callee">
+					<span class="doc-list-category">Callee</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/roles/callee/getting-started-with-callee/">Getting started with Callee</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/callee/raw-callee/">Raw Callee</a>
+					</li>
+				
+					<li>
+						<span class="active">Reflection-based Callee</span>
+						</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/caller">
+					<span class="doc-list-category">Caller</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/roles/caller/getting-started-with-caller/">Getting started with Caller</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/caller/raw-caller/">Raw Caller</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/caller/reflection-based-caller/">Reflection-based Caller</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/client">
+					<span class="doc-list-category">Client</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/router/transports/rawsocket/">RawSocket transport</a>
+					</li>
+				
+					<li><a href="/wamp2/client/client-side-authentication/">Client-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/meta-api-service/">Meta-api descriptor service</a>
+					</li>
+				
+					<li><a href="/wamp2/client/wamp-cra-client-side-authentication/">WAMP-CRA client side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/client/wampchannel/">WampChannel</a>
+					</li>
+				
+					<li><a href="/wamp2/client/wampchannelreconnector/">WampChannelReconnector</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/getting-started">
+					<span class="doc-list-category">Getting-Started</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/roles/callee/getting-started-with-callee/">Getting started with Callee</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/caller/getting-started-with-caller/">Getting started with Caller</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/publisher/getting-started-with-publisher/">Getting started with Publisher</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/subscriber/getting-started-with-subscriber/">Getting started with Subscriber</a>
+					</li>
+				
+					<li><a href="/wamp2/getting-started-with-wampv2/">Getting started with WAMPv2</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/publisher">
+					<span class="doc-list-category">Publisher</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/roles/publisher/getting-started-with-publisher/">Getting started with Publisher</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/publisher/raw-publisher/">Raw Publisher</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/publisher/reflection-based-publisher/">Reflection-based Publisher</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/publisher/rx-based-publisher/">Rx-based Publisher</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/release-notes">
+					<span class="doc-list-category">Release-Notes</span>
+				</a>
+				<ul>
+					<li><a href="/release-notes/wampsharp-v1.2.6.41-beta-release-notes/">WampSharp v1.2.6.41-beta release notes</a>
+					</li>
+				
+					<li><a href="/release-notes/wampsharp-v1.2.5.21-beta-release-notes/">WampSharp v1.2.5.21-beta release notes</a>
+					</li>
+				
+					<li><a href="/release-notes/wampsharp-v1.2.4.18-beta-release-notes/">WampSharp v1.2.4.18-beta release notes</a>
+					</li>
+				
+					<li><a href="/release-notes/wampsharp-v1.2.3.12-beta-release-notes/">WampSharp v1.2.3.12-beta release notes</a>
+					</li>
+				
+					<li><a href="/release-notes/wampsharp-v1.2.2.8-beta-release-notes/">WampSharp v1.2.2.8-beta release notes</a>
+					</li>
+				
+					<li><a href="/release-notes/wampsharp-v1.2.1.6-beta-release-notes/">WampSharp v1.2.1.6-beta release notes</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/roadmap">
+					<span class="doc-list-category">Roadmap</span>
+				</a>
+				<ul>
+					<li><a href="/roadmap/">Roadmap</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/router">
+					<span class="doc-list-category">Router</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/router/transports/rawsocket/">RawSocket transport</a>
+					</li>
+				
+					<li><a href="/wamp2/router/transports/websocket/">WebSocket transports</a>
+					</li>
+				
+					<li><a href="/wamp2/router/cookie-based-router-side-authentication/">Cookie based router-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/meta-api-service/">Meta-api descriptor service</a>
+					</li>
+				
+					<li><a href="/wamp2/router/router-side-authentication/">Router-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/router/wamp-cra-router-side-authentication/">WAMP-CRA router-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/router/wamphost/">WampHost</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/subscriber">
+					<span class="doc-list-category">Subscriber</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/roles/subscriber/getting-started-with-subscriber/">Getting started with Subscriber</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/subscriber/raw-subscriber/">Raw Subscriber</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/subscriber/reflection-based-subscriber/">Reflection-based Subscriber</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/subscriber/rx-based-subscriber/">Rx-based Subscriber</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/wamp1">
+					<span class="doc-list-category">Wamp1</span>
+				</a>
+				<ul>
+					<li><a href="/wamp1/getting-started-with-wampv1/">Getting started with WAMPv1</a>
+					</li>
+				
+					<li><a href="/wamp1/getting-started-with-wampv1-client/">Getting started with WAMPv1 client</a>
+					</li>
+				
+					<li><a href="/wamp1/notes-for-wampv1-users/">Notes for WAMP1 users</a>
+					</li>
+				
+					<li><a href="/wamp1/server-pubsub-hosting-wampv1/">Server PubSub hosting (WAMPv1)</a>
+					</li>
+				
+					<li><a href="/wamp1/server-rpc-hosting-wampv1/">Server RPC hosting (WAMPv1)</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+		</ul>
+	</div>
+	<div class="sidebar-module">
+		<h4 class="sidebar-heading">Tags</h4>
+		<div class="tag-box">
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/authentication">authentication</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/callee">callee</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/caller">caller</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/client">client</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/publisher">publisher</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/raw-api">raw-api</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/reflection">reflection</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/roadmap">roadmap</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/router">router</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/rx">rx</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/services">services</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/subscriber">subscriber</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/transports">transports</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/wamp1">wamp1</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/wampcra">wampcra</a>
+		
+		</div>
+	</div>
+	</div>
+</div>
+
+</div> 
+
+
+<hr />
+
+<div class="row">
+	<div class="col-sm-8">
+		<p class="doc-footer-em"><a href="#" onclick="resetSidebarPos()">Back to TOP</a></p>
+	</div>
+</div>
+
+</div> 
+
+<footer class="doc-footer">
+	
+	<p>Copyright (c) 2013-2017, Elad Zelingher; All rights reserved.</p>
+	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
+</footer>
+
+
+
+<script src="http://wampsharp.net/js/jquery.min.js"></script>
+<script src="http://wampsharp.net/js/bootstrap.min.js"></script>
+
+<script src="http://wampsharp.net/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="http://wampsharp.net/js/ie10-viewport-bug-workaround.js"></script>
+<script src="http://wampsharp.net/js/bootie-docs.js"></script>
+
+</body>
+</html>

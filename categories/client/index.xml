@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Client on WampSharp</title>
+    <link>http://wampsharp.net/categories/client/</link>
+    <description>Recent content in Client on WampSharp</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright (c) 2013-2017, Elad Zelingher; All rights reserved.</copyright>
+    <lastBuildDate>Tue, 01 Aug 2017 10:25:07 +0900</lastBuildDate>
+    
+	<atom:link href="http://wampsharp.net/categories/client/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>RawSocket transport</title>
+      <link>http://wampsharp.net/wamp2/router/transports/rawsocket/</link>
+      <pubDate>Tue, 01 Aug 2017 10:25:07 +0900</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/router/transports/rawsocket/</guid>
+      <description>WampSharp supports the RawSocket transport. It is available through the WampSharp.RawSocket NuGet package.
+Router-side usage IWampHost host = new WampHost(); RawSocketTransport transport = new RawSocketTransport(TcpListener.Create(8080)); host.RegisterTransport(transport, new JTokenJsonBinding());  Client-side usage In order to obtain a RawSocket IWampChannel, you can use the fluent syntax api:
+IWampChannelFactory factory = new WampChannelFactory(); IWampChannel channel = factory.ConnectToRealm(&amp;quot;realm1&amp;quot;) .RawSocketTransport(&amp;quot;127.0.0.1&amp;quot;, 8080) .MsgpackSerialization() .Build();  This fluent-api allows some RawSocket customization features:
+IWampChannelFactory factory = new WampChannelFactory(); IWampChannel channel = factory.</description>
+    </item>
+    
+    <item>
+      <title>Client-side authentication</title>
+      <link>http://wampsharp.net/wamp2/client/client-side-authentication/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/client/client-side-authentication/</guid>
+      <description>Client-side authentication is supported. In order to use client authentication, you need to implement an interface named IWampClientAuthenticator. Then, pass it to CreateChannel/CreateJsonChannel/CreateMsgpackChannel overloads of DefaultChannelFactory. In IWampClientAuthenticator we supply the supported authentication methods and the authenticationid, these are passed in the HELLO message to the router (as details.authmethods, details.authid). We also implement Authenticate method, which sends an AUTHENTICATE message to the router upon CHALLENGE.
+Example public class TicketAuthenticator : IWampClientAuthenticator { private static readonly string[] mAuthenticationMethods = { &amp;quot;ticket&amp;quot; }; private readonly IDictionary&amp;lt;string, string&amp;gt; mTickets = new Dictionary&amp;lt;string, string&amp;gt;() { {&amp;quot;peter&amp;quot;, &amp;quot;magic_secret_1&amp;quot;}, {&amp;quot;joe&amp;quot;, &amp;quot;magic_secret_2&amp;quot;} }; private const string User = &amp;quot;peter&amp;quot;; public AuthenticationResponse Authenticate(string authmethod, ChallengeDetails extra) { if (authmethod == &amp;quot;ticket&amp;quot;) { Console.</description>
+    </item>
+    
+    <item>
+      <title>Meta-api descriptor service</title>
+      <link>http://wampsharp.net/wamp2/meta-api-service/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/meta-api-service/</guid>
+      <description>WampSharp implements WAMP meta-api (i.e. session meta api, registration meta api and subscription meta api). It is possible both to consume WAMP meta-api from a WampSharp client, and to expose it from a WampSharp router.
+Exposing meta-api In order to expose meta-api, you can call an extension method of IWampHostedRealm, named &amp;ldquo;HostMetaApiService&amp;rdquo;. This method returns an IDisposable which you can dispose in order to unregister the meta-api service.
+ Note: it is important to call HostMetaApiService before hosting any other components (callees/subscribers), since otherwise the meta-api service isn&amp;rsquo;t be able to track components registered before it.</description>
+    </item>
+    
+    <item>
+      <title>WAMP-CRA client side authentication</title>
+      <link>http://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</guid>
+      <description>WAMP-CRA client side authentication is supported. In order to use it, instantiate a new instance of WampCraAuthenticator and pass it to the channel factory.
+Example public async Task Run() { DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory(); IWampClientAuthenticator authenticator; if (false) { authenticator = new WampCraClientAuthenticator(authenticationId: &amp;quot;joe&amp;quot;, secret: &amp;quot;secret2&amp;quot;); } else { authenticator = new WampCraClientAuthenticator(authenticationId: &amp;quot;peter&amp;quot;, secret: &amp;quot;secret1&amp;quot;, salt: &amp;quot;salt123&amp;quot;, iterations: 100, keyLen: 16); } IWampChannel channel = channelFactory.CreateJsonChannel(&amp;quot;ws://127.0.0.1:8080/ws&amp;quot;, &amp;quot;realm1&amp;quot;, authenticator); channel.</description>
+    </item>
+    
+    <item>
+      <title>WampChannel</title>
+      <link>http://wampsharp.net/wamp2/client/wampchannel/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/client/wampchannel/</guid>
+      <description>A WampChannel is an object that represents a WAMP client session to a remote router.
+In order to obtain a WampChannel, instantiate an instance of the WampChannelFactory class, and call CreateChannel with the desired realm to connect to, the desired WampConnection and the desired binding.
+For example: connecting to a remote router with Msgpack support and WebSocket4NetConnection:
+const string serverAddress = &amp;quot;ws://127.0.0.1:8080/ws&amp;quot;; WampChannelFactory factory = new WampChannelFactory(); JTokenMsgpackBinding msgpackBinding = new JTokenMsgpackBinding(); IWampChannel channel = factory.</description>
+    </item>
+    
+    <item>
+      <title>WampChannelReconnector</title>
+      <link>http://wampsharp.net/wamp2/client/wampchannelreconnector/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/client/wampchannelreconnector/</guid>
+      <description>The WampChannelReconnector class helps handling re-connection of WampChannel.
+Usage sample:
+public static async Task Run() { DefaultWampChannelFactory factory = new DefaultWampChannelFactory(); string address = &amp;quot;ws://localhost:8080/ws&amp;quot;; MySubscriber mySubscriber = new MySubscriber(); IWampChannel channel = factory.CreateJsonChannel(address, &amp;quot;realm1&amp;quot;); Func&amp;lt;Task&amp;gt; connect = async () =&amp;gt; { await channel.Open(); var subscriptionTask = channel.RealmProxy.Services.RegisterSubscriber(mySubscriber); var asyncDisposable = await subscriptionTask; }; WampChannelReconnector reconnector = new WampChannelReconnector(channel, connect); reconnector.Start(); }  </description>
+    </item>
+    
+  </channel>
+</rss>

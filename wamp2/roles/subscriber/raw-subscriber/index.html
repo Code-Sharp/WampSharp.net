@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="alternate" href="/index.xml" type="application/rss+xml" title="WampSharp">
+		<link rel="icon" href="http://wampsharp.net/favicon.ico">
+		<title>Raw Subscriber - WampSharp</title>
+		
+		<link rel="stylesheet" href="http://wampsharp.net/css/highlight/default.css">
+		<link rel="stylesheet" href="http://wampsharp.net/css/bootstrap.min.css">
+		<link rel="stylesheet" href="http://wampsharp.net/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="http://wampsharp.net/css/theme.css">
+		<link rel="stylesheet" href="http://wampsharp.net/css/bootie-docs.css">
+		<link rel="stylesheet" href="http://wampsharp.net/css/site.css">
+	</head>
+
+<body role="document">
+
+	
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="http://wampsharp.net/">WampSharp</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li ><a href="http://wampsharp.net/">Home</a></li>
+			
+			
+				
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Categories<span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+						
+							<li><a href="http://wampsharp.net/categories/authentication">Authentication</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/callee">Callee</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/caller">Caller</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/client">Client</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/getting-started">Getting-Started</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/publisher">Publisher</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/release-notes">Release-Notes</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/roadmap">Roadmap</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/router">Router</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/subscriber">Subscriber</a></li>
+						
+							<li><a href="http://wampsharp.net/categories/wamp1">Wamp1</a></li>
+						
+						</ul>
+					</li>
+				
+				</ul>
+				
+			</div>
+		</div>
+	</nav>
+
+<div class="container">
+
+
+<div class="row">
+	<div class="col-sm-8 doc-main">
+		<main role="main">
+			<article>
+				<a id="title"></a>
+				<h1 class="doc-entry-title">Raw Subscriber</h1>
+				<div class="doc-entry-meta">
+					<span><time datetime="2017-07-30">July 30, 2017</time></span>
+				</div>
+				<section>
+					
+
+<p>Like other roles, subscriber also has a raw version, which allows you treat EVENT messages as you like. In order to use it, you need to implement the IWampRawTopicClientSubscriber interface.</p>
+
+<h2 id="usage">Usage</h2>
+
+<h3 id="client-sample">Client sample</h3>
+
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using SystemEx;
+using WampSharp.Core.Serialization;
+using WampSharp.V2;
+using WampSharp.V2.Client;
+using WampSharp.V2.Core.Contracts;
+using WampSharp.V2.PubSub;
+
+namespace MyNamespace
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            const string serverAddress = &quot;ws://127.0.0.1:8080/ws&quot;;
+
+            DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+
+            IWampChannel channel =
+                factory.CreateJsonChannel(serverAddress, &quot;realm1&quot;);
+
+            Task openTask = channel.Open();
+
+            openTask.Wait(TimeSpan.FromSeconds(5));
+
+            IWampTopicProxy topicProxy =
+                channel.RealmProxy.TopicContainer.GetTopicByUri(&quot;com.myapp.topic1&quot;);
+
+            Task&lt;IAsyncDisposable&gt; subscribeTask =
+                topicProxy.Subscribe(new MySubscriber(), new SubscribeOptions());
+
+            Console.ReadLine();
+        }
+    }
+
+    internal class MySubscriber : IWampRawTopicClientSubscriber
+    {
+        public void Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, long publicationId, EventDetails details)
+        {
+            Console.WriteLine(&quot;Got event with publication id: &quot; + publicationId);
+        }
+
+        public void Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, long publicationId, EventDetails details, TMessage[] arguments)
+        {
+            int number = formatter.Deserialize&lt;int&gt;(arguments[0]);
+
+            Console.WriteLine(&quot;Got event &quot; + number + &quot; with publication id: &quot; + publicationId);
+        }
+
+        public void Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, long publicationId, EventDetails details, TMessage[] arguments,
+                                    IDictionary&lt;string, TMessage&gt; argumentsKeywords)
+        {
+            int number = formatter.Deserialize&lt;int&gt;(arguments[0]);
+
+            Console.WriteLine(&quot;Got event &quot; + number + &quot; with publication id: &quot; + publicationId);
+        }
+    }
+}
+</code></pre>
+
+<h3 id="router-sample">Router sample</h3>
+
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+using WampSharp.Core.Serialization;
+using WampSharp.V2;
+using WampSharp.V2.Core.Contracts;
+using WampSharp.V2.PubSub;
+using WampSharp.V2.Realm;
+
+namespace MyNamespace
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            const string serverAddress = &quot;ws://127.0.0.1:8080/ws&quot;;
+
+            DefaultWampHost host = new DefaultWampHost(serverAddress);
+
+            IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&quot;realm1&quot;);
+
+            IWampTopic topic =
+                realm.TopicContainer.GetOrCreateTopicByUri(&quot;com.myapp.topic1&quot;);
+
+            MySubscriber subscriber = new MySubscriber();
+
+            IDisposable subscription = topic.Subscribe(subscriber);
+
+            host.Open();
+
+            Console.ReadLine();
+        }
+    }
+
+    internal class MySubscriber : IWampRawTopicRouterSubscriber
+    {
+        public void Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, long publicationId, PublishOptions options)
+        {
+            Console.WriteLine(&quot;Got event with publication id: &quot; + publicationId);
+        }
+
+        public void Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, long publicationId, PublishOptions options, TMessage[] arguments)
+        {
+            int number = formatter.Deserialize&lt;int&gt;(arguments[0]);
+
+            Console.WriteLine(&quot;Got event &quot; + number + &quot; with publication id: &quot; + publicationId);
+        }
+
+        public void Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, long publicationId, PublishOptions options, TMessage[] arguments,
+                                    IDictionary&lt;string, TMessage&gt; argumentsKeywords)
+        {
+            int number = formatter.Deserialize&lt;int&gt;(arguments[0]);
+
+            Console.WriteLine(&quot;Got event &quot; + number + &quot; with publication id: &quot; + publicationId);
+        }
+    }
+}
+</code></pre>
+
+<h2 id="local-subscriber">Local Subscriber</h2>
+
+<p>WampSharp defines a base-class named LocalSubscriber that makes it easier to implement IWampRawTopicClientSubscriber.</p>
+
+<p>In this class, we define the parameters we expect to receive and let WampSharp deserialize them for us.</p>
+
+<h3 id="example">Example</h3>
+
+<pre><code class="language-csharp">public class MySubscriber : LocalSubscriber
+{
+    private readonly LocalParameter[] mEventParameters = new[]
+    {
+        new LocalParameter(&quot;number1&quot;, typeof (int), 0),
+        new LocalParameter(&quot;number2&quot;, typeof (int), 1),
+        new LocalParameter(&quot;c&quot;, typeof (string), 2),
+        new LocalParameter(&quot;d&quot;, typeof (MyClass), 3),
+    };
+
+    protected override void InnerEvent&lt;TMessage&gt;
+        (IWampFormatter&lt;TMessage&gt; formatter,
+         long publicationId,
+         EventDetails details,
+         TMessage[] arguments,
+         IDictionary&lt;string, TMessage&gt; argumentsKeywords)
+    {
+        object[] unpacked =
+            base.UnpackParameters(formatter, arguments, argumentsKeywords);
+
+        int number1 = (int) unpacked[0];
+        int number2 = (int) unpacked[1];
+        string c = (string) unpacked[2];
+        MyClass d = (MyClass) unpacked[3];
+
+        Console.WriteLine(&quot;Got event: number1:{0}, number2:{1}, c:{2}, d:{3}&quot;,
+                          number1, number2, c, d);
+    }
+
+    public override LocalParameter[] Parameters
+    {
+        get { return mEventParameters; }
+    }
+}
+
+private static void Run()
+{
+    const string serverAddress = &quot;ws://127.0.0.1:8080/ws&quot;;
+
+    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+
+    IWampChannel channel =
+        factory.CreateJsonChannel(serverAddress, &quot;realm1&quot;);
+
+    Task openTask = channel.Open();
+
+    openTask.Wait(TimeSpan.FromSeconds(5));
+
+    IWampTopicProxy topicProxy =
+        channel.RealmProxy.TopicContainer.GetTopicByUri(&quot;com.myapp.topic2&quot;);
+
+    Task&lt;IAsyncDisposable&gt; subscribeTask =
+        topicProxy.Subscribe(new MySubscriber(), new SubscribeOptions());
+
+    Console.ReadLine();
+}
+
+public class MyClass
+{
+    [JsonProperty(&quot;counter&quot;)]
+    public int Counter { get; set; }
+
+    [JsonProperty(&quot;foo&quot;)]
+    public int[] Foo { get; set; }
+}
+</code></pre>
+
+<p>This handles lookups for parameters named number1, number2, c and d (or positioned at 0, 1, 2, 3), and throws an exception if not all are present.</p>
+
+				</section>
+			</article>
+		</main>
+	</div> 
+
+	
+
+<div class="col-sm-3 col-sm-offset-1 doc-sidebar">
+	<div id="sidebar">
+	<div class="sidebar-module">
+		<div class="sidebar-toc">
+			<h4 class="sidebar-heading">Table of Contents</h4>
+			<ul>
+				<li><strong><a href="#title">Raw Subscriber</a></strong></li>
+			</ul>
+			<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#usage">Usage</a>
+<ul>
+<li><a href="#client-sample">Client sample</a></li>
+<li><a href="#router-sample">Router sample</a></li>
+</ul></li>
+<li><a href="#local-subscriber">Local Subscriber</a>
+<ul>
+<li><a href="#example">Example</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+		</div>
+	</div>
+	<div class="sidebar-module">
+		<h4 class="sidebar-heading">Pages in Categories</h4>
+		<ul class="sidebar-category-list">
+		
+			<li>
+				<a href="http://wampsharp.net/categories/authentication">
+					<span class="doc-list-category">Authentication</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/client/client-side-authentication/">Client-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/router/cookie-based-router-side-authentication/">Cookie based router-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/router/router-side-authentication/">Router-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/client/wamp-cra-client-side-authentication/">WAMP-CRA client side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/router/wamp-cra-router-side-authentication/">WAMP-CRA router-side authentication</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/callee">
+					<span class="doc-list-category">Callee</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/roles/callee/getting-started-with-callee/">Getting started with Callee</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/callee/raw-callee/">Raw Callee</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/callee/reflection-based-callee/">Reflection-based Callee</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/caller">
+					<span class="doc-list-category">Caller</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/roles/caller/getting-started-with-caller/">Getting started with Caller</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/caller/raw-caller/">Raw Caller</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/caller/reflection-based-caller/">Reflection-based Caller</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/client">
+					<span class="doc-list-category">Client</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/router/transports/rawsocket/">RawSocket transport</a>
+					</li>
+				
+					<li><a href="/wamp2/client/client-side-authentication/">Client-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/meta-api-service/">Meta-api descriptor service</a>
+					</li>
+				
+					<li><a href="/wamp2/client/wamp-cra-client-side-authentication/">WAMP-CRA client side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/client/wampchannel/">WampChannel</a>
+					</li>
+				
+					<li><a href="/wamp2/client/wampchannelreconnector/">WampChannelReconnector</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/getting-started">
+					<span class="doc-list-category">Getting-Started</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/roles/callee/getting-started-with-callee/">Getting started with Callee</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/caller/getting-started-with-caller/">Getting started with Caller</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/publisher/getting-started-with-publisher/">Getting started with Publisher</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/subscriber/getting-started-with-subscriber/">Getting started with Subscriber</a>
+					</li>
+				
+					<li><a href="/wamp2/getting-started-with-wampv2/">Getting started with WAMPv2</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/publisher">
+					<span class="doc-list-category">Publisher</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/roles/publisher/getting-started-with-publisher/">Getting started with Publisher</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/publisher/raw-publisher/">Raw Publisher</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/publisher/reflection-based-publisher/">Reflection-based Publisher</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/publisher/rx-based-publisher/">Rx-based Publisher</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/release-notes">
+					<span class="doc-list-category">Release-Notes</span>
+				</a>
+				<ul>
+					<li><a href="/release-notes/wampsharp-v1.2.6.41-beta-release-notes/">WampSharp v1.2.6.41-beta release notes</a>
+					</li>
+				
+					<li><a href="/release-notes/wampsharp-v1.2.5.21-beta-release-notes/">WampSharp v1.2.5.21-beta release notes</a>
+					</li>
+				
+					<li><a href="/release-notes/wampsharp-v1.2.4.18-beta-release-notes/">WampSharp v1.2.4.18-beta release notes</a>
+					</li>
+				
+					<li><a href="/release-notes/wampsharp-v1.2.3.12-beta-release-notes/">WampSharp v1.2.3.12-beta release notes</a>
+					</li>
+				
+					<li><a href="/release-notes/wampsharp-v1.2.2.8-beta-release-notes/">WampSharp v1.2.2.8-beta release notes</a>
+					</li>
+				
+					<li><a href="/release-notes/wampsharp-v1.2.1.6-beta-release-notes/">WampSharp v1.2.1.6-beta release notes</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/roadmap">
+					<span class="doc-list-category">Roadmap</span>
+				</a>
+				<ul>
+					<li><a href="/roadmap/">Roadmap</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/router">
+					<span class="doc-list-category">Router</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/router/transports/rawsocket/">RawSocket transport</a>
+					</li>
+				
+					<li><a href="/wamp2/router/transports/websocket/">WebSocket transports</a>
+					</li>
+				
+					<li><a href="/wamp2/router/cookie-based-router-side-authentication/">Cookie based router-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/meta-api-service/">Meta-api descriptor service</a>
+					</li>
+				
+					<li><a href="/wamp2/router/router-side-authentication/">Router-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/router/wamp-cra-router-side-authentication/">WAMP-CRA router-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/router/wamphost/">WampHost</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/subscriber">
+					<span class="doc-list-category">Subscriber</span>
+				</a>
+				<ul>
+					<li><a href="/wamp2/roles/subscriber/getting-started-with-subscriber/">Getting started with Subscriber</a>
+					</li>
+				
+					<li>
+						<span class="active">Raw Subscriber</span>
+						</li>
+				
+					<li><a href="/wamp2/roles/subscriber/reflection-based-subscriber/">Reflection-based Subscriber</a>
+					</li>
+				
+					<li><a href="/wamp2/roles/subscriber/rx-based-subscriber/">Rx-based Subscriber</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+			<li>
+				<a href="http://wampsharp.net/categories/wamp1">
+					<span class="doc-list-category">Wamp1</span>
+				</a>
+				<ul>
+					<li><a href="/wamp1/getting-started-with-wampv1/">Getting started with WAMPv1</a>
+					</li>
+				
+					<li><a href="/wamp1/getting-started-with-wampv1-client/">Getting started with WAMPv1 client</a>
+					</li>
+				
+					<li><a href="/wamp1/notes-for-wampv1-users/">Notes for WAMP1 users</a>
+					</li>
+				
+					<li><a href="/wamp1/server-pubsub-hosting-wampv1/">Server PubSub hosting (WAMPv1)</a>
+					</li>
+				
+					<li><a href="/wamp1/server-rpc-hosting-wampv1/">Server RPC hosting (WAMPv1)</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+		</ul>
+	</div>
+	<div class="sidebar-module">
+		<h4 class="sidebar-heading">Tags</h4>
+		<div class="tag-box">
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/authentication">authentication</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/callee">callee</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/caller">caller</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/client">client</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/publisher">publisher</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/raw-api">raw-api</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/reflection">reflection</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/roadmap">roadmap</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/router">router</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/rx">rx</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/services">services</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/subscriber">subscriber</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/transports">transports</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/wamp1">wamp1</a>
+		
+			<a class="tag-item" href="http://wampsharp.net/tags/wampcra">wampcra</a>
+		
+		</div>
+	</div>
+	</div>
+</div>
+
+</div> 
+
+
+<hr />
+
+<div class="row">
+	<div class="col-sm-8">
+		<p class="doc-footer-em"><a href="#" onclick="resetSidebarPos()">Back to TOP</a></p>
+	</div>
+</div>
+
+</div> 
+
+<footer class="doc-footer">
+	
+	<p>Copyright (c) 2013-2017, Elad Zelingher; All rights reserved.</p>
+	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
+</footer>
+
+
+
+<script src="http://wampsharp.net/js/jquery.min.js"></script>
+<script src="http://wampsharp.net/js/bootstrap.min.js"></script>
+
+<script src="http://wampsharp.net/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="http://wampsharp.net/js/ie10-viewport-bug-workaround.js"></script>
+<script src="http://wampsharp.net/js/bootie-docs.js"></script>
+
+</body>
+</html>

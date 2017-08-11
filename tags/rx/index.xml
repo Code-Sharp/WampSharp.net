@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rx on WampSharp</title>
+    <link>http://wampsharp.net/tags/rx/</link>
+    <description>Recent content in Rx on WampSharp</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright (c) 2013-2017, Elad Zelingher; All rights reserved.</copyright>
+    <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
+    
+	<atom:link href="http://wampsharp.net/tags/rx/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Rx-based Publisher</title>
+      <link>http://wampsharp.net/wamp2/roles/publisher/rx-based-publisher/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/roles/publisher/rx-based-publisher/</guid>
+      <description>Rx-based Publisher allows you to publish events to a topic of a WAMP router realm, using Reactive Extensions Observer api.
+Basic usage private static void Run() { const string serverAddress = &amp;quot;ws://127.0.0.1:8080/ws&amp;quot;; DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory(); IWampChannel channel = channelFactory.CreateJsonChannel(serverAddress, &amp;quot;realm1&amp;quot;); Task openTask = channel.Open(); openTask.Wait(5000); IWampRealmProxy realm = channel.RealmProxy; ISubject&amp;lt;int&amp;gt; subject = realm.Services.GetSubject&amp;lt;int&amp;gt;(&amp;quot;com.myapp.topic1&amp;quot;); // Publishes 5 to com.myapp.topic1 subject.OnNext(5); }  GetSubject overloads If a generic type is specified in the GetSubject method, the ARGUMENTS parameter of the EVENT message will contain the single parameter OnNext receives.</description>
+    </item>
+    
+    <item>
+      <title>Rx-based Subscriber</title>
+      <link>http://wampsharp.net/wamp2/roles/subscriber/rx-based-subscriber/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/roles/subscriber/rx-based-subscriber/</guid>
+      <description>Rx-based Subscriber allows you to subscribe to events of a topic of a WAMP router realm, using Reactive Extensions Observable api.
+Basic usage private static async Task RunAsync() { DefaultWampChannelFactory factory = new DefaultWampChannelFactory(); const string serverAddress = &amp;quot;ws://127.0.0.1:8080/ws&amp;quot;; IWampChannel channel = factory.CreateJsonChannel(serverAddress, &amp;quot;realm1&amp;quot;); await channel.Open().ConfigureAwait(false); IWampRealmProxy realmProxy = channel.RealmProxy; IDisposable subscription = realmProxy.Services.GetSubject&amp;lt;int&amp;gt;(&amp;quot;com.myapp.topic1&amp;quot;) .Subscribe(x =&amp;gt; { Console.WriteLine(&amp;quot;Got Event: &amp;quot; + x); }); // Call subscription.Dispose(); to unsubscribe. }  GetSubject overloads GetSubject allows you to subscribe to a topic of a WAMP realm, given the type of the received events.</description>
+    </item>
+    
+  </channel>
+</rss>
