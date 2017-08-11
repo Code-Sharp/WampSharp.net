@@ -1,0 +1,7 @@
+
+# Created by https://www.gitignore.io/api/hugo
+
+### Hugo ###
+hugo.exe
+/public/
+# End of https://www.gitignore.io/api/hugo
