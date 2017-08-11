@@ -5,3 +5,4 @@
 hugo.exe
 /public/
 # End of https://www.gitignore.io/api/hugo
+/themes/
