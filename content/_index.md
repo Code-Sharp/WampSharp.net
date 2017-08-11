@@ -102,6 +102,7 @@ The following [Advanced profile features](https://github.com/wamp-proto/wamp-pro
 
 ## Release Notes
 
+* [WampSharp v1.2.6.41-beta release notes]({{<ref "Release-notes/WampSharp-v1.2.6.41-beta-release-notes.md">}})
 * [WampSharp v1.2.5.21-beta release notes]({{<ref "Release-notes/WampSharp-v1.2.5.21-beta-release-notes.md">}})
 * [WampSharp v1.2.4.18-beta release notes]({{<ref "Release-notes/WampSharp-v1.2.4.18-beta-release-notes.md">}})
 * [WampSharp v1.2.3.12-beta release notes]({{<ref "Release-notes/WampSharp-v1.2.3.12-beta-release-notes.md">}})
