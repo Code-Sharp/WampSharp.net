@@ -90,7 +90,7 @@
 
 <h3 id="observeon-extension-method">ObserveOn extension method</h3>
 
-<p>From this version, the <a href="http://wampsharp.net/wamp2/client/wampchannel/#fluent-syntax">client fluent syntax api</a> supports a new <code>ObserverOn</code> method. This method allows you to WAMP messages to be observed on a specified <a href="http://www.introtorx.com/Content/v1.0.10621.0/15_SchedulingAndThreading.html">IScheduler</a>. This for instance allows to ensure that <a href="http://wampsharp.net/wamp2/roles/callee/reflection-based-callee/">reflection based callee</a> methods or <a href="http://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/">reflection based subscriber</a> event handlers are invoked on the Dispatcher thread.</p>
+<p>From this version, the <a href="http://wampsharp.net/wamp2/client/wampchannel/#fluent-syntax">client fluent syntax api</a> supports a new <code>ObserverOn</code> method. This method allows you to specify an <a href="http://www.introtorx.com/Content/v1.0.10621.0/15_SchedulingAndThreading.html">IScheduler</a> that WAMP messages will be observed on. This for instance allows to ensure that <a href="http://wampsharp.net/wamp2/roles/callee/reflection-based-callee/">reflection based callee</a> methods or <a href="http://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/">reflection based subscriber</a> event handlers are invoked on the Dispatcher thread.</p>
 
 <p>Usage example:</p>
 

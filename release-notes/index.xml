@@ -18,7 +18,7 @@
       <pubDate>Fri, 01 Jun 2018 09:51:52 -0400</pubDate>
       
       <guid>http://wampsharp.net/release-notes/wampsharp-v18.6.1-release-notes/</guid>
-      <description>New features ObserveOn extension method From this version, the client fluent syntax api supports a new ObserverOn method. This method allows you to WAMP messages to be observed on a specified IScheduler. This for instance allows to ensure that reflection based callee methods or reflection based subscriber event handlers are invoked on the Dispatcher thread.
+      <description>New features ObserveOn extension method From this version, the client fluent syntax api supports a new ObserverOn method. This method allows you to specify an IScheduler that WAMP messages will be observed on. This for instance allows to ensure that reflection based callee methods or reflection based subscriber event handlers are invoked on the Dispatcher thread.
 Usage example:
 IWampChannel channel = channelFactory.ConnectToRealm(&amp;quot;realm1&amp;quot;) .WebSocketTransport(&amp;quot;ws://127.0.0.1:8080/ws&amp;quot;) .JsonSerialization() .ObserveOn(DispatcherScheduler.Current) .Build();  RawSocket Ssl support From this version, RawSocket Ssl security is supported.</description>
     </item>
