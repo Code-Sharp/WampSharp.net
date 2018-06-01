@@ -8,7 +8,7 @@
 		<link rel="icon" href="http://wampsharp.net/favicon.ico">
 		<title>Reflection-based Callee - WampSharp</title>
 		
-		<link rel="stylesheet" href="http://wampsharp.net/css/highlight/default.css">
+		<link rel="stylesheet" href="http://wampsharp.net/css/highlight/github.css">
 		<link rel="stylesheet" href="http://wampsharp.net/css/bootstrap.min.css">
 		<link rel="stylesheet" href="http://wampsharp.net/css/bootstrap-theme.min.css">
 		<link rel="stylesheet" href="http://wampsharp.net/css/theme.css">
@@ -409,6 +409,56 @@ In order to report progress, call the progress Report method. Example:</p>
 <p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/progress">this</a> AutobahnJS sample</p>
 </blockquote>
 
+<h3 id="cancellation-support">Cancellation support</h3>
+
+<p>Cancellation is supported via the <a href="https://msdn.microsoft.com/en-us/library/system.threading.cancellationtoken(v=vs.110).aspx">CancellationToken api</a>. In order to declare a callee procedure which supports cancellation, declare an async method which receives as its last argument a CancellationToken:</p>
+
+<pre><code class="language-csharp">public class CancellableOpService
+{
+    [WampProcedure(&quot;com.myapp.cancellableop&quot;)]
+    public async Task&lt;int&gt; CancellableOp(int n, CancellationToken token)
+    {
+        for (int i = 0; i &lt; n; i++)
+        {
+            if (token.IsCancellationRequested)
+            {
+                throw new WampRpcCanceledException($&quot; {i * 100.0 / n}% of the work was done&quot;);
+            }
+
+            await Task.Delay(100, token);
+        }
+
+        return n;
+    }
+}
+</code></pre>
+
+<blockquote>
+<p><strong>Note</strong>: This works also with progressive call results:</p>
+
+<pre><code class="language-csharp">public class LongCancellableOpService
+{
+    [WampProgressiveResultProcedure]
+    [WampProcedure(&quot;com.myapp.longop&quot;)]
+    public async Task&lt;int&gt; LongCancellableOp(int n, IProgress&lt;int&gt; progress, CancellationToken token)
+    {
+        for (int i = 0; i &lt; n; i++)
+        {
+            if (token.IsCancellationRequested)
+            {
+                throw new WampRpcCanceledException($&quot; {i * 100.0 / n}% of the work was done&quot;);
+            }
+
+            progress.Report(i);
+            await Task.Delay(100, token);
+        }
+
+        return n;
+    }
+}
+</code></pre>
+</blockquote>
+
 <h3 id="out-ref-parameters">out/ref parameters</h3>
 
 <p>For synchronous methods, out/ref parameters are supported.</p>
@@ -714,6 +764,7 @@ public class Callee3
 <li><a href="#tuples-support">Tuples support</a></li>
 <li><a href="#exception-support">Exception support</a></li>
 <li><a href="#progressive-call-results">Progressive call results</a></li>
+<li><a href="#cancellation-support">Cancellation support</a></li>
 <li><a href="#out-ref-parameters">out/ref parameters</a></li>
 <li><a href="#multivalued-results">Multivalued results</a></li>
 <li><a href="#wampinvocationcontext">WampInvocationContext</a></li>
@@ -805,6 +856,9 @@ public class Callee3
 					<li><a href="/wamp2/meta-api-service/">Meta-api descriptor service</a>
 					</li>
 				
+					<li><a href="/wamp2/testament-service/">Testament service</a>
+					</li>
+				
 					<li><a href="/wamp2/client/wamp-cra-client-side-authentication/">WAMP-CRA client side authentication</a>
 					</li>
 				
@@ -865,6 +919,9 @@ public class Callee3
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v1.2.6.41-beta-release-notes/">WampSharp v1.2.6.41-beta release notes</a>
 					</li>
 				
@@ -915,6 +972,9 @@ public class Callee3
 					</li>
 				
 					<li><a href="/wamp2/router/router-side-authentication/">Router-side authentication</a>
+					</li>
+				
+					<li><a href="/wamp2/testament-service/">Testament service</a>
 					</li>
 				
 					<li><a href="/wamp2/router/wamp-cra-router-side-authentication/">WAMP-CRA router-side authentication</a>
@@ -1024,8 +1084,8 @@ public class Callee3
 </div> 
 
 <footer class="doc-footer">
-	
-	<p>Copyright (c) 2013-2017, Elad Zelingher; All rights reserved.</p>
+	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
+	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

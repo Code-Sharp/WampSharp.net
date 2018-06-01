@@ -6,7 +6,7 @@
     <description>Recent content in Services on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright (c) 2013-2017, Elad Zelingher; All rights reserved.</copyright>
+    <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
     
 	<atom:link href="http://wampsharp.net/tags/services/index.xml" rel="self" type="application/rss+xml" />
@@ -21,6 +21,18 @@
       <description>WampSharp implements WAMP meta-api (i.e. session meta api, registration meta api and subscription meta api). It is possible both to consume WAMP meta-api from a WampSharp client, and to expose it from a WampSharp router.
 Exposing meta-api In order to expose meta-api, you can call an extension method of IWampHostedRealm, named &amp;ldquo;HostMetaApiService&amp;rdquo;. This method returns an IDisposable which you can dispose in order to unregister the meta-api service.
  Note: it is important to call HostMetaApiService before hosting any other components (callees/subscribers), since otherwise the meta-api service isn&amp;rsquo;t be able to track components registered before it.</description>
+    </item>
+    
+    <item>
+      <title>Testament service</title>
+      <link>http://wampsharp.net/wamp2/testament-service/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/testament-service/</guid>
+      <description>The Testament feature is supported.
+This feature allows a client to request the router to publish some predefined events when the client disconnects.
+Enabling the testament service on the router-side In order to enable it from router-side, call HostTestamentService extension method of the relevant realm (this is similiar to the Router-side meta-api usage):
+DefaultWampHost host = new DefaultWampHost(&amp;quot;ws://127.0.0.1:8080/ws&amp;quot;); IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&amp;quot;realm1&amp;quot;); IDisposable disposable = realm.HostTestamentService(); // Uncomment to unregister the Testament service.</description>
     </item>
     
   </channel>

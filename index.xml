@@ -6,11 +6,22 @@
     <description>Recent content in _index on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright (c) 2013-2017, Elad Zelingher; All rights reserved.</copyright>
+    <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
     
 	<atom:link href="http://wampsharp.net/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>WampSharp v18.6.1 release notes</title>
+      <link>http://wampsharp.net/release-notes/wampsharp-v18.6.1-release-notes/</link>
+      <pubDate>Fri, 01 Jun 2018 09:51:52 -0400</pubDate>
+      
+      <guid>http://wampsharp.net/release-notes/wampsharp-v18.6.1-release-notes/</guid>
+      <description>New features ObserveOn extension method From this version, the client fluent syntax api supports a new ObserverOn method. This method allows you to WAMP messages to be observed on a specified IScheduler. This for instance allows to ensure that reflection based callee methods or reflection based subscriber event handlers are invoked on the Dispatcher thread.
+Usage example:
+IWampChannel channel = channelFactory.ConnectToRealm(&amp;quot;realm1&amp;quot;) .WebSocketTransport(&amp;quot;ws://127.0.0.1:8080/ws&amp;quot;) .JsonSerialization() .ObserveOn(DispatcherScheduler.Current) .Build();  RawSocket Ssl support From this version, RawSocket Ssl security is supported.</description>
+    </item>
     
     <item>
       <title>WampSharp v1.2.6.41-beta release notes</title>
@@ -330,6 +341,18 @@ There are two types of topics:
       <description>As you&amp;rsquo;ve seen in The getting started tutorial, WampSharp allows you to host RPC services and consume them from a WAMP client.
 Declaring RPC services In order to declare a RPC service, just place a [WampRpcMethod] attribute above a method you want to expose. You can place the attribute either on the implemented method itself, or on a method belonging to an interface the RPC service implements.
 The WampRpcMethod receives a ProcUri in its constructor - that is used as an identifier for the WAMP method (used by a WAMP CALL request).</description>
+    </item>
+    
+    <item>
+      <title>Testament service</title>
+      <link>http://wampsharp.net/wamp2/testament-service/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>http://wampsharp.net/wamp2/testament-service/</guid>
+      <description>The Testament feature is supported.
+This feature allows a client to request the router to publish some predefined events when the client disconnects.
+Enabling the testament service on the router-side In order to enable it from router-side, call HostTestamentService extension method of the relevant realm (this is similiar to the Router-side meta-api usage):
+DefaultWampHost host = new DefaultWampHost(&amp;quot;ws://127.0.0.1:8080/ws&amp;quot;); IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&amp;quot;realm1&amp;quot;); IDisposable disposable = realm.HostTestamentService(); // Uncomment to unregister the Testament service.</description>
     </item>
     
     <item>
