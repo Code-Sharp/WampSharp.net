@@ -8,7 +8,7 @@ categories: ["release notes"]
 
 ### ObserveOn extension method
 
-From this version, the [client fluent syntax api]({{<ref "WAMP2/Client/WampChannel.md">}}#fluent-syntax) supports a new `ObserverOn` method. This method allows you to WAMP messages to be observed on a specified [IScheduler](http://www.introtorx.com/Content/v1.0.10621.0/15_SchedulingAndThreading.html). This for instance allows to ensure that [reflection based callee]({{<ref "WAMP2/Roles/Callee/Reflection-based-Callee.md">}}) methods or [reflection based subscriber]({{<ref "WAMP2/Roles/Subscriber/Reflection-based-Subscriber.md">}}) event handlers are invoked on the Dispatcher thread.
+From this version, the [client fluent syntax api]({{<ref "WAMP2/Client/WampChannel.md">}}#fluent-syntax) supports a new `ObserverOn` method. This method allows you to specify an [IScheduler](http://www.introtorx.com/Content/v1.0.10621.0/15_SchedulingAndThreading.html) that WAMP messages will be observed on. This for instance allows to ensure that [reflection based callee]({{<ref "WAMP2/Roles/Callee/Reflection-based-Callee.md">}}) methods or [reflection based subscriber]({{<ref "WAMP2/Roles/Subscriber/Reflection-based-Subscriber.md">}}) event handlers are invoked on the Dispatcher thread.
 
 Usage example:
 
