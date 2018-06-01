@@ -105,6 +105,7 @@ The following [Advanced profile features](https://wamp-proto.org/static/rfc/draf
 
 ## Release Notes
 
+* [WampSharp v18.6.1 release notes]({{<ref "Release-notes/WampSharp-v18.6.1-release-notes.md">}})
 * [WampSharp v1.2.6.41-beta release notes]({{<ref "Release-notes/WampSharp-v1.2.6.41-beta-release-notes.md">}})
 * [WampSharp v1.2.5.21-beta release notes]({{<ref "Release-notes/WampSharp-v1.2.5.21-beta-release-notes.md">}})
 * [WampSharp v1.2.4.18-beta release notes]({{<ref "Release-notes/WampSharp-v1.2.4.18-beta-release-notes.md">}})
