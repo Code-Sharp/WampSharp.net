@@ -323,6 +323,55 @@ public async Task Run()
 
 > Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/progress) AutobahnJS sample
 
+### Cancellation support
+
+Cancellation is supported via the [CancellationToken api](https://msdn.microsoft.com/en-us/library/system.threading.cancellationtoken(v=vs.110).aspx). In order to declare a callee procedure which supports cancellation, declare an async method which receives as its last argument a CancellationToken:
+
+```csharp
+public class CancellableOpService
+{
+    [WampProcedure("com.myapp.cancellableop")]
+    public async Task<int> CancellableOp(int n, CancellationToken token)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            if (token.IsCancellationRequested)
+            {
+                throw new WampRpcCanceledException($" {i * 100.0 / n}% of the work was done");
+            }
+
+            await Task.Delay(100, token);
+        }
+
+        return n;
+    }
+}
+```
+
+> **Note**: This works also with progressive call results:
+```csharp
+public class LongCancellableOpService
+{
+    [WampProgressiveResultProcedure]
+    [WampProcedure("com.myapp.longop")]
+    public async Task<int> LongCancellableOp(int n, IProgress<int> progress, CancellationToken token)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            if (token.IsCancellationRequested)
+            {
+                throw new WampRpcCanceledException($" {i * 100.0 / n}% of the work was done");
+            }
+
+            progress.Report(i);
+            await Task.Delay(100, token);
+        }
+
+        return n;
+    }
+}
+```
+
 ### out/ref parameters
 
 For synchronous methods, out/ref parameters are supported. 

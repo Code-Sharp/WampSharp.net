@@ -250,6 +250,58 @@ public async Task Run()
 
 >Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/progress) AutobahnJS sample
 
+### Cancelation support
+
+Cancellation is supported via the [CancellationToken api](https://msdn.microsoft.com/en-us/library/system.threading.cancellationtoken(v=vs.110).aspx). In order to cancel a pending rpc invocation from a WAMP caller using the callee proxy api, declare an interface containing an async method, receiving a CancellationToken as its last parameter:
+
+```csharp
+public interface ICancellableOpService
+{
+    [WampProcedure("com.myapp.cancellableop")]
+    Task<int> CancellableOp(int n, CancellationToken token);
+}
+```
+
+Then pass a CancellationToken to the method call, this is usually done using CancellationTokenSource. Call CancellationTokenSource.Cancel in order to cancel the invocation.
+
+```csharp
+ICancellableOpService proxy =
+    channel.RealmProxy.Services.GetCalleeProxy<ICancellableOpService>();
+
+CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+Task<int> invocationTask = proxy.CancellableOp(4096, cancellationTokenSource.Token);
+
+// Cancel the operation
+cancellationTokenSource.Cancel();
+
+await invocationTask.ConfigureAwait(false);
+```
+
+> **Note**: This works also with progressive call results:
+```csharp
+public interface ILongCancellableOpService
+{
+    [WampProcedure("com.myapp.cancellableop")]
+    Task<int> LongCancellableOp(int n, IProgress<int> progress, CancellationToken token);
+}
+```
+> 
+> Cancellation:
+```csharp
+ILongCancellableOpService proxy =
+    channel.RealmProxy.Services.GetCalleeProxy<ILongCancellableOpService>();
+
+CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+Task<int> invocationTask = proxy.LongCancellableOp(4096, new MyProgress(), cancellationTokenSource.Token);
+
+// Cancel the operation
+cancellationTokenSource.Cancel();
+
+await invocationTask.ConfigureAwait(false);
+```
+
 ### out/ref parameters
 
 For synchronous methods, out/ref parameters are supported.
