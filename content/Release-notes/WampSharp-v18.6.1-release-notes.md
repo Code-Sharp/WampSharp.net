@@ -80,6 +80,7 @@ This allows you to listen to both RawSocket and WebSocket requests on the same p
 ```csharp
 using System.Net;
 using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using WampSharp.AspNetCore.RawSocket;
 using WampSharp.AspNetCore.WebSockets.Server;
