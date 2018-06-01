@@ -131,3 +131,13 @@ public class Program
     }
 }
 ```
+
+## Internal changes
+
+* WampSharp.RawSocket now uses internally [Microsoft.IO.RecyclableMemoryStream](https://github.com/Microsoft/Microsoft.IO.RecyclableMemoryStream) instead of [System.Buffers](https://www.nuget.org/packages/System.Buffers/), in order to manage MemoryStream lifetimes, as the previous implementation used System.Buffers incorrectly.
+* Optimizations for router-side pub/sub publications were made for RawSocket implementation. These also affect (minorly) the WampSharp.WebSockets based WebSockets implementations (i.e. ASP.NET, ASP.NET Core, Owin, HttpListener).
+* A lot of auto refactoring was done to leverage C# 6.0 and C# 7.0 features. These include expression bodied properties, `nameof` operator, readonly properties, string interpolation, pattern matching, var out, etc. This should not affect the implementation in any way.
+* Most of the dependencies were updated to latest version. As a result
+    * [WampSharp.Fleck](https://www.nuget.org/packages/WampSharp.Fleck) and [WampSharp.Default.Router](https://www.nuget.org/packages/WampSharp.Default.Router) are now available for .NET Standard 2.0. 
+    * The [System.Reactive](https://www.nuget.org/packages/System.Reactive) package reference was updated to v4.0.0, which now consists of a single dll, instead of 5 dlls.
+    * If you need support for a framework variant which is not supported by [.NET Standard 2.0](http://immo.landwerth.net/netstandard-versions/#), please specify it and explain why in [this thread](https://github.com/Code-Sharp/WampSharp/issues/252).
