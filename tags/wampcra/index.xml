@@ -2,32 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Wampcra on WampSharp</title>
-    <link>http://wampsharp.net/tags/wampcra/</link>
+    <link>https://wampsharp.net/tags/wampcra/</link>
     <description>Recent content in Wampcra on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
     
-	<atom:link href="http://wampsharp.net/tags/wampcra/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://wampsharp.net/tags/wampcra/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>WAMP-CRA client side authentication</title>
-      <link>http://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</link>
+      <link>https://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</guid>
+      <guid>https://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</guid>
       <description>WAMP-CRA client side authentication is supported. In order to use it, instantiate a new instance of WampCraAuthenticator and pass it to the channel factory.
 Example public async Task Run() { DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory(); IWampClientAuthenticator authenticator; if (false) { authenticator = new WampCraClientAuthenticator(authenticationId: &amp;quot;joe&amp;quot;, secret: &amp;quot;secret2&amp;quot;); } else { authenticator = new WampCraClientAuthenticator(authenticationId: &amp;quot;peter&amp;quot;, secret: &amp;quot;secret1&amp;quot;, salt: &amp;quot;salt123&amp;quot;, iterations: 100, keyLen: 16); } IWampChannel channel = channelFactory.CreateJsonChannel(&amp;quot;ws://127.0.0.1:8080/ws&amp;quot;, &amp;quot;realm1&amp;quot;, authenticator); channel.</description>
     </item>
     
     <item>
       <title>WAMP-CRA router-side authentication</title>
-      <link>http://wampsharp.net/wamp2/router/wamp-cra-router-side-authentication/</link>
+      <link>https://wampsharp.net/wamp2/router/wamp-cra-router-side-authentication/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/router/wamp-cra-router-side-authentication/</guid>
+      <guid>https://wampsharp.net/wamp2/router/wamp-cra-router-side-authentication/</guid>
       <description>WAMP-CRA router side authentication is supported. It is available as an abstract class named WampCraSessionAuthenticator which inherits from the WampSessionAuthenticator class. The class has two abstract properties needed to be implemented: AuthenticationChallenge and Secret - the AuthenticationChallenge is the challenge to be sent upon CHALLENGE message, the Secret is the secret used to compute the signature
 It is also possible to add additional data (sent upon CHALLENGE message in extra parameter), such as salt, iterations and keylen by setting the CraChallengeDetails property.</description>
     </item>

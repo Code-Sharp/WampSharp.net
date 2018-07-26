@@ -2,148 +2,148 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on WampSharp</title>
-    <link>http://wampsharp.net/tags/</link>
+    <link>https://wampsharp.net/tags/</link>
     <description>Recent content in Tags on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
     
-	<atom:link href="http://wampsharp.net/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://wampsharp.net/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Authentication</title>
-      <link>http://wampsharp.net/tags/authentication/</link>
+      <link>https://wampsharp.net/tags/authentication/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/tags/authentication/</guid>
+      <guid>https://wampsharp.net/tags/authentication/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Callee</title>
-      <link>http://wampsharp.net/tags/callee/</link>
+      <link>https://wampsharp.net/tags/callee/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/tags/callee/</guid>
+      <guid>https://wampsharp.net/tags/callee/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Caller</title>
-      <link>http://wampsharp.net/tags/caller/</link>
+      <link>https://wampsharp.net/tags/caller/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/tags/caller/</guid>
+      <guid>https://wampsharp.net/tags/caller/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Client</title>
-      <link>http://wampsharp.net/tags/client/</link>
+      <link>https://wampsharp.net/tags/client/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/tags/client/</guid>
+      <guid>https://wampsharp.net/tags/client/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Publisher</title>
-      <link>http://wampsharp.net/tags/publisher/</link>
+      <link>https://wampsharp.net/tags/publisher/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/tags/publisher/</guid>
+      <guid>https://wampsharp.net/tags/publisher/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Raw Api</title>
-      <link>http://wampsharp.net/tags/raw-api/</link>
+      <link>https://wampsharp.net/tags/raw-api/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/tags/raw-api/</guid>
+      <guid>https://wampsharp.net/tags/raw-api/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Reflection</title>
-      <link>http://wampsharp.net/tags/reflection/</link>
+      <link>https://wampsharp.net/tags/reflection/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/tags/reflection/</guid>
+      <guid>https://wampsharp.net/tags/reflection/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Roadmap</title>
-      <link>http://wampsharp.net/tags/roadmap/</link>
+      <link>https://wampsharp.net/tags/roadmap/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/tags/roadmap/</guid>
+      <guid>https://wampsharp.net/tags/roadmap/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Router</title>
-      <link>http://wampsharp.net/tags/router/</link>
+      <link>https://wampsharp.net/tags/router/</link>
       <pubDate>Tue, 01 Aug 2017 10:25:07 +0900</pubDate>
       
-      <guid>http://wampsharp.net/tags/router/</guid>
+      <guid>https://wampsharp.net/tags/router/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Rx</title>
-      <link>http://wampsharp.net/tags/rx/</link>
+      <link>https://wampsharp.net/tags/rx/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/tags/rx/</guid>
+      <guid>https://wampsharp.net/tags/rx/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Services</title>
-      <link>http://wampsharp.net/tags/services/</link>
+      <link>https://wampsharp.net/tags/services/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/tags/services/</guid>
+      <guid>https://wampsharp.net/tags/services/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Subscriber</title>
-      <link>http://wampsharp.net/tags/subscriber/</link>
+      <link>https://wampsharp.net/tags/subscriber/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/tags/subscriber/</guid>
+      <guid>https://wampsharp.net/tags/subscriber/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Transports</title>
-      <link>http://wampsharp.net/tags/transports/</link>
+      <link>https://wampsharp.net/tags/transports/</link>
       <pubDate>Tue, 01 Aug 2017 10:25:07 +0900</pubDate>
       
-      <guid>http://wampsharp.net/tags/transports/</guid>
+      <guid>https://wampsharp.net/tags/transports/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Wamp1</title>
-      <link>http://wampsharp.net/tags/wamp1/</link>
+      <link>https://wampsharp.net/tags/wamp1/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/tags/wamp1/</guid>
+      <guid>https://wampsharp.net/tags/wamp1/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Wampcra</title>
-      <link>http://wampsharp.net/tags/wampcra/</link>
+      <link>https://wampsharp.net/tags/wampcra/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/tags/wampcra/</guid>
+      <guid>https://wampsharp.net/tags/wampcra/</guid>
       <description></description>
     </item>
     

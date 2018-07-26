@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Publisher on WampSharp</title>
-    <link>http://wampsharp.net/categories/publisher/</link>
+    <link>https://wampsharp.net/categories/publisher/</link>
     <description>Recent content in Publisher on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
     
-	<atom:link href="http://wampsharp.net/categories/publisher/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://wampsharp.net/categories/publisher/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Getting started with Publisher</title>
-      <link>http://wampsharp.net/wamp2/roles/publisher/getting-started-with-publisher/</link>
+      <link>https://wampsharp.net/wamp2/roles/publisher/getting-started-with-publisher/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/roles/publisher/getting-started-with-publisher/</guid>
+      <guid>https://wampsharp.net/wamp2/roles/publisher/getting-started-with-publisher/</guid>
       <description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your publisher will use.
 About Publisher role WAMPv2 defines a Publisher role, that is a role that can publish events to a WAMP realm&amp;rsquo;s topic.
 WampSubject The WampSubject is the easiest way to publish to a topic of a WAMP router.
@@ -27,20 +27,20 @@ of the IWampRealm/IWampRealmProxy instance with a generic type representing the 
     
     <item>
       <title>Raw Publisher</title>
-      <link>http://wampsharp.net/wamp2/roles/publisher/raw-publisher/</link>
+      <link>https://wampsharp.net/wamp2/roles/publisher/raw-publisher/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/roles/publisher/raw-publisher/</guid>
+      <guid>https://wampsharp.net/wamp2/roles/publisher/raw-publisher/</guid>
       <description>If you want to get feedbacks for publications, you can use publisher raw api. In order to use it in client side, access the RealmProxy of your WampChannel and then access its TopicContainer property in order to obtain a WampTopicProxy to your topic. Then call Publish with PUBLISH parameters.
 In order to use it from router side: Obtain the realm by accessing the RealmContainer property of your WampHost, then access its TopicContainer property in order to access the topic by its uri, then call publish with desired parameters.</description>
     </item>
     
     <item>
       <title>Reflection-based Publisher</title>
-      <link>http://wampsharp.net/wamp2/roles/publisher/reflection-based-publisher/</link>
+      <link>https://wampsharp.net/wamp2/roles/publisher/reflection-based-publisher/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/roles/publisher/reflection-based-publisher/</guid>
+      <guid>https://wampsharp.net/wamp2/roles/publisher/reflection-based-publisher/</guid>
       <description>Reflection-based Publisher allows to use publisher features in a similar fashion as Reflection based Callee.
 In order to use it, create a class containing an event decorated with a [WampTopic] attribute. Then register an instance of the class using the RegisterPublisher method of IWampRealmServiceProvider. The arguments published to the event will be treated as the arguments keywords of the publication.
 Basic usage public class MyClass { [JsonProperty(&amp;quot;counter&amp;quot;)] public int Counter { get; set; } [JsonProperty(&amp;quot;foo&amp;quot;)] public int[] Foo { get; set; } } public delegate void MyPublicationDelegate(int number1, int number2, string c, MyClass d); public interface IMyPublisher { [WampTopic(&amp;quot;com.</description>
@@ -48,10 +48,10 @@ Basic usage public class MyClass { [JsonProperty(&amp;quot;counter&amp;quot;)] p
     
     <item>
       <title>Rx-based Publisher</title>
-      <link>http://wampsharp.net/wamp2/roles/publisher/rx-based-publisher/</link>
+      <link>https://wampsharp.net/wamp2/roles/publisher/rx-based-publisher/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/roles/publisher/rx-based-publisher/</guid>
+      <guid>https://wampsharp.net/wamp2/roles/publisher/rx-based-publisher/</guid>
       <description>Rx-based Publisher allows you to publish events to a topic of a WAMP router realm, using Reactive Extensions Observer api.
 Basic usage private static void Run() { const string serverAddress = &amp;quot;ws://127.0.0.1:8080/ws&amp;quot;; DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory(); IWampChannel channel = channelFactory.CreateJsonChannel(serverAddress, &amp;quot;realm1&amp;quot;); Task openTask = channel.Open(); openTask.Wait(5000); IWampRealmProxy realm = channel.RealmProxy; ISubject&amp;lt;int&amp;gt; subject = realm.Services.GetSubject&amp;lt;int&amp;gt;(&amp;quot;com.myapp.topic1&amp;quot;); // Publishes 5 to com.myapp.topic1 subject.OnNext(5); }  GetSubject overloads If a generic type is specified in the GetSubject method, the ARGUMENTS parameter of the EVENT message will contain the single parameter OnNext receives.</description>
     </item>

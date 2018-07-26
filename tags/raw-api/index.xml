@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Raw Api on WampSharp</title>
-    <link>http://wampsharp.net/tags/raw-api/</link>
+    <link>https://wampsharp.net/tags/raw-api/</link>
     <description>Recent content in Raw Api on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
     
-	<atom:link href="http://wampsharp.net/tags/raw-api/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://wampsharp.net/tags/raw-api/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Raw Callee</title>
-      <link>http://wampsharp.net/wamp2/roles/callee/raw-callee/</link>
+      <link>https://wampsharp.net/wamp2/roles/callee/raw-callee/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/roles/callee/raw-callee/</guid>
+      <guid>https://wampsharp.net/wamp2/roles/callee/raw-callee/</guid>
       <description>WampSharp provides a lower level api that allows to deal with rpc operations as they are sent/received, which is called Raw callee.
 Actually, the reflection based callee api is built above the Raw callee api.
 In order to use the raw callee api, implement IWampRpcOperation. A IWampFormatter is passed to your methods in order to allow you to deserialize the method parameters. In order to return a result or an error, call the corresponding caller method.</description>
@@ -25,30 +25,30 @@ In order to use the raw callee api, implement IWampRpcOperation. A IWampFormatte
     
     <item>
       <title>Raw Caller</title>
-      <link>http://wampsharp.net/wamp2/roles/caller/raw-caller/</link>
+      <link>https://wampsharp.net/wamp2/roles/caller/raw-caller/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/roles/caller/raw-caller/</guid>
+      <guid>https://wampsharp.net/wamp2/roles/caller/raw-caller/</guid>
       <description>The callee proxy is the easiest way to consume WAMP caller capabilities, but it is limited to C# features. In some cases you might want to handle a RESULT message differently. For these cases, the Raw callback api exists.
 In order to use raw callback api from a WampSharp client, create a class implementing IWampRawRpcOperationClientCallback. This class will be notified when a result arrives. Then create a new instance of your class, and access RpcCatalog property of WampChannel&amp;rsquo;s RealmProxy, then call Invoke of your desired method with desired parameters.</description>
     </item>
     
     <item>
       <title>Raw Publisher</title>
-      <link>http://wampsharp.net/wamp2/roles/publisher/raw-publisher/</link>
+      <link>https://wampsharp.net/wamp2/roles/publisher/raw-publisher/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/roles/publisher/raw-publisher/</guid>
+      <guid>https://wampsharp.net/wamp2/roles/publisher/raw-publisher/</guid>
       <description>If you want to get feedbacks for publications, you can use publisher raw api. In order to use it in client side, access the RealmProxy of your WampChannel and then access its TopicContainer property in order to obtain a WampTopicProxy to your topic. Then call Publish with PUBLISH parameters.
 In order to use it from router side: Obtain the realm by accessing the RealmContainer property of your WampHost, then access its TopicContainer property in order to access the topic by its uri, then call publish with desired parameters.</description>
     </item>
     
     <item>
       <title>Raw Subscriber</title>
-      <link>http://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/</link>
+      <link>https://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/</guid>
+      <guid>https://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/</guid>
       <description>Like other roles, subscriber also has a raw version, which allows you treat EVENT messages as you like. In order to use it, you need to implement the IWampRawTopicClientSubscriber interface.
 Usage Client sample using System; using System.Collections.Generic; using System.Threading.Tasks; using SystemEx; using WampSharp.Core.Serialization; using WampSharp.V2; using WampSharp.V2.Client; using WampSharp.V2.Core.Contracts; using WampSharp.V2.PubSub; namespace MyNamespace { internal class Program { public static void Main(string[] args) { const string serverAddress = &amp;quot;ws://127.0.0.1:8080/ws&amp;quot;; DefaultWampChannelFactory factory = new DefaultWampChannelFactory(); IWampChannel channel = factory.</description>
     </item>

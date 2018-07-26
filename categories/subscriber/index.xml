@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Subscriber on WampSharp</title>
-    <link>http://wampsharp.net/categories/subscriber/</link>
+    <link>https://wampsharp.net/categories/subscriber/</link>
     <description>Recent content in Subscriber on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
     
-	<atom:link href="http://wampsharp.net/categories/subscriber/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://wampsharp.net/categories/subscriber/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Getting started with Subscriber</title>
-      <link>http://wampsharp.net/wamp2/roles/subscriber/getting-started-with-subscriber/</link>
+      <link>https://wampsharp.net/wamp2/roles/subscriber/getting-started-with-subscriber/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/roles/subscriber/getting-started-with-subscriber/</guid>
+      <guid>https://wampsharp.net/wamp2/roles/subscriber/getting-started-with-subscriber/</guid>
       <description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your subscriber will use.
 About Subscriber role WAMPv2 defines a Subscriber role, that is a role that can subscribe to a WAMP realm&amp;rsquo;s topic. The subscriber will be notified about events published to the topic by publishers.
 WampSubject The WampSubject is the easiest way to subscribe to a topic of a WAMP router.
@@ -26,20 +26,20 @@ In order to use it, call the GetSubject method of the Services property</descrip
     
     <item>
       <title>Raw Subscriber</title>
-      <link>http://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/</link>
+      <link>https://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/</guid>
+      <guid>https://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/</guid>
       <description>Like other roles, subscriber also has a raw version, which allows you treat EVENT messages as you like. In order to use it, you need to implement the IWampRawTopicClientSubscriber interface.
 Usage Client sample using System; using System.Collections.Generic; using System.Threading.Tasks; using SystemEx; using WampSharp.Core.Serialization; using WampSharp.V2; using WampSharp.V2.Client; using WampSharp.V2.Core.Contracts; using WampSharp.V2.PubSub; namespace MyNamespace { internal class Program { public static void Main(string[] args) { const string serverAddress = &amp;quot;ws://127.0.0.1:8080/ws&amp;quot;; DefaultWampChannelFactory factory = new DefaultWampChannelFactory(); IWampChannel channel = factory.</description>
     </item>
     
     <item>
       <title>Reflection-based Subscriber</title>
-      <link>http://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/</link>
+      <link>https://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/</guid>
+      <guid>https://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/</guid>
       <description>Reflection-based Subscriber allows to use WAMPv2 subscriber features in a similar fashion as Reflection based Callee.
 In order to use it, create a class with a method having a [WampTopic] attribute, Then call RegisterSubscriber of IWampRealmServiceProvider.
 Both placing attributes on a class method and placing attributes on an interface implemented by the class are supported.
@@ -48,10 +48,10 @@ Basic usage public class MyClass { [JsonProperty(&amp;quot;counter&amp;quot;)] p
     
     <item>
       <title>Rx-based Subscriber</title>
-      <link>http://wampsharp.net/wamp2/roles/subscriber/rx-based-subscriber/</link>
+      <link>https://wampsharp.net/wamp2/roles/subscriber/rx-based-subscriber/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/roles/subscriber/rx-based-subscriber/</guid>
+      <guid>https://wampsharp.net/wamp2/roles/subscriber/rx-based-subscriber/</guid>
       <description>Rx-based Subscriber allows you to subscribe to events of a topic of a WAMP router realm, using Reactive Extensions Observable api.
 Basic usage private static async Task RunAsync() { DefaultWampChannelFactory factory = new DefaultWampChannelFactory(); const string serverAddress = &amp;quot;ws://127.0.0.1:8080/ws&amp;quot;; IWampChannel channel = factory.CreateJsonChannel(serverAddress, &amp;quot;realm1&amp;quot;); await channel.Open().ConfigureAwait(false); IWampRealmProxy realmProxy = channel.RealmProxy; IDisposable subscription = realmProxy.Services.GetSubject&amp;lt;int&amp;gt;(&amp;quot;com.myapp.topic1&amp;quot;) .Subscribe(x =&amp;gt; { Console.WriteLine(&amp;quot;Got Event: &amp;quot; + x); }); // Call subscription.Dispose(); to unsubscribe. }  GetSubject overloads GetSubject allows you to subscribe to a topic of a WAMP realm, given the type of the received events.</description>
     </item>

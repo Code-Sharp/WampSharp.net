@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>WAMP1s on WampSharp</title>
-    <link>http://wampsharp.net/wamp1/</link>
+    <link>https://wampsharp.net/wamp1/</link>
     <description>Recent content in WAMP1s on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
     
-	<atom:link href="http://wampsharp.net/wamp1/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://wampsharp.net/wamp1/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Getting started with WAMPv1</title>
-      <link>http://wampsharp.net/wamp1/getting-started-with-wampv1/</link>
+      <link>https://wampsharp.net/wamp1/getting-started-with-wampv1/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp1/getting-started-with-wampv1/</guid>
+      <guid>https://wampsharp.net/wamp1/getting-started-with-wampv1/</guid>
       <description>Create a new Console Application in Visual Studio.
 Open Package Manager Console (Tools -&amp;gt; Library Package Manager -&amp;gt; Package Manager Console) and enter the command
  Install-Package WampSharp.Default -Pre
@@ -28,10 +28,10 @@ using System; using WampSharp.V1; using WampSharp.V1.Rpc; namespace MyNamespace 
     
     <item>
       <title>Getting started with WAMPv1 client</title>
-      <link>http://wampsharp.net/wamp1/getting-started-with-wampv1-client/</link>
+      <link>https://wampsharp.net/wamp1/getting-started-with-wampv1-client/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp1/getting-started-with-wampv1-client/</guid>
+      <guid>https://wampsharp.net/wamp1/getting-started-with-wampv1-client/</guid>
       <description>Before you begin Raise up a WampHost such as in the Getting started tutorial.
 This tutorial will work against it.
 Create a console application Create a new Console Application in Visual Studio.
@@ -43,20 +43,20 @@ Creating a channel factory In order to create a channel factory use DefaultWampC
     
     <item>
       <title>Notes for WAMP1 users</title>
-      <link>http://wampsharp.net/wamp1/notes-for-wampv1-users/</link>
+      <link>https://wampsharp.net/wamp1/notes-for-wampv1-users/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp1/notes-for-wampv1-users/</guid>
+      <guid>https://wampsharp.net/wamp1/notes-for-wampv1-users/</guid>
       <description>If you are using WampSharp with WAMPv1 support and want to update to WAMPv2 version (without updating the protocol to WAMPv2) please read the following notes:
  All classes of WampSharp that are specific for WAMPv1 implementation have moved to namespace WampSharp.V1 Since Fleck has been updated to a newer version, specifying a host name in the serverAddress of a DefaultWampHost isn&amp;rsquo;t supported anymore. You need to specify an IP address.</description>
     </item>
     
     <item>
       <title>Server PubSub hosting (WAMPv1)</title>
-      <link>http://wampsharp.net/wamp1/server-pubsub-hosting-wampv1/</link>
+      <link>https://wampsharp.net/wamp1/server-pubsub-hosting-wampv1/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp1/server-pubsub-hosting-wampv1/</guid>
+      <guid>https://wampsharp.net/wamp1/server-pubsub-hosting-wampv1/</guid>
       <description>WampSharp contains a Pub/Sub mechanism.
 Declaring topics All WampSharp server-side topics are contained in a WampTopicContainer. This is a property of the DefaultWampHost (called TopicContainer).
 There are two types of topics:
@@ -65,10 +65,10 @@ There are two types of topics:
     
     <item>
       <title>Server RPC hosting (WAMPv1)</title>
-      <link>http://wampsharp.net/wamp1/server-rpc-hosting-wampv1/</link>
+      <link>https://wampsharp.net/wamp1/server-rpc-hosting-wampv1/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
-      <guid>http://wampsharp.net/wamp1/server-rpc-hosting-wampv1/</guid>
+      <guid>https://wampsharp.net/wamp1/server-rpc-hosting-wampv1/</guid>
       <description>As you&amp;rsquo;ve seen in The getting started tutorial, WampSharp allows you to host RPC services and consume them from a WAMP client.
 Declaring RPC services In order to declare a RPC service, just place a [WampRpcMethod] attribute above a method you want to expose. You can place the attribute either on the implemented method itself, or on a method belonging to an interface the RPC service implements.
 The WampRpcMethod receives a ProcUri in its constructor - that is used as an identifier for the WAMP method (used by a WAMP CALL request).</description>

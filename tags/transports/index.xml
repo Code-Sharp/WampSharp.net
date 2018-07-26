@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Transports on WampSharp</title>
-    <link>http://wampsharp.net/tags/transports/</link>
+    <link>https://wampsharp.net/tags/transports/</link>
     <description>Recent content in Transports on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Tue, 01 Aug 2017 10:25:07 +0900</lastBuildDate>
     
-	<atom:link href="http://wampsharp.net/tags/transports/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://wampsharp.net/tags/transports/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>RawSocket transport</title>
-      <link>http://wampsharp.net/wamp2/router/transports/rawsocket/</link>
+      <link>https://wampsharp.net/wamp2/router/transports/rawsocket/</link>
       <pubDate>Tue, 01 Aug 2017 10:25:07 +0900</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/router/transports/rawsocket/</guid>
+      <guid>https://wampsharp.net/wamp2/router/transports/rawsocket/</guid>
       <description>WampSharp supports the RawSocket transport. It is available through the WampSharp.RawSocket NuGet package.
 Router-side usage IWampHost host = new WampHost(); RawSocketTransport transport = new RawSocketTransport(TcpListener.Create(8080)); host.RegisterTransport(transport, new JTokenJsonBinding());  Client-side usage In order to obtain a RawSocket IWampChannel, you can use the fluent syntax api:
 IWampChannelFactory factory = new WampChannelFactory(); IWampChannel channel = factory.ConnectToRealm(&amp;quot;realm1&amp;quot;) .RawSocketTransport(&amp;quot;127.0.0.1&amp;quot;, 8080) .MsgpackSerialization() .Build();  This fluent-api allows some RawSocket customization features:
@@ -26,10 +26,10 @@ IWampChannelFactory factory = new WampChannelFactory(); IWampChannel channel = f
     
     <item>
       <title>WebSocket transports</title>
-      <link>http://wampsharp.net/wamp2/router/transports/websocket/</link>
+      <link>https://wampsharp.net/wamp2/router/transports/websocket/</link>
       <pubDate>Tue, 01 Aug 2017 10:25:07 +0900</pubDate>
       
-      <guid>http://wampsharp.net/wamp2/router/transports/websocket/</guid>
+      <guid>https://wampsharp.net/wamp2/router/transports/websocket/</guid>
       <description>This pages describes the currently available router side WebSockets transports for WampSharp.
 WampSharp.Fleck A Fleck based transport. It is the default transport for WampSharp (DefaultWampHost uses it). Supports .NET Framework 4.0.
 Usage:
