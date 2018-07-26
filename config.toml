@@ -1,4 +1,4 @@
-baseURL = "http://wampsharp.net"
+baseURL = "https://wampsharp.net"
 theme = "bootie-docs"
 languageCode = "en-us"
 title = "WampSharp"
