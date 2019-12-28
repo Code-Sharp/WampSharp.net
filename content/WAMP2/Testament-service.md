@@ -37,15 +37,17 @@ private static async Task Run()
 
     IWampChannel channel =
         channelFactory.ConnectToRealm("realm1")
-                      .WebSocketTransport("ws://127.0.0.1:8080/ws")
+                      .WebSocketTransport(new Uri("ws://127.0.0.1:8080/ws"))
                       .JsonSerialization()
                       .Build();
 
-    long? sessionId = null;
+    TaskCompletionSource<long> sessionIdTask = new TaskCompletionSource<long>();
 
-    channel.RealmProxy.Monitor.ConnectionEstablished += (sender, args) => { sessionId = args.SessionId; }; 
+    channel.RealmProxy.Monitor.ConnectionEstablished += (sender, args) => sessionIdTask.SetResult(args.SessionId);
 
     await channel.Open().ConfigureAwait(false);
+
+    long sessionId = await sessionIdTask.Task.ConfigureAwait(false);
 
     IWampTestamentServiceProxy proxy = channel.RealmProxy.GetTestamentServiceProxy();
 
