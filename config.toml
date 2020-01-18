@@ -2,7 +2,7 @@ baseURL = "https://wampsharp.net"
 theme = "bootie-docs"
 languageCode = "en-us"
 title = "WampSharp"
-copyright    = "Copyright (c) 2013-2018, Elad Zelingher; All rights reserved."
+copyright    = "Copyright (c) 2013-2020, Elad Zelingher; All rights reserved."
 
 [params]
 description = "A C# implementation of WAMP (The Web Application Messaging Protocol)"

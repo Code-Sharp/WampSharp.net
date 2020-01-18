@@ -25,7 +25,7 @@ From this version, WampSharp targets only the following .NET variants: [net461](
 
 ### Proxy implementation
 
-WampSharp had several implementations for its [Reflection based Caller]({{<ref "WAMP2/Roles/Caller/Reflection-based-Caller.md">}}) feature. For several platforms (`net40`, `net45`, `netstandard1.3`, `netstandard2.0`) it used [Castle.Core DynamicProxy](http://www.castleproject.org/projects/dynamicproxy/) and for others it used [System.Reflection.DispatchProxy](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.dispatchproxy?view=netcore-3.1). From this version, `System.Reflection.DispatchProxy` is used for every platform. This is an internal change of the library that should not library users.
+WampSharp had several implementations for its [Reflection based Caller]({{<ref "WAMP2/Roles/Caller/Reflection-based-Caller.md">}}) feature. For several platforms (`net40`, `net45`, `netstandard1.3`, `netstandard2.0`) it used [Castle.Core DynamicProxy](http://www.castleproject.org/projects/dynamicproxy/) and for others it used [System.Reflection.DispatchProxy](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.dispatchproxy?view=netcore-3.1). From this version, `System.Reflection.DispatchProxy` is used for every platform. This is an internal change of the library that should not affect library users.
 
 ### IAsyncDisposable
 
@@ -68,7 +68,7 @@ IWampChannel channel =
 await channel.Open().ConfigureAwait(false);
 
 IWampSessionManagementServiceProxy proxy = 
-    channel.RealmProxy.Services.GetCalleeProxy<IWampSessionManagementServiceProxy>();
+    channel.RealmProxy.GetManagementServiceProxy();
 
 await proxy.KillBySessionIdAsync(15068678494738).ConfigureAwait(false);
 
@@ -119,4 +119,55 @@ host.RegisterTransport(new FleckWebSocketTransport("ws://127.0.0.1:8080/ws"),
 //                         });
 
 host.Open();
+```
+
+### IAsyncDisposable support
+
+As mentioned above, the `RegisterCallee`/`RegisterSubscriber` methods now return the new `System.IAsyncDisposable` type: for `netstandard2.1` this type is available, while for `net461` and `netstandard2.0` the package [Microsoft.Bcl.AsyncInterfaces](https://www.nuget.org/packages/Microsoft.Bcl.AsyncInterfaces/) is used.
+
+This allows one to use the C# 8.0 [await using](https://www.tabsoverspaces.com/233779-using-await-using-iasyncdisposable-with-configureawait) feature. For example:
+
+```csharp
+class Program
+{
+    private static async Task Main()
+    {
+        WampChannelFactory factory = new WampChannelFactory();
+
+        IWampChannel channel =
+            factory.ConnectToRealm("realm1")
+                   .WebSocketTransport(new Uri("ws://localhost:8080/ws"))
+                   .JsonSerialization()
+                   .Build();
+
+        await channel.Open().ConfigureAwait(false);
+
+        Add2Service service = new Add2Service();
+
+        await using (IAsyncDisposable disposable =
+            await channel.RealmProxy.Services.RegisterCallee(service))
+        {
+            Console.WriteLine($"Registered!");
+
+            await Task.Yield();
+
+            Console.WriteLine("Hit any key to unregister");
+
+            Console.ReadKey();
+        }
+
+        Console.WriteLine("Unregistered");
+
+        Console.ReadLine();
+    }
+
+    private class Add2Service
+    {
+        [WampProcedure("com.arguments.add2")]
+        public int Add2(int a, int b)
+        {
+            return a + b;
+        }
+    }
+}
 ```
