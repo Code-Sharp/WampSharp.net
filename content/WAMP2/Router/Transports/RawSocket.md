@@ -10,6 +10,10 @@ It is available through the [WampSharp.RawSocket](https://www.nuget.org/packages
 
 ### Router-side usage
 
+### TcpListener implementation
+
+This is a standalone implementation which uses [`TcpListener`](https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.tcplistener). In order to use it, install the [WampSharp.RawSocket](https://www.nuget.org/packages/WampSharp.RawSocket) NuGet package. Usage example:
+
 ```csharp
 IWampHost host = new WampHost();
 
@@ -21,6 +25,109 @@ host.RegisterTransport(transport,
 
 ```
 
+### ASP.NET Core implementation
+
+This is an implementation of the RawSocket protocol using [Microsoft.AspNetCore.Connections.Abstractions](https://www.nuget.org/packages/Microsoft.AspNetCore.Connections.Abstractions/) package, which is part of [Project Bedrock](https://github.com/aspnet/KestrelHttpServer/issues/1980). This implementation is present in the package [WampSharp.AspNetCore.RawSocket](http://nuget.org/packages/WampSharp.AspNetCore.RawSocket).
+
+Usage sample:
+
+```csharp
+using System.Net;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using WampSharp.AspNetCore.RawSocket;
+using WampSharp.Binding;
+using WampSharp.V2;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        WampHost wampHost = new WampHost();
+
+        JTokenJsonBinding jsonBinding = new JTokenJsonBinding();
+
+        IWebHost host =
+            WebHost.CreateDefaultBuilder(args)
+                   .UseKestrel(options =>
+                               {
+                                   options.Listen(IPAddress.Loopback, 8080,
+                                                  builder =>
+                                                  {
+                                                      // Configure RawSocket transport
+                                                      wampHost
+                                                          .RegisterTransport(new AspNetCoreRawSocketTransport(builder),
+                                                                             jsonBinding);
+                                                  });
+                               })
+                   .Configure(app =>
+                              {
+                                  wampHost.Open();
+                              })
+                   .Build();
+
+        host.Run();
+    }
+}
+```
+
+This allows you to listen to both RawSocket and WebSocket requests on the same port. For example, the following code listens both to WAMP RawSocket requests on port 8080 and to WAMP WebSocket requests on `ws://localhost:8080/ws/` (using the [WampSharp.AspNetCore.WebSockets.Server](http://nuget.org/packages/WampSharp.AspNetCore.WebSockets.Server) package):
+
+```csharp
+using System.Net;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using WampSharp.AspNetCore.RawSocket;
+using WampSharp.AspNetCore.WebSockets.Server;
+using WampSharp.Binding;
+using WampSharp.V2;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        WampHost wampHost = new WampHost();
+
+        JTokenJsonBinding jsonBinding = new JTokenJsonBinding();
+
+        IWebHost host =
+            WebHost.CreateDefaultBuilder(args)
+                   .UseKestrel(options =>
+                               {
+                                   options.Listen(IPAddress.Loopback, 8080,
+                                                  builder =>
+                                                  {
+                                                      // Log all of the http bytes as they are sent and received
+                                                      builder.UseConnectionLogging();
+
+                                                      // Configure RawSocket transport
+                                                      wampHost
+                                                          .RegisterTransport(new AspNetCoreRawSocketTransport(builder),
+                                                                             jsonBinding);
+                                                  });
+                               })
+                   .Configure(app =>
+                              {
+                                  app.Map("/ws",
+                                          builder =>
+                                          {
+                                              builder.UseWebSockets();
+
+                                              // Configure WebSockets transport
+                                              wampHost.RegisterTransport
+                                                  (new AspNetCoreWebSocketTransport(builder),
+                                                   jsonBinding);
+                                          });
+
+                                  wampHost.Open();
+                              })
+                   .Build();
+
+        host.Run();
+    }
+}
+```
 
 ### Client-side usage
 
