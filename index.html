@@ -3,7 +3,7 @@
 
 <html lang="en">
 	<head>
-	<meta name="generator" content="Hugo 0.41" />
+	<meta name="generator" content="Hugo 0.62.2" />
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="alternate" href="/index.xml" type="application/rss+xml" title="WampSharp">
@@ -88,27 +88,17 @@
 
 
 	<div class="row doc-main">
-		<p class="doc-entry-meta"><time datetime="2017-07-30">July 30, 2017</time></p>
-		
-
-<p>This site contains documentation for the <a href="http://github.com/Code-Sharp/WampSharp">WampSharp project</a>.</p>
-
+		<p class="doc-entry-meta"><time datetime="2020-01-18">January 18, 2020</time></p>
+		<p>This site contains documentation for the <a href="http://github.com/Code-Sharp/WampSharp">WampSharp project</a>.</p>
 <h2 id="introduction">Introduction</h2>
-
 <p><a href="http://wamp.ws">WAMP (The Web Application Messaging Protocol)</a> is an open standard WebSocket subprotocol that provides two application messaging patterns in one unified protocol: Remote Procedure Calls + Publish &amp; Subscribe.</p>
-
 <p><a href="http://github.com/Code-Sharp/WampSharp">WampSharp</a> is a .NET open source implementation of WAMP which allows you to write RPC services and Pub/Sub based applications in a convenient way.</p>
-
 <h2 id="roadmap">Roadmap</h2>
-
 <ul>
 <li><a href="https://wampsharp.net/roadmap/">Roadmap</a></li>
 </ul>
-
 <h2 id="wampv2-documentation">WAMPv2 Documentation</h2>
-
 <h3 id="tutorials">Tutorials</h3>
-
 <ul>
 <li><a href="https://wampsharp.net/wamp2/getting-started-with-wampv2/">Getting started with WAMPv2</a></li>
 <li><a href="https://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/">Getting started with Callee</a></li>
@@ -116,43 +106,31 @@
 <li><a href="https://wampsharp.net/wamp2/roles/publisher/getting-started-with-publisher/">Getting started with Publisher</a></li>
 <li><a href="https://wampsharp.net/wamp2/roles/subscriber/getting-started-with-subscriber/">Getting started with Subscriber</a></li>
 </ul>
-
 <h3 id="roles">Roles</h3>
-
 <h4 id="callee">Callee</h4>
-
 <ul>
 <li><a href="https://wampsharp.net/wamp2/roles/callee/reflection-based-callee/">Reflection based Callee</a></li>
 <li><a href="https://wampsharp.net/wamp2/roles/callee/raw-callee/">Raw Callee</a></li>
 </ul>
-
 <h4 id="caller">Caller</h4>
-
 <ul>
 <li><a href="https://wampsharp.net/wamp2/roles/caller/reflection-based-caller/">Reflection based Caller</a></li>
 <li><a href="https://wampsharp.net/wamp2/roles/caller/raw-caller/">Raw Caller</a></li>
 </ul>
-
 <h4 id="publisher">Publisher</h4>
-
 <ul>
 <li><a href="https://wampsharp.net/wamp2/roles/publisher/rx-based-publisher/">Rx based Publisher</a></li>
 <li><a href="https://wampsharp.net/wamp2/roles/publisher/reflection-based-publisher/">Reflection based Publisher</a></li>
 <li><a href="https://wampsharp.net/wamp2/roles/publisher/raw-publisher/">Raw Publisher</a></li>
 </ul>
-
 <h4 id="subscriber">Subscriber</h4>
-
 <ul>
 <li><a href="https://wampsharp.net/wamp2/roles/subscriber/rx-based-subscriber/">Rx based Subscriber</a></li>
 <li><a href="https://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/">Reflection based Subscriber</a></li>
 <li><a href="https://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/">Raw Subscriber</a></li>
 </ul>
-
 <h3 id="advanced-profile-features">Advanced profile features</h3>
-
 <p>The following <a href="https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#advanced-profile-1">Advanced profile features</a> are supported</p>
-
 <ul>
 <li><a href="https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#progressive-call-results">Progressive call results</a>: <a href="https://wampsharp.net/wamp2/roles/caller/reflection-based-caller/#progressive-call-results">caller tutorial</a>, <a href="https://wampsharp.net/wamp2/roles/callee/reflection-based-callee/#progressive-call-results">callee tutorial</a></li>
 <li><a href="https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#call-canceling">Cancelation</a>: <a href="https://wampsharp.net/wamp2/roles/caller/reflection-based-caller/#cancellation">caller tutorial</a>, <a href="https://wampsharp.net/wamp2/roles/callee/reflection-based-callee/#cancellation">callee tutorial</a></li>
@@ -170,23 +148,19 @@
 <li><a href="https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#authentication">Authentication</a> - see <a href="https://wampsharp.net/wamp2/router/router-side-authentication/">Router side authentication</a>, <a href="https://wampsharp.net/wamp2/client/client-side-authentication/">Client side authentication</a>.</li>
 <li><a href="https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#wampcra">WAMP-CRA</a> - see <a href="https://wampsharp.net/wamp2/router/wamp-cra-router-side-authentication/">WAMP-CRA router side authentication</a>, <a href="https://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/">WAMP-CRA client side authentication</a></li>
 </ul>
-
 <h3 id="router">Router</h3>
-
 <ul>
 <li><a href="https://wampsharp.net/wamp2/router/wamphost/">WampHost</a></li>
 <li>Authentication
-
 <ul>
 <li><a href="https://wampsharp.net/wamp2/router/router-side-authentication/">Router side authentication</a></li>
 <li><a href="https://wampsharp.net/wamp2/router/wamp-cra-router-side-authentication/">WAMP-CRA router side authentication</a></li>
 <li><a href="https://wampsharp.net/wamp2/router/cookie-based-router-side-authentication/">Cookie based router side authentication</a></li>
-</ul></li>
+</ul>
+</li>
 <li>Transports
-
 <ul>
 <li><a href="https://wampsharp.net/wamp2/router/transports/websocket/">WebSockets</a>
-
 <ul>
 <li><a href="https://wampsharp.net/wamp2/router/transports/websocket/#wampsharp-fleck">Fleck</a></li>
 <li><a href="https://wampsharp.net/wamp2/router/transports/websocket/#wampsharp-vtortola">Vtortola</a></li>
@@ -194,34 +168,32 @@
 <li><a href="https://wampsharp.net/wamp2/router/transports/websocket/#wampsharp-aspnetcore-websockets-server">ASP.NET Core</a></li>
 <li><a href="https://wampsharp.net/wamp2/router/transports/websocket/#wampsharp-aspnet-websockets-server">ASP.NET</a></li>
 <li><a href="https://wampsharp.net/wamp2/router/transports/websocket/#wampsharp-owin">Microsoft.Owin</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="https://wampsharp.net/wamp2/router/transports/rawsocket/#router-side-usage">RawSocket</a></li>
 <li><a href="https://github.com/Code-Sharp/AutobahnJS.SignalR">SignalR</a></li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <h3 id="client">Client</h3>
-
 <ul>
 <li><a href="https://wampsharp.net/wamp2/client/wampchannel/">WampChannel</a></li>
 <li><a href="https://wampsharp.net/wamp2/client/wampchannelreconnector/">WampChannelReconnector</a></li>
 <li>Authentication
-
 <ul>
 <li><a href="https://wampsharp.net/wamp2/client/client-side-authentication/">Client side authentication</a></li>
 <li><a href="https://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/">WAMP-CRA client side authentication</a></li>
-</ul></li>
+</ul>
+</li>
 <li>Transports
-
 <ul>
 <li>WebSocket4Net</li>
 <li><a href="https://wampsharp.net/wamp2/router/transports/rawsocket/#client-side-usage">RawSocket</a></li>
 <li>System.Net.WebSockets</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <h2 id="wampv1">WAMPv1</h2>
-
 <ul>
 <li><a href="https://wampsharp.net/wamp1/getting-started-with-wampv1/">Get Started!</a></li>
 <li><a href="https://wampsharp.net/wamp1/getting-started-with-wampv1-client/">Getting Started with WAMP client</a></li>
@@ -229,10 +201,9 @@
 <li><a href="https://wampsharp.net/wamp1/server-pubsub-hosting-wampv1/">Server PubSub Hosting</a></li>
 <li><a href="https://wampsharp.net/wamp1/notes-for-wampv1-users/">Notes for WAMPv1 users</a></li>
 </ul>
-
 <h2 id="release-notes">Release Notes</h2>
-
 <ul>
+<li><a href="https://wampsharp.net/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a></li>
 <li><a href="https://wampsharp.net/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a></li>
 <li><a href="https://wampsharp.net/release-notes/wampsharp-v1.2.6.41-beta-release-notes/">WampSharp v1.2.6.41-beta release notes</a></li>
 <li><a href="https://wampsharp.net/release-notes/wampsharp-v1.2.5.21-beta-release-notes/">WampSharp v1.2.5.21-beta release notes</a></li>
@@ -465,6 +436,12 @@
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">
+						<span>WampSharp v20.1.1 release notes</span>
+						<span class="doc-entry-meta">(<time datetime="2020-01-18">January 18, 2020</time>)
+					</span>
+				</a></li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">
 						<span>WampSharp v18.6.1 release notes</span>
 						<span class="doc-entry-meta">(<time datetime="2018-06-01">June 01, 2018</time>)
@@ -672,7 +649,7 @@
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

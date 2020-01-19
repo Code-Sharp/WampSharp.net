@@ -1,6 +1,31 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://wampsharp.net/</loc>
+    <lastmod>2020-01-18T00:12:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/categories/</loc>
+    <lastmod>2020-01-18T00:12:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/categories/release-notes/</loc>
+    <lastmod>2020-01-18T00:12:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/release-notes/</loc>
+    <lastmod>2020-01-18T00:12:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/release-notes/wampsharp-v20.1.1-release-notes/</loc>
+    <lastmod>2020-01-18T00:12:00+00:00</lastmod>
+  </url>
   
   <url>
     <loc>https://wampsharp.net/release-notes/wampsharp-v18.6.1-release-notes/</loc>
@@ -13,7 +38,37 @@
   </url>
   
   <url>
+    <loc>https://wampsharp.net/categories/client/</loc>
+    <lastmod>2017-08-01T10:25:07+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://wampsharp.net/wamp2/router/transports/rawsocket/</loc>
+    <lastmod>2017-08-01T10:25:07+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/categories/router/</loc>
+    <lastmod>2017-08-01T10:25:07+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/tags/router/</loc>
+    <lastmod>2017-08-01T10:25:07+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/tags/</loc>
+    <lastmod>2017-08-01T10:25:07+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/tags/transports/</loc>
+    <lastmod>2017-08-01T10:25:07+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/wamp2/</loc>
     <lastmod>2017-08-01T10:25:07+09:00</lastmod>
   </url>
   
@@ -23,12 +78,52 @@
   </url>
   
   <url>
+    <loc>https://wampsharp.net/categories/authentication/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/tags/authentication/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/tags/callee/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/categories/callee/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/tags/caller/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/categories/caller/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/tags/client/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://wampsharp.net/wamp2/client/client-side-authentication/</loc>
     <lastmod>2017-07-30T00:16:09+03:00</lastmod>
   </url>
   
   <url>
     <loc>https://wampsharp.net/wamp2/router/cookie-based-router-side-authentication/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/categories/getting-started/</loc>
     <lastmod>2017-07-30T00:16:09+03:00</lastmod>
   </url>
   
@@ -78,6 +173,21 @@
   </url>
   
   <url>
+    <loc>https://wampsharp.net/categories/publisher/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/tags/publisher/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/tags/raw-api/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://wampsharp.net/wamp2/roles/callee/raw-callee/</loc>
     <lastmod>2017-07-30T00:16:09+03:00</lastmod>
   </url>
@@ -94,6 +204,11 @@
   
   <url>
     <loc>https://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/tags/reflection/</loc>
     <lastmod>2017-07-30T00:16:09+03:00</lastmod>
   </url>
   
@@ -123,7 +238,22 @@
   </url>
   
   <url>
+    <loc>https://wampsharp.net/categories/roadmap/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/tags/roadmap/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://wampsharp.net/wamp2/router/router-side-authentication/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/tags/rx/</loc>
     <lastmod>2017-07-30T00:16:09+03:00</lastmod>
   </url>
   
@@ -148,6 +278,21 @@
   </url>
   
   <url>
+    <loc>https://wampsharp.net/tags/services/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/categories/subscriber/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/tags/subscriber/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://wampsharp.net/wamp2/testament-service/</loc>
     <lastmod>2017-07-30T00:16:09+03:00</lastmod>
   </url>
@@ -163,6 +308,21 @@
   </url>
   
   <url>
+    <loc>https://wampsharp.net/categories/wamp1/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/tags/wamp1/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wampsharp.net/wamp1/</loc>
+    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://wampsharp.net/wamp2/client/wampchannel/</loc>
     <lastmod>2017-07-30T00:16:09+03:00</lastmod>
   </url>
@@ -173,12 +333,12 @@
   </url>
   
   <url>
-    <loc>https://wampsharp.net/wamp2/router/wamphost/</loc>
+    <loc>https://wampsharp.net/tags/wampcra/</loc>
     <lastmod>2017-07-30T00:16:09+03:00</lastmod>
   </url>
   
   <url>
-    <loc>https://wampsharp.net/</loc>
+    <loc>https://wampsharp.net/wamp2/router/wamphost/</loc>
     <lastmod>2017-07-30T00:16:09+03:00</lastmod>
   </url>
   
@@ -205,192 +365,6 @@
   <url>
     <loc>https://wampsharp.net/release-notes/wampsharp-v1.2.1.6-beta-release-notes/</loc>
     <lastmod>2015-02-28T10:25:07+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/authentication/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/categories/authentication/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/callee/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/categories/callee/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/caller/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/categories/caller/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/categories/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/client/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/categories/client/</loc>
-    <lastmod>2017-08-01T10:25:07+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/categories/getting-started/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/publisher/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/categories/publisher/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/raw-api/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/reflection/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/categories/release-notes/</loc>
-    <lastmod>2018-06-01T09:51:52-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/release-notes/</loc>
-    <lastmod>2018-06-01T09:51:52-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/roadmap/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/categories/roadmap/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/router/</loc>
-    <lastmod>2017-08-01T10:25:07+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/categories/router/</loc>
-    <lastmod>2017-08-01T10:25:07+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/rx/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/services/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/subscriber/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/categories/subscriber/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/transports/</loc>
-    <lastmod>2017-08-01T10:25:07+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/wamp1/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/wamp2/</loc>
-    <lastmod>2017-08-01T10:25:07+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/wamp1/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/categories/wamp1/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wampsharp.net/tags/wampcra/</loc>
-    <lastmod>2017-07-30T00:16:09+03:00</lastmod>
-    <priority>0</priority>
   </url>
   
 </urlset>

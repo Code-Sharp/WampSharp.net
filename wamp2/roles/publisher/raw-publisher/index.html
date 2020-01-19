@@ -84,98 +84,89 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p>If you want to get feedbacks for publications, you can use publisher raw api.
+					<p>If you want to get feedbacks for publications, you can use publisher raw api.
 In order to use it in client side, access the RealmProxy of your WampChannel and then access its TopicContainer property in order to obtain a WampTopicProxy to your topic. Then call Publish with PUBLISH parameters.</p>
-
 <p>In order to use it from router side:
 Obtain the realm by accessing the RealmContainer property of your WampHost, then access its TopicContainer property in order to access the topic by its uri, then call publish with desired parameters.</p>
-
 <h2 id="client-side-sample">Client side sample</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
-<pre><code class="language-csharp">const string serverAddress = &quot;ws://127.0.0.1:8080/ws&quot;;
+DefaultWampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
-DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
+IWampChannel channel = channelFactory.CreateJsonChannel(serverAddress, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-IWampChannel channel = channelFactory.CreateJsonChannel(serverAddress, &quot;realm1&quot;);
+<span style="color:#66d9ef">await</span> channel.Open();
 
-await channel.Open();
-
-int counter = 0;
+<span style="color:#66d9ef">int</span> counter = <span style="color:#ae81ff">0</span>;
 
 IWampTopicProxy topicProxy =
-    channel.RealmProxy.TopicContainer.GetTopicByUri(&quot;com.myapp.topic1&quot;);
+    channel.RealmProxy.TopicContainer.GetTopicByUri(<span style="color:#e6db74">&#34;com.myapp.topic1&#34;</span>);
 
-IObservable&lt;long&gt; timer =
-    Observable.Timer(TimeSpan.FromMilliseconds(0),
-                     TimeSpan.FromMilliseconds(1000));
+IObservable&lt;<span style="color:#66d9ef">long</span>&gt; timer =
+    Observable.Timer(TimeSpan.FromMilliseconds(<span style="color:#ae81ff">0</span>),
+                     TimeSpan.FromMilliseconds(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>));
 
-timer.Subscribe(async x =&gt;
+timer.Subscribe(<span style="color:#66d9ef">async</span> x =&gt;
     {
-        Task&lt;long?&gt; publishTask =
+        Task&lt;<span style="color:#66d9ef">long?</span>&gt; publishTask =
             topicProxy.Publish
-                (new PublishOptions
+                (<span style="color:#66d9ef">new</span> PublishOptions
                     {
-                        Acknowledge = true,
-                        DiscloseMe = true
+                        Acknowledge = <span style="color:#66d9ef">true</span>,
+                        DiscloseMe = <span style="color:#66d9ef">true</span>
                     },
-                 new object[] {counter});
+                 <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] {counter});
 
-        try
+        <span style="color:#66d9ef">try</span>
         {
-            long? publicationId = await publishTask;
+            <span style="color:#66d9ef">long?</span> publicationId = <span style="color:#66d9ef">await</span> publishTask;
 
-            if (publicationId != null)
+            <span style="color:#66d9ef">if</span> (publicationId != <span style="color:#66d9ef">null</span>)
             {
-                Console.WriteLine(&quot;Event published with publication ID &quot; + publicationId);
+                Console.WriteLine(<span style="color:#e6db74">&#34;Event published with publication ID &#34;</span> + publicationId);
             }
         }
-        catch (WampException ex)
+        <span style="color:#66d9ef">catch</span> (WampException ex)
         {
-            Console.WriteLine(&quot;An error occured while publishing event: &quot; +
+            Console.WriteLine(<span style="color:#e6db74">&#34;An error occured while publishing event: &#34;</span> +
                               ex);
         }
     });
-</code></pre>
+</code></pre></div><h2 id="router-side-sample">Router side sample</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
-<h2 id="router-side-sample">Router side sample</h2>
-
-<pre><code class="language-csharp">const string serverAddress = &quot;ws://127.0.0.1:8080/ws&quot;;
-
-DefaultWampHost host = new DefaultWampHost(serverAddress);
+DefaultWampHost host = <span style="color:#66d9ef">new</span> DefaultWampHost(serverAddress);
 
 host.Open();
 
-IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&quot;realm1&quot;);
+IWampHostedRealm realm = host.RealmContainer.GetRealmByName(<span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-IObservable&lt;long&gt; timer =
-    Observable.Timer(TimeSpan.FromMilliseconds(0),
-                     TimeSpan.FromMilliseconds(1000));
+IObservable&lt;<span style="color:#66d9ef">long</span>&gt; timer =
+    Observable.Timer(TimeSpan.FromMilliseconds(<span style="color:#ae81ff">0</span>),
+                     TimeSpan.FromMilliseconds(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>));
 
-int counter = 0;
+<span style="color:#66d9ef">int</span> counter = <span style="color:#ae81ff">0</span>;
 
 timer.Subscribe(x =&gt;
     {
-        try
+        <span style="color:#66d9ef">try</span>
         {
-            long publicationId =
+            <span style="color:#66d9ef">long</span> publicationId =
                 realm.TopicContainer.Publish
                     (WampObjectFormatter.Value,
-                     new PublishOptions(),
-                     &quot;com.myapp.topic1&quot;,
-                     new object[] {counter});
+                     <span style="color:#66d9ef">new</span> PublishOptions(),
+                     <span style="color:#e6db74">&#34;com.myapp.topic1&#34;</span>,
+                     <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] {counter});
 
-            Console.WriteLine(&quot;Event published with publication ID &quot; + publicationId);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Event published with publication ID &#34;</span> + publicationId);
         }
-        catch (WampException ex)
+        <span style="color:#66d9ef">catch</span> (WampException ex)
         {
-            Console.WriteLine(&quot;An error occured while publishing event: &quot; +
+            Console.WriteLine(<span style="color:#e6db74">&#34;An error occured while publishing event: &#34;</span> +
                               ex);
         }
     });
-</code></pre>
-
+</code></pre></div>
 				</section>
 			</article>
 		</main>
@@ -192,13 +183,10 @@ timer.Subscribe(x =&gt;
 				<li><strong><a href="#title">Raw Publisher</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#client-side-sample">Client side sample</a></li>
-<li><a href="#router-side-sample">Router side sample</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#client-side-sample">Client side sample</a></li>
+    <li><a href="#router-side-sample">Router side sample</a></li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -341,6 +329,9 @@ timer.Subscribe(x =&gt;
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -507,7 +498,7 @@ timer.Subscribe(x =&gt;
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

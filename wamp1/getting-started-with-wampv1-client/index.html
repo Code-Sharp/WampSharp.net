@@ -84,231 +84,184 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<h2 id="before-you-begin">Before you begin</h2>
-
+					<h2 id="before-you-begin">Before you begin</h2>
 <p>Raise up a WampHost such as in the <a href="https://wampsharp.net/wamp1/getting-started-with-wampv1/">Getting started tutorial</a>.</p>
-
 <p>This tutorial will work against it.</p>
-
 <h2 id="create-a-console-application">Create a console application</h2>
-
 <p>Create a new Console Application in Visual Studio.</p>
-
 <p>Open Package Manager Console (Tools -&gt; Library Package Manager -&gt; Package Manager Console) and enter the command</p>
-
 <blockquote>
 <p>Install-Package WampSharp.Default -Pre</p>
 </blockquote>
-
 <p>This will install the pre-release version of WampSharp.</p>
-
 <h2 id="creating-a-channel-factory">Creating a channel factory</h2>
-
-<p>In order to create a channel factory use DefaultWampChannelFactory&rsquo;s default constructor.</p>
-
-<pre><code class="language-csharp">DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
-</code></pre>
-
-<h2 id="obtaining-a-channel">Obtaining a channel</h2>
-
+<p>In order to create a channel factory use DefaultWampChannelFactory's default constructor.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">DefaultWampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
+</code></pre></div><h2 id="obtaining-a-channel">Obtaining a channel</h2>
 <p>A channel is an object that represents a WAMP session, and provides services for server communication.
-In order to obtain a channel, use the channel factory you&rsquo;ve created earlier and call CreateChannel extension method:</p>
-
-<pre><code class="language-csharp">IWampChannel&lt;JToken&gt; channel =
-    channelFactory.CreateChannel(&quot;ws://127.0.0.1:9000/&quot;);
-</code></pre>
-
-<p>After obtaining a channel, we open it. This establishes a connection to the server and waits for the WELCOME message:</p>
-
-<pre><code class="language-csharp">channel.Open();
-// NOTE: async version is also available;
-// Task channelOpen = channel.OpenAsync();
-</code></pre>
-
-<h2 id="consuming-rpc-methods">Consuming RPC methods</h2>
-
+In order to obtain a channel, use the channel factory you've created earlier and call CreateChannel extension method:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">IWampChannel&lt;JToken&gt; channel =
+    channelFactory.CreateChannel(<span style="color:#e6db74">&#34;ws://127.0.0.1:9000/&#34;</span>);
+</code></pre></div><p>After obtaining a channel, we open it. This establishes a connection to the server and waits for the WELCOME message:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">channel.Open();
+<span style="color:#75715e">// NOTE: async version is also available;
+</span><span style="color:#75715e"></span><span style="color:#75715e">// Task channelOpen = channel.OpenAsync();
+</span></code></pre></div><h2 id="consuming-rpc-methods">Consuming RPC methods</h2>
 <p>In order to consume a WAMP RPC method, we first need to declare an interface representing our service contract:
 For instance</p>
-
-<pre><code class="language-csharp">public interface ICalculator
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> ICalculator
 {
-    [WampRpcMethod(&quot;http://example.com/simple/calc#add&quot;)]
-    int Add(int x, int y);
+<span style="color:#a6e22e">    [WampRpcMethod(&#34;http://example.com/simple/calc#add&#34;)]</span>
+    <span style="color:#66d9ef">int</span> Add(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y);
 }
 
-public interface IAsyncCalculator
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IAsyncCalculator
 {
-    [WampRpcMethod(&quot;http://example.com/simple/calc#add&quot;)]
-    Task&lt;int&gt; Add(int x, int y);
+<span style="color:#a6e22e">    [WampRpcMethod(&#34;http://example.com/simple/calc#add&#34;)]</span>
+    Task&lt;<span style="color:#66d9ef">int</span>&gt; Add(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y);
 }
-</code></pre>
+</code></pre></div><p>After that, we can use the channel to get a proxy to this interface, and call its method:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">ICalculator proxy = channel.GetRpcProxy&lt;ICalculator&gt;();
+<span style="color:#66d9ef">int</span> five = proxy.Add(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>);
+Console.WriteLine(<span style="color:#e6db74">&#34;2 + 3 = &#34;</span> + five);
 
-<p>After that, we can use the channel to get a proxy to this interface, and call its method:</p>
-
-<pre><code class="language-csharp">ICalculator proxy = channel.GetRpcProxy&lt;ICalculator&gt;();
-int five = proxy.Add(2, 3);
-Console.WriteLine(&quot;2 + 3 = &quot; + five);
-
-// Async version
-IAsyncCalculator asyncProxy = channel.GetRpcProxy&lt;IAsyncCalculator&gt;();
-Task&lt;int&gt; asyncFive = asyncProxy.Add(2, 3);
-Console.WriteLine(&quot;2 + 3 = &quot; + asyncFive.Result);
-</code></pre>
-
-<h2 id="consuming-pubsub-topics-capabilities">Consuming PubSub topics capabilities</h2>
-
-<p>In order to use pub/sub capabilities, we call channel&rsquo;s GetSubject method: this method has a generic type parameter representing the type of the event published to the Subject. In addition, this method receives the uri of the topic we want to subscribe/publish to.</p>
-
+<span style="color:#75715e">// Async version
+</span><span style="color:#75715e"></span>IAsyncCalculator asyncProxy = channel.GetRpcProxy&lt;IAsyncCalculator&gt;();
+Task&lt;<span style="color:#66d9ef">int</span>&gt; asyncFive = asyncProxy.Add(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>);
+Console.WriteLine(<span style="color:#e6db74">&#34;2 + 3 = &#34;</span> + asyncFive.Result);
+</code></pre></div><h2 id="consuming-pubsub-topics-capabilities">Consuming PubSub topics capabilities</h2>
+<p>In order to use pub/sub capabilities, we call channel's GetSubject method: this method has a generic type parameter representing the type of the event published to the Subject. In addition, this method receives the uri of the topic we want to subscribe/publish to.</p>
 <p>We first create the event type:</p>
-
-<pre><code class="language-csharp">public class TopicEvent
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TopicEvent</span>
 {
-    [JsonProperty(&quot;a&quot;)]
-    public string A { get; set; }
+<span style="color:#a6e22e">    [JsonProperty(&#34;a&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> A { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [JsonProperty(&#34;b&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> B { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [JsonProperty(&#34;c&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> C { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
 
-    [JsonProperty(&quot;b&quot;)]
-    public string B { get; set; }
-
-    [JsonProperty(&quot;c&quot;)]
-    public int C { get; set; }
-
-    public override string ToString()
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> ToString()
     {
-        return string.Format(&quot;A: {0}, B: {1}, C: {2}&quot;, A, B, C);
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">string</span>.Format(<span style="color:#e6db74">&#34;A: {0}, B: {1}, C: {2}&#34;</span>, A, B, C);
     }
 }
-</code></pre>
-
-<p>After that, we can get a proxy to the server&rsquo;s topic:</p>
-
-<pre><code class="language-csharp">ISubject&lt;TopicEvent&gt; subject =
-    channel.GetSubject&lt;TopicEvent&gt;(@&quot;http://example.com/simple&quot;);
-</code></pre>
-
-<p>Subscribe to it:</p>
-
-<pre><code class="language-csharp">IDisposable subscription =
+</code></pre></div><p>After that, we can get a proxy to the server's topic:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">ISubject&lt;TopicEvent&gt; subject =
+    channel.GetSubject&lt;TopicEvent&gt;(<span style="color:#e6db74">@&#34;http://example.com/simple&#34;</span>);
+</code></pre></div><p>Subscribe to it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">IDisposable subscription =
     subject.Subscribe(x =&gt; Console.WriteLine(x));
-</code></pre>
-
-<p>Publish events to it:</p>
-
-<pre><code class="language-csharp">subject.OnNext(new TopicEvent()
+</code></pre></div><p>Publish events to it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">subject.OnNext(<span style="color:#66d9ef">new</span> TopicEvent()
                    {
-                       A = &quot;Yo&quot;,
-                       B = &quot;Cool&quot;,
-                       C = 3
+                       A = <span style="color:#e6db74">&#34;Yo&#34;</span>,
+                       B = <span style="color:#e6db74">&#34;Cool&#34;</span>,
+                       C = <span style="color:#ae81ff">3</span>
                    });
-</code></pre>
+</code></pre></div><p>And unsubscribe from it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">subscription.Dispose();
+</code></pre></div><h2 id="a-complete-sample">A complete sample</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">using</span> System;
+<span style="color:#66d9ef">using</span> System.Reactive.Subjects;
+<span style="color:#66d9ef">using</span> System.Threading.Tasks;
+<span style="color:#66d9ef">using</span> Newtonsoft.Json;
+<span style="color:#66d9ef">using</span> Newtonsoft.Json.Linq;
+<span style="color:#66d9ef">using</span> WampSharp.V1;
+<span style="color:#66d9ef">using</span> WampSharp.V1.Rpc;
 
-<p>And unsubscribe from it:</p>
-
-<pre><code class="language-csharp">subscription.Dispose();
-</code></pre>
-
-<h2 id="a-complete-sample">A complete sample</h2>
-
-<pre><code class="language-csharp">using System;
-using System.Reactive.Subjects;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using WampSharp.V1;
-using WampSharp.V1.Rpc;
-
-namespace ClientSample
+<span style="color:#66d9ef">namespace</span> ClientSample
 {
-    public class Program
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
     {
-        public class TopicEvent
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TopicEvent</span>
         {
-            [JsonProperty(&quot;a&quot;)]
-            public string A { get; set; }
+<span style="color:#a6e22e">            [JsonProperty(&#34;a&#34;)]</span>
+            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> A { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">            [JsonProperty(&#34;b&#34;)]</span>
+            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> B { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">            [JsonProperty(&#34;c&#34;)]</span>
+            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> C { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
 
-            [JsonProperty(&quot;b&quot;)]
-            public string B { get; set; }
-
-            [JsonProperty(&quot;c&quot;)]
-            public int C { get; set; }
-
-            public override string ToString()
+            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> ToString()
             {
-                return string.Format(&quot;A: {0}, B: {1}, C: {2}&quot;, A, B, C);
+                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">string</span>.Format(<span style="color:#e6db74">&#34;A: {0}, B: {1}, C: {2}&#34;</span>, A, B, C);
             }
         }
 
-        public interface ICalculator
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> ICalculator
         {
-            [WampRpcMethod(&quot;http://example.com/simple/calc#add&quot;)]
-            int Add(int x, int y);
+<span style="color:#a6e22e">            [WampRpcMethod(&#34;http://example.com/simple/calc#add&#34;)]</span>
+            <span style="color:#66d9ef">int</span> Add(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y);
         }
 
-        public interface IAsyncCalculator
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IAsyncCalculator
         {
-            [WampRpcMethod(&quot;http://example.com/simple/calc#add&quot;)]
-            Task&lt;int&gt; Add(int x, int y);
+<span style="color:#a6e22e">            [WampRpcMethod(&#34;http://example.com/simple/calc#add&#34;)]</span>
+            Task&lt;<span style="color:#66d9ef">int</span>&gt; Add(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y);
         }
 
-        static void Main(string[] args)
+        <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
         {
-            DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
+            DefaultWampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
             IWampChannel&lt;JToken&gt; channel =
-                channelFactory.CreateChannel(&quot;ws://127.0.0.1:9000/&quot;);
+                channelFactory.CreateChannel(<span style="color:#e6db74">&#34;ws://127.0.0.1:9000/&#34;</span>);
 
             channel.Open();
 
-            // RPC Method Call
-            ICalculator proxy = channel.GetRpcProxy&lt;ICalculator&gt;();
+            <span style="color:#75715e">// RPC Method Call
+</span><span style="color:#75715e"></span>            ICalculator proxy = channel.GetRpcProxy&lt;ICalculator&gt;();
 
-            int five = proxy.Add(2, 3);
+            <span style="color:#66d9ef">int</span> five = proxy.Add(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>);
 
-            Console.WriteLine(&quot;2 + 3 = &quot; + five);
+            Console.WriteLine(<span style="color:#e6db74">&#34;2 + 3 = &#34;</span> + five);
 
-            // Async version
-            IAsyncCalculator asyncProxy =
+            <span style="color:#75715e">// Async version
+</span><span style="color:#75715e"></span>            IAsyncCalculator asyncProxy =
                 channel.GetRpcProxy&lt;IAsyncCalculator&gt;();
 
-            Task&lt;int&gt; asyncFive =
-                asyncProxy.Add(2, 3);
+            Task&lt;<span style="color:#66d9ef">int</span>&gt; asyncFive =
+                asyncProxy.Add(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>);
 
-            Console.WriteLine(&quot;2 + 3 = &quot; + asyncFive.Result);
+            Console.WriteLine(<span style="color:#e6db74">&#34;2 + 3 = &#34;</span> + asyncFive.Result);
 
 
-            // PubSub subscription:
-            ISubject&lt;TopicEvent&gt; subject =
-                channel.GetSubject&lt;TopicEvent&gt;(@&quot;http://example.com/simple&quot;);
+            <span style="color:#75715e">// PubSub subscription:
+</span><span style="color:#75715e"></span>            ISubject&lt;TopicEvent&gt; subject =
+                channel.GetSubject&lt;TopicEvent&gt;(<span style="color:#e6db74">@&#34;http://example.com/simple&#34;</span>);
 
             IDisposable subscription =
-                subject.Subscribe(x =&gt; Console.WriteLine(&quot;Received &quot; + x));
+                subject.Subscribe(x =&gt; Console.WriteLine(<span style="color:#e6db74">&#34;Received &#34;</span> + x));
 
-            while (true)
+            <span style="color:#66d9ef">while</span> (<span style="color:#66d9ef">true</span>)
             {
-                Console.WriteLine(&quot;Enter publish or unsubscribe&quot;);
-                string line = Console.ReadLine();
+                Console.WriteLine(<span style="color:#e6db74">&#34;Enter publish or unsubscribe&#34;</span>);
+                <span style="color:#66d9ef">string</span> line = Console.ReadLine();
 
-                switch (line)
+                <span style="color:#66d9ef">switch</span> (line)
                 {
-                    case &quot;publish&quot;:
-                        subject.OnNext(new TopicEvent()
+                    <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;publish&#34;</span>:
+                        subject.OnNext(<span style="color:#66d9ef">new</span> TopicEvent()
                         {
-                            A = &quot;Yo&quot;,
-                            B = &quot;Cool&quot;,
-                            C = 3
+                            A = <span style="color:#e6db74">&#34;Yo&#34;</span>,
+                            B = <span style="color:#e6db74">&#34;Cool&#34;</span>,
+                            C = <span style="color:#ae81ff">3</span>
                         });
-                        break;
-                    case &quot;unsubscribe&quot;:
+                        <span style="color:#66d9ef">break</span>;
+                    <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;unsubscribe&#34;</span>:
                         subscription.Dispose();
-                        break;
+                        <span style="color:#66d9ef">break</span>;
                 }
             }
         }
     }
 }
-</code></pre>
-
+</code></pre></div>
 				</section>
 			</article>
 		</main>
@@ -325,18 +278,15 @@ namespace ClientSample
 				<li><strong><a href="#title">Getting started with WAMPv1 client</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#before-you-begin">Before you begin</a></li>
-<li><a href="#create-a-console-application">Create a console application</a></li>
-<li><a href="#creating-a-channel-factory">Creating a channel factory</a></li>
-<li><a href="#obtaining-a-channel">Obtaining a channel</a></li>
-<li><a href="#consuming-rpc-methods">Consuming RPC methods</a></li>
-<li><a href="#consuming-pubsub-topics-capabilities">Consuming PubSub topics capabilities</a></li>
-<li><a href="#a-complete-sample">A complete sample</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#before-you-begin">Before you begin</a></li>
+    <li><a href="#create-a-console-application">Create a console application</a></li>
+    <li><a href="#creating-a-channel-factory">Creating a channel factory</a></li>
+    <li><a href="#obtaining-a-channel">Obtaining a channel</a></li>
+    <li><a href="#consuming-rpc-methods">Consuming RPC methods</a></li>
+    <li><a href="#consuming-pubsub-topics-capabilities">Consuming PubSub topics capabilities</a></li>
+    <li><a href="#a-complete-sample">A complete sample</a></li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -478,6 +428,9 @@ namespace ClientSample
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -645,7 +598,7 @@ namespace ClientSample
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

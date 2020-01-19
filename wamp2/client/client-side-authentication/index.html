@@ -84,94 +84,85 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p>Client-side authentication is supported. In order to use client authentication, you need to implement an interface named IWampClientAuthenticator. Then, pass it to CreateChannel/CreateJsonChannel/CreateMsgpackChannel overloads of DefaultChannelFactory.
+					<p>Client-side authentication is supported. In order to use client authentication, you need to implement an interface named IWampClientAuthenticator. Then, pass it to CreateChannel/CreateJsonChannel/CreateMsgpackChannel overloads of DefaultChannelFactory.
 In IWampClientAuthenticator we supply the supported authentication methods and the authenticationid, these are passed in the HELLO message to the router (as details.authmethods, details.authid). We also implement Authenticate method, which sends an AUTHENTICATE message to the router upon CHALLENGE.</p>
-
 <h2 id="example">Example</h2>
-
-<pre><code class="language-csharp">public class TicketAuthenticator : IWampClientAuthenticator
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TicketAuthenticator</span> : IWampClientAuthenticator
 {
-    private static readonly string[] mAuthenticationMethods = { &quot;ticket&quot; };
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">readonly</span> <span style="color:#66d9ef">string</span>[] mAuthenticationMethods = { <span style="color:#e6db74">&#34;ticket&#34;</span> };
 
-    private readonly IDictionary&lt;string, string&gt; mTickets =
-        new Dictionary&lt;string, string&gt;()
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> IDictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>&gt; mTickets =
+        <span style="color:#66d9ef">new</span> Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>&gt;()
         {
-            {&quot;peter&quot;, &quot;magic_secret_1&quot;},
-            {&quot;joe&quot;, &quot;magic_secret_2&quot;}
+            {<span style="color:#e6db74">&#34;peter&#34;</span>, <span style="color:#e6db74">&#34;magic_secret_1&#34;</span>},
+            {<span style="color:#e6db74">&#34;joe&#34;</span>, <span style="color:#e6db74">&#34;magic_secret_2&#34;</span>}
         };
 
-    private const string User = &quot;peter&quot;;
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> User = <span style="color:#e6db74">&#34;peter&#34;</span>;
 
-    public AuthenticationResponse Authenticate(string authmethod, ChallengeDetails extra)
+    <span style="color:#66d9ef">public</span> AuthenticationResponse Authenticate(<span style="color:#66d9ef">string</span> authmethod, ChallengeDetails extra)
     {
-        if (authmethod == &quot;ticket&quot;)
+        <span style="color:#66d9ef">if</span> (authmethod == <span style="color:#e6db74">&#34;ticket&#34;</span>)
         {
-            Console.WriteLine(&quot;authenticating via '&quot; + authmethod + &quot;'&quot;);
+            Console.WriteLine(<span style="color:#e6db74">&#34;authenticating via &#39;&#34;</span> + authmethod + <span style="color:#e6db74">&#34;&#39;&#34;</span>);
 
             AuthenticationResponse result =
-                new AuthenticationResponse {Signature = mTickets[User]};
+                <span style="color:#66d9ef">new</span> AuthenticationResponse {Signature = mTickets[User]};
 
-            return result;
+            <span style="color:#66d9ef">return</span> result;
         }
-        else
+        <span style="color:#66d9ef">else</span>
         {
-            throw new WampAuthenticationException(&quot;don't know how to authenticate using '&quot; + authmethod + &quot;'&quot;);
-        }
-    }
-
-    public string[] AuthenticationMethods
-    {
-        get
-        {
-            return mAuthenticationMethods;
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampAuthenticationException(<span style="color:#e6db74">&#34;don&#39;t know how to authenticate using &#39;&#34;</span> + authmethod + <span style="color:#e6db74">&#34;&#39;&#34;</span>);
         }
     }
 
-    public string AuthenticationId
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span>[] AuthenticationMethods
     {
-        get
+        <span style="color:#66d9ef">get</span>
         {
-            return User;
+            <span style="color:#66d9ef">return</span> mAuthenticationMethods;
+        }
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> AuthenticationId
+    {
+        <span style="color:#66d9ef">get</span>
+        {
+            <span style="color:#66d9ef">return</span> User;
         }
     }
 }
-</code></pre>
-
-<p>Then we pass an instance of our authenticator to the ChannelFactory:</p>
-
-<pre><code class="language-csharp">public async Task Run()
+</code></pre></div><p>Then we pass an instance of our authenticator to the ChannelFactory:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
-    IWampClientAuthenticator authenticator = new TicketAuthenticator();
+    IWampClientAuthenticator authenticator = <span style="color:#66d9ef">new</span> TicketAuthenticator();
 
     IWampChannel channel =
-        channelFactory.CreateJsonChannel(&quot;ws://127.0.0.1:8080/ws&quot;,
-            &quot;realm1&quot;,
+        channelFactory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>,
+            <span style="color:#e6db74">&#34;realm1&#34;</span>,
             authenticator);
 
     IWampRealmProxy realmProxy = channel.RealmProxy;
 
-    await channel.Open();
+    <span style="color:#66d9ef">await</span> channel.Open();
 
-    // Call a rpc for example
-    ITimeService proxy = realmProxy.Services.GetCalleeProxy&lt;ITimeService&gt;();
+    <span style="color:#75715e">// Call a rpc for example
+</span><span style="color:#75715e"></span>    ITimeService proxy = realmProxy.Services.GetCalleeProxy&lt;ITimeService&gt;();
 
-    try
+    <span style="color:#66d9ef">try</span>
     {
-        string now = await proxy.Now();
-        Console.WriteLine(&quot;call result {0}&quot;, now);
+        <span style="color:#66d9ef">string</span> now = <span style="color:#66d9ef">await</span> proxy.Now();
+        Console.WriteLine(<span style="color:#e6db74">&#34;call result {0}&#34;</span>, now);
     }
-    catch (Exception e)
+    <span style="color:#66d9ef">catch</span> (Exception e)
     {
-        Console.WriteLine(&quot;call error {0}&quot;, e);
+        Console.WriteLine(<span style="color:#e6db74">&#34;call error {0}&#34;</span>, e);
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/v0.10.3/examples/twisted/wamp/authentication/ticket">this</a> AutobahnJS sample</p>
 </blockquote>
 
@@ -191,12 +182,9 @@ In IWampClientAuthenticator we supply the supported authentication methods and t
 				<li><strong><a href="#title">Client-side authentication</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#example">Example</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#example">Example</a></li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -340,6 +328,9 @@ In IWampClientAuthenticator we supply the supported authentication methods and t
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -506,7 +497,7 @@ In IWampClientAuthenticator we supply the supported authentication methods and t
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

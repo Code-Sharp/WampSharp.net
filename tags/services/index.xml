@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Services on WampSharp</title>
+    <title>services on WampSharp</title>
     <link>https://wampsharp.net/tags/services/</link>
-    <description>Recent content in Services on WampSharp</description>
+    <description>Recent content in services on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
+    <copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
     
 	<atom:link href="https://wampsharp.net/tags/services/index.xml" rel="self" type="application/rss+xml" />
@@ -20,7 +20,7 @@
       <guid>https://wampsharp.net/wamp2/meta-api-service/</guid>
       <description>WampSharp implements WAMP meta-api (i.e. session meta api, registration meta api and subscription meta api). It is possible both to consume WAMP meta-api from a WampSharp client, and to expose it from a WampSharp router.
 Exposing meta-api In order to expose meta-api, you can call an extension method of IWampHostedRealm, named &amp;ldquo;HostMetaApiService&amp;rdquo;. This method returns an IDisposable which you can dispose in order to unregister the meta-api service.
- Note: it is important to call HostMetaApiService before hosting any other components (callees/subscribers), since otherwise the meta-api service isn&amp;rsquo;t be able to track components registered before it.</description>
+ Note: it is important to call HostMetaApiService before hosting any other components (callees/subscribers), since otherwise the meta-api service isn&#39;t be able to track components registered before it.</description>
     </item>
     
     <item>
@@ -32,7 +32,7 @@ Exposing meta-api In order to expose meta-api, you can call an extension method 
       <description>The Testament feature is supported.
 This feature allows a client to request the router to publish some predefined events when the client disconnects.
 Enabling the testament service on the router-side In order to enable it from router-side, call HostTestamentService extension method of the relevant realm (this is similiar to the Router-side meta-api usage):
-DefaultWampHost host = new DefaultWampHost(&amp;quot;ws://127.0.0.1:8080/ws&amp;quot;); IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&amp;quot;realm1&amp;quot;); IDisposable disposable = realm.HostTestamentService(); // Uncomment to unregister the Testament service.</description>
+DefaultWampHost host = new DefaultWampHost(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;);IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&amp;#34;realm1&amp;#34;);IDisposable disposable = realm.HostTestamentService();// Uncomment to unregister the Testament service.</description>
     </item>
     
   </channel>

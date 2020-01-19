@@ -85,14 +85,13 @@
 				</div>
 				<section>
 					<p>If you are using WampSharp with WAMPv1 support and want to update to WAMPv2 version (without updating the protocol to WAMPv2) please read the following notes:</p>
-
 <ul>
 <li>All classes of WampSharp that are specific for WAMPv1 implementation have moved to namespace WampSharp.V1</li>
-<li>Since Fleck has been updated to a newer version, specifying a host name in the serverAddress of a DefaultWampHost isn&rsquo;t supported anymore. You need to specify an IP address.</li>
+<li>Since Fleck has been updated to a newer version, specifying a host name in the serverAddress of a DefaultWampHost isn't supported anymore. You need to specify an IP address.</li>
 <li>From <a href="https://wampsharp.net/release-notes/wampsharp-v1.2.2.8-beta-release-notes/">version v1.2.2.8</a>, WAMPv1 support has been moved to a dedicated dll name WampSharp.WAMP1.dll. The types DefaultWampHost, DefaultWampCraHost and DefaultWampChannelFactory (and some extension methods of IWampChannelFactory) are located in WampSharp.WAMP1.Default.dll.
 In order to update a WAMP1 application to this version, please uninstall WampSharp.Default and install WampSharp.WAMP1.Default instead.</li>
-<li>Please also note that <a href="https://groups.google.com/forum/#!msg/autobahnws/k-Jo8NnFtjA/qxnmFp2qGkMJ">WAMPv1 is deprecated</a>, and you&rsquo;re encouraged to upgrade your application to WAMPv2.</li>
-<li>.NET Standard support isn&rsquo;t available at this time for WAMPv1.</li>
+<li>Please also note that <a href="https://groups.google.com/forum/#!msg/autobahnws/k-Jo8NnFtjA/qxnmFp2qGkMJ">WAMPv1 is deprecated</a>, and you're encouraged to upgrade your application to WAMPv2.</li>
+<li>.NET Standard support isn't available at this time for WAMPv1.</li>
 </ul>
 
 				</section>
@@ -110,7 +109,7 @@ In order to update a WAMP1 application to this version, please uninstall WampSha
 			<ul>
 				<li><strong><a href="#title">Notes for WAMP1 users</a></strong></li>
 			</ul>
-			
+			<nav id="TableOfContents"></nav>
 		</div>
 	</div>
 	<div class="sidebar-module">
@@ -251,6 +250,9 @@ In order to update a WAMP1 application to this version, please uninstall WampSha
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -418,7 +420,7 @@ In order to update a WAMP1 application to this version, please uninstall WampSha
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

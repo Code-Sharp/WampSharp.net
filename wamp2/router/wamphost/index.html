@@ -84,82 +84,62 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p>A WampHost is an object that hosts a WampSharp router.</p>
-
+					<p>A WampHost is an object that hosts a WampSharp router.</p>
 <p>In order to use WampHost, instantiate a new instance of WampHost class.
 Then register the host with the transport and bindings you are interested in:</p>
-
 <p>For example: Initialization of a WampHost with FleckWebSocketTransport and Json and Msgpack binding support:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
-<pre><code class="language-csharp">const string serverAddress = &quot;ws://127.0.0.1:8080/ws&quot;;
+WampHost host = <span style="color:#66d9ef">new</span> WampHost();
 
-WampHost host = new WampHost();
-
-host.RegisterTransport(new FleckWebSocketTransport(serverAddress),
-                       new JTokenJsonBinding(),
-                       new JTokenMsgpackBinding());
-
-host.Open();
-</code></pre>
-
-<p>For example: Initialization of a WampHost with SignalRTransport and Json binding support:</p>
-
-<pre><code class="language-csharp">const string serverAddress = &quot;http://127.0.0.1:8080/wampsharp&quot;;
-
-WampHost host = new WampHost();
-
-host.RegisterTransport(new SignalRTransport(serverAddress, &quot;&quot;),
-                       new JTokenJsonBinding());
+host.RegisterTransport(<span style="color:#66d9ef">new</span> FleckWebSocketTransport(serverAddress),
+                       <span style="color:#66d9ef">new</span> JTokenJsonBinding(),
+                       <span style="color:#66d9ef">new</span> JTokenMsgpackBinding());
 
 host.Open();
-</code></pre>
+</code></pre></div><p>For example: Initialization of a WampHost with SignalRTransport and Json binding support:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;http://127.0.0.1:8080/wampsharp&#34;</span>;
 
-<p>Combining multiple transports:</p>
+WampHost host = <span style="color:#66d9ef">new</span> WampHost();
 
-<pre><code class="language-csharp">const string fleckAddress = &quot;ws://127.0.0.1:8080/ws&quot;;
-const string signalRAddress = &quot;http://127.0.0.1:9090/signalR&quot;;
+host.RegisterTransport(<span style="color:#66d9ef">new</span> SignalRTransport(serverAddress, <span style="color:#e6db74">&#34;&#34;</span>),
+                       <span style="color:#66d9ef">new</span> JTokenJsonBinding());
 
-WampHost host = new WampHost();
+host.Open();
+</code></pre></div><p>Combining multiple transports:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> fleckAddress = <span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>;
+<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> signalRAddress = <span style="color:#e6db74">&#34;http://127.0.0.1:9090/signalR&#34;</span>;
 
-JTokenJsonBinding jsonBinding = new JTokenJsonBinding();
-JTokenMsgpackBinding msgpackBinding = new JTokenMsgpackBinding();
+WampHost host = <span style="color:#66d9ef">new</span> WampHost();
 
-host.RegisterTransport(new FleckWebSocketTransport(fleckAddress),
+JTokenJsonBinding jsonBinding = <span style="color:#66d9ef">new</span> JTokenJsonBinding();
+JTokenMsgpackBinding msgpackBinding = <span style="color:#66d9ef">new</span> JTokenMsgpackBinding();
+
+host.RegisterTransport(<span style="color:#66d9ef">new</span> FleckWebSocketTransport(fleckAddress),
                        jsonBinding,
                        msgpackBinding);
 
-host.RegisterTransport(new SignalRTransport(signalRAddress, &quot;&quot;),
+host.RegisterTransport(<span style="color:#66d9ef">new</span> SignalRTransport(signalRAddress, <span style="color:#e6db74">&#34;&#34;</span>),
                        jsonBinding);
 
 host.Open();
-</code></pre>
-
-<p>After that, you consume the roles you are interested in as described in the getting started tutorials:</p>
-
+</code></pre></div><p>After that, you consume the roles you are interested in as described in the getting started tutorials:</p>
 <ul>
 <li><a href="https://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/">Getting started with Callee</a></li>
 <li><a href="https://wampsharp.net/wamp2/roles/caller/getting-started-with-caller/">Getting started with Caller</a></li>
 <li><a href="https://wampsharp.net/wamp2/roles/subscriber/getting-started-with-subscriber/">Getting started with Subscriber</a></li>
 <li><a href="https://wampsharp.net/wamp2/roles/publisher/getting-started-with-publisher/">Getting started with Publisher</a></li>
 </ul>
-
 <h2 id="defaultwamphost">DefaultWampHost</h2>
-
 <p>Since the most common usage of WampSharp is with Fleck and Json/Msgpack support, there exists a class named DefaultWampHost which instantiates a WampHost with FleckWebSocketTransport and JTokenJsonBinding, JTokenMsgpackBinding.</p>
-
-<p>In order to use it, provide only the server address in the class&rsquo;s constructor.</p>
-
+<p>In order to use it, provide only the server address in the class's constructor.</p>
 <h3 id="example">Example</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;http://127.0.0.1:8080/ws&#34;</span>;
 
-<pre><code class="language-csharp">const string serverAddress = &quot;http://127.0.0.1:8080/ws&quot;;
-
-WampHost host = new DefaultWampHost(serverAddress);
+WampHost host = <span style="color:#66d9ef">new</span> DefaultWampHost(serverAddress);
 
 host.Open();
-</code></pre>
-
+</code></pre></div>
 				</section>
 			</article>
 		</main>
@@ -176,15 +156,13 @@ host.Open();
 				<li><strong><a href="#title">WampHost</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#defaultwamphost">DefaultWampHost</a>
-<ul>
-<li><a href="#example">Example</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#defaultwamphost">DefaultWampHost</a>
+      <ul>
+        <li><a href="#example">Example</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -326,6 +304,9 @@ host.Open();
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -493,7 +474,7 @@ host.Open();
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

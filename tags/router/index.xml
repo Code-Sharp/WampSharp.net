@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Router on WampSharp</title>
+    <title>router on WampSharp</title>
     <link>https://wampsharp.net/tags/router/</link>
-    <description>Recent content in Router on WampSharp</description>
+    <description>Recent content in router on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
+    <copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Tue, 01 Aug 2017 10:25:07 +0900</lastBuildDate>
     
 	<atom:link href="https://wampsharp.net/tags/router/index.xml" rel="self" type="application/rss+xml" />
@@ -19,9 +19,8 @@
       
       <guid>https://wampsharp.net/wamp2/router/transports/rawsocket/</guid>
       <description>WampSharp supports the RawSocket transport. It is available through the WampSharp.RawSocket NuGet package.
-Router-side usage IWampHost host = new WampHost(); RawSocketTransport transport = new RawSocketTransport(TcpListener.Create(8080)); host.RegisterTransport(transport, new JTokenJsonBinding());  Client-side usage In order to obtain a RawSocket IWampChannel, you can use the fluent syntax api:
-IWampChannelFactory factory = new WampChannelFactory(); IWampChannel channel = factory.ConnectToRealm(&amp;quot;realm1&amp;quot;) .RawSocketTransport(&amp;quot;127.0.0.1&amp;quot;, 8080) .MsgpackSerialization() .Build();  This fluent-api allows some RawSocket customization features:
-IWampChannelFactory factory = new WampChannelFactory(); IWampChannel channel = factory.</description>
+Router-side usage TcpListener implementation This is a standalone implementation which uses TcpListener. In order to use it, install the WampSharp.RawSocket NuGet package. Usage example:
+IWampHost host = new WampHost();RawSocketTransport transport =new RawSocketTransport(TcpListener.Create(8080));host.RegisterTransport(transport,new JTokenJsonBinding());ASP.NET Core implementation This is an implementation of the RawSocket protocol using Microsoft.AspNetCore.Connections.Abstractions package, which is part of Project Bedrock. This implementation is present in the package WampSharp.</description>
     </item>
     
     <item>
@@ -33,10 +32,10 @@ IWampChannelFactory factory = new WampChannelFactory(); IWampChannel channel = f
       <description>This pages describes the currently available router side WebSockets transports for WampSharp.
 WampSharp.Fleck A Fleck based transport. It is the default transport for WampSharp (DefaultWampHost uses it). Supports .NET Framework 4.0.
 Usage:
-WampHost host = new WampHost(); host.RegisterTransport(new FleckWebSocketTransport(&amp;quot;ws://127.0.0.1:8080/ws&amp;quot;), new JTokenJsonBinding(), new JTokenMsgpackBinding()); host.Open();  Or
-WampHost host = new DefaultWampHost(&amp;quot;ws://127.0.0.1:8080/ws&amp;quot;); host.Open();  WampSharp.Vtortola A transport based on vtortola&amp;rsquo;s WebSocketListener. Supports permessage-deflate.
+WampHost host = new WampHost();host.RegisterTransport(new FleckWebSocketTransport(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;),new JTokenJsonBinding(),new JTokenMsgpackBinding());host.Open();Or
+WampHost host = new DefaultWampHost(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;);host.Open();WampSharp.Vtortola A transport based on vtortola&#39;s WebSocketListener. Supports permessage-deflate.
 Usage:
-WampHost host = new WampHost(); IWampTransport transport = new VtortolaWebSocketTransport (endpoint: new IPEndPoint(IPAddress.</description>
+WampHost host = new WampHost();IWampTransport transport =new VtortolaWebSocketTransport(endpoint: new IPEndPoint(IPAddress.</description>
     </item>
     
     <item>
@@ -45,7 +44,7 @@ WampHost host = new WampHost(); IWampTransport transport = new VtortolaWebSocket
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
       <guid>https://wampsharp.net/wamp2/router/cookie-based-router-side-authentication/</guid>
-      <description>It is possible to build authenticators that are cookie-based. In order to that, one needs to implement an interface named ICookieAuthenticatorFactory and pass it to DefaultWampAuthenticationHost&amp;rsquo;s constructor, (or to FleckAuthenticatedWebSocketTransport/VtortolaAuthenticatedWebSocketTransport constructors).
+      <description>It is possible to build authenticators that are cookie-based. In order to that, one needs to implement an interface named ICookieAuthenticatorFactory and pass it to DefaultWampAuthenticationHost&#39;s constructor, (or to FleckAuthenticatedWebSocketTransport/VtortolaAuthenticatedWebSocketTransport constructors).
 The interface consists of a single method named &amp;ldquo;CreateAuthenticator&amp;rdquo;, which receives as a parameter an ICookieProvider, that is an interface that allows to access client cookies for read-only.
 The authenticator created by the &amp;ldquo;CreateAuthenticator&amp;rdquo; method will be passed to the IWampSessionAuthenticatorFactory passed to the (Default)WampAuthenticationHost as the transportAuthenticator parameter.</description>
     </item>
@@ -58,7 +57,7 @@ The authenticator created by the &amp;ldquo;CreateAuthenticator&amp;rdquo; metho
       <guid>https://wampsharp.net/wamp2/meta-api-service/</guid>
       <description>WampSharp implements WAMP meta-api (i.e. session meta api, registration meta api and subscription meta api). It is possible both to consume WAMP meta-api from a WampSharp client, and to expose it from a WampSharp router.
 Exposing meta-api In order to expose meta-api, you can call an extension method of IWampHostedRealm, named &amp;ldquo;HostMetaApiService&amp;rdquo;. This method returns an IDisposable which you can dispose in order to unregister the meta-api service.
- Note: it is important to call HostMetaApiService before hosting any other components (callees/subscribers), since otherwise the meta-api service isn&amp;rsquo;t be able to track components registered before it.</description>
+ Note: it is important to call HostMetaApiService before hosting any other components (callees/subscribers), since otherwise the meta-api service isn&#39;t be able to track components registered before it.</description>
     </item>
     
     <item>
@@ -68,8 +67,8 @@ Exposing meta-api In order to expose meta-api, you can call an extension method 
       
       <guid>https://wampsharp.net/wamp2/router/router-side-authentication/</guid>
       <description>This page describes router-side authentication.
-In order to use router-side authentication, you&amp;rsquo;ll need to create an instance of a (Default)WampAuthenticationHost and initialize it with a IWampSessionAuthenticatorFactory - that is an interface which will create a IWampSessionAuthenticator - a mechanism which is responsible of the authentication process of an individual client.
-IWampSessionAuthenticator IWampSessionAuthenticator is an interface which represents a mechanism which is responsible of the authentication process of an individual client.</description>
+In order to use router-side authentication, you&#39;ll need to create an instance of a (Default)WampAuthenticationHost and initialize it with a IWampSessionAuthenticatorFactory - that is an interface which will create a IWampSessionAuthenticator - a mechanism which is responsible of the authentication process of an individual client.
+IWampSessionAuthenticator IWampSessionAuthenticator is an interface which represents a mechanism which is responsible of the authentication process of an individual client. Whenever a client requests to join the router (i.</description>
     </item>
     
     <item>
@@ -81,7 +80,7 @@ IWampSessionAuthenticator IWampSessionAuthenticator is an interface which repres
       <description>The Testament feature is supported.
 This feature allows a client to request the router to publish some predefined events when the client disconnects.
 Enabling the testament service on the router-side In order to enable it from router-side, call HostTestamentService extension method of the relevant realm (this is similiar to the Router-side meta-api usage):
-DefaultWampHost host = new DefaultWampHost(&amp;quot;ws://127.0.0.1:8080/ws&amp;quot;); IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&amp;quot;realm1&amp;quot;); IDisposable disposable = realm.HostTestamentService(); // Uncomment to unregister the Testament service.</description>
+DefaultWampHost host = new DefaultWampHost(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;);IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&amp;#34;realm1&amp;#34;);IDisposable disposable = realm.HostTestamentService();// Uncomment to unregister the Testament service.</description>
     </item>
     
     <item>
@@ -103,7 +102,7 @@ It is also possible to add additional data (sent upon CHALLENGE message in extra
       <description>A WampHost is an object that hosts a WampSharp router.
 In order to use WampHost, instantiate a new instance of WampHost class. Then register the host with the transport and bindings you are interested in:
 For example: Initialization of a WampHost with FleckWebSocketTransport and Json and Msgpack binding support:
-const string serverAddress = &amp;quot;ws://127.0.0.1:8080/ws&amp;quot;; WampHost host = new WampHost(); host.RegisterTransport(new FleckWebSocketTransport(serverAddress), new JTokenJsonBinding(), new JTokenMsgpackBinding()); host.Open();  For example: Initialization of a WampHost with SignalRTransport and Json binding support:</description>
+const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;;WampHost host = new WampHost();host.RegisterTransport(new FleckWebSocketTransport(serverAddress),new JTokenJsonBinding(),new JTokenMsgpackBinding());host.Open();For example: Initialization of a WampHost with SignalRTransport and Json binding support:</description>
     </item>
     
   </channel>

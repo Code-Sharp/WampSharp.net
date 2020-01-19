@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Raw Api on WampSharp</title>
+    <title>raw api on WampSharp</title>
     <link>https://wampsharp.net/tags/raw-api/</link>
-    <description>Recent content in Raw Api on WampSharp</description>
+    <description>Recent content in raw api on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
+    <copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
     
 	<atom:link href="https://wampsharp.net/tags/raw-api/index.xml" rel="self" type="application/rss+xml" />
@@ -30,7 +30,7 @@ In order to use the raw callee api, implement IWampRpcOperation. A IWampFormatte
       
       <guid>https://wampsharp.net/wamp2/roles/caller/raw-caller/</guid>
       <description>The callee proxy is the easiest way to consume WAMP caller capabilities, but it is limited to C# features. In some cases you might want to handle a RESULT message differently. For these cases, the Raw callback api exists.
-In order to use raw callback api from a WampSharp client, create a class implementing IWampRawRpcOperationClientCallback. This class will be notified when a result arrives. Then create a new instance of your class, and access RpcCatalog property of WampChannel&amp;rsquo;s RealmProxy, then call Invoke of your desired method with desired parameters.</description>
+In order to use raw callback api from a WampSharp client, create a class implementing IWampRawRpcOperationClientCallback. This class will be notified when a result arrives. Then create a new instance of your class, and access RpcCatalog property of WampChannel&#39;s RealmProxy, then call Invoke of your desired method with desired parameters.</description>
     </item>
     
     <item>
@@ -50,7 +50,7 @@ In order to use it from router side: Obtain the realm by accessing the RealmCont
       
       <guid>https://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/</guid>
       <description>Like other roles, subscriber also has a raw version, which allows you treat EVENT messages as you like. In order to use it, you need to implement the IWampRawTopicClientSubscriber interface.
-Usage Client sample using System; using System.Collections.Generic; using System.Threading.Tasks; using SystemEx; using WampSharp.Core.Serialization; using WampSharp.V2; using WampSharp.V2.Client; using WampSharp.V2.Core.Contracts; using WampSharp.V2.PubSub; namespace MyNamespace { internal class Program { public static void Main(string[] args) { const string serverAddress = &amp;quot;ws://127.0.0.1:8080/ws&amp;quot;; DefaultWampChannelFactory factory = new DefaultWampChannelFactory(); IWampChannel channel = factory.</description>
+Usage Client sample using System;using System.Collections.Generic;using System.Threading.Tasks;using SystemEx;using WampSharp.Core.Serialization;using WampSharp.V2;using WampSharp.V2.Client;using WampSharp.V2.Core.Contracts;using WampSharp.V2.PubSub;namespace MyNamespace{internal class Program{public static void Main(string[] args){const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;;DefaultWampChannelFactory factory = new DefaultWampChannelFactory();IWampChannel channel =factory.</description>
     </item>
     
   </channel>

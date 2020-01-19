@@ -84,117 +84,88 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p>A WampChannel is an object that represents a WAMP client session to a remote router.</p>
-
+					<p>A WampChannel is an object that represents a WAMP client session to a remote router.</p>
 <p>In order to obtain a WampChannel, instantiate an instance of the WampChannelFactory class, and call CreateChannel with the desired realm to connect to, the desired WampConnection and the desired binding.</p>
-
 <p>For example: connecting to a remote router with Msgpack support and WebSocket4NetConnection:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
-<pre><code class="language-csharp">const string serverAddress = &quot;ws://127.0.0.1:8080/ws&quot;;
+WampChannelFactory factory = <span style="color:#66d9ef">new</span> WampChannelFactory();
 
-WampChannelFactory factory = new WampChannelFactory();
-
-JTokenMsgpackBinding msgpackBinding = new JTokenMsgpackBinding();
+JTokenMsgpackBinding msgpackBinding = <span style="color:#66d9ef">new</span> JTokenMsgpackBinding();
 
 IWampChannel channel =
-    factory.CreateChannel(&quot;realm1&quot;,
-                          new WebSocket4NetBinaryConnection&lt;JToken&gt;(serverAddress, msgpackBinding),
+    factory.CreateChannel(<span style="color:#e6db74">&#34;realm1&#34;</span>,
+                          <span style="color:#66d9ef">new</span> WebSocket4NetBinaryConnection&lt;JToken&gt;(serverAddress, msgpackBinding),
                           msgpackBinding);
 
-await channel.Open().ConfigureAwait(false);
-</code></pre>
+<span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
+</code></pre></div><p>For example: connecting to a remote router with Json support and SignalRConnection (with long polling transport):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;http://127.0.0.1:8080/wampsharp&#34;</span>;
 
-<p>For example: connecting to a remote router with Json support and SignalRConnection (with long polling transport):</p>
+WampChannelFactory factory = <span style="color:#66d9ef">new</span> WampChannelFactory();
 
-<pre><code class="language-csharp">const string serverAddress = &quot;http://127.0.0.1:8080/wampsharp&quot;;
-
-WampChannelFactory factory = new WampChannelFactory();
-
-JTokenJsonBinding jsonBinding = new JTokenJsonBinding();
+JTokenJsonBinding jsonBinding = <span style="color:#66d9ef">new</span> JTokenJsonBinding();
 
 SignalRTextConnection&lt;JToken&gt; signalRConnection =
-    new SignalRTextConnection&lt;JToken&gt;
-        (serverAddress, jsonBinding, new LongPollingTransport());
+    <span style="color:#66d9ef">new</span> SignalRTextConnection&lt;JToken&gt;
+        (serverAddress, jsonBinding, <span style="color:#66d9ef">new</span> LongPollingTransport());
 
 IWampChannel channel =
-    factory.CreateChannel(&quot;realm1&quot;,
+    factory.CreateChannel(<span style="color:#e6db74">&#34;realm1&#34;</span>,
                           signalRConnection,
                           jsonBinding);
 
-await channel.Open().ConfigureAwait(false);
-</code></pre>
-
-<h2 id="defaultwampchannelfactory">DefaultWampChannelFactory</h2>
-
+<span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
+</code></pre></div><h2 id="defaultwampchannelfactory">DefaultWampChannelFactory</h2>
 <p>Since the common case is to use a WebSocket4Net connection with MessagePack or Json binding, there exists the DefaultWampChannelFactory class.</p>
-
 <p>It has overloads that allow you obtain a WampChannel in a easier way:</p>
-
 <p>Obtaining a Json channel:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;http://127.0.0.1:8080/wampsharp&#34;</span>;
 
-<pre><code class="language-csharp">const string serverAddress = &quot;http://127.0.0.1:8080/wampsharp&quot;;
-
-DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
-
-IWampChannel channel =
-    factory.CreateJsonChannel(serverAddress, &quot;realm1&quot;);
-
-await channel.Open().ConfigureAwait(false);
-</code></pre>
-
-<p>Obtaining a Msgpack channel:</p>
-
-<pre><code class="language-csharp">const string serverAddress = &quot;http://127.0.0.1:8080/wampsharp&quot;;
-
-DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
 IWampChannel channel =
-    factory.CreateMsgpackChannel(serverAddress, &quot;realm1&quot;);
+    factory.CreateJsonChannel(serverAddress, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-await channel.Open().ConfigureAwait(false);
-</code></pre>
+<span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
+</code></pre></div><p>Obtaining a Msgpack channel:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;http://127.0.0.1:8080/wampsharp&#34;</span>;
 
-<h2 id="fluent-syntax">Fluent syntax</h2>
+DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
+IWampChannel channel =
+    factory.CreateMsgpackChannel(serverAddress, <span style="color:#e6db74">&#34;realm1&#34;</span>);
+
+<span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
+</code></pre></div><h2 id="fluent-syntax">Fluent syntax</h2>
 <p>Fluent syntax is an alternative api for the above. The api is fluent and allows customization.</p>
-
-<p>In order to use it, you need to add an using directive. Note that the available api depends on which WampSharp packages you installed. (For instance, if you haven&rsquo;t installed WampSharp.NewtonsoftMsgpack, then msgpack extension methods won&rsquo;t be present)</p>
-
-<pre><code class="language-csharp">using WampSharp.V2.Fluent;
-</code></pre>
-
-<p>Examples:</p>
-
-<pre><code class="language-csharp">IWampChannelFactory factory = new WampChannelFactory();
+<p>In order to use it, you need to add an using directive. Note that the available api depends on which WampSharp packages you installed. (For instance, if you haven't installed WampSharp.NewtonsoftMsgpack, then msgpack extension methods won't be present)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">using</span> WampSharp.V2.Fluent;
+</code></pre></div><p>Examples:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">IWampChannelFactory factory = <span style="color:#66d9ef">new</span> WampChannelFactory();
 
 IWampChannel channel =
-    factory.ConnectToRealm(&quot;realm1&quot;)
-           .WebSocketTransport(&quot;ws://127.0.0.1:8080/ws&quot;)
+    factory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
+           .WebSocketTransport(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>)
            .MsgpackSerialization()
            .Build();
 
-await channel.Open();
-</code></pre>
-
-<p>This feels more modular in some sense:</p>
-
-<pre><code class="language-csharp">IWampChannelFactory factory = new WampChannelFactory();
+<span style="color:#66d9ef">await</span> channel.Open();
+</code></pre></div><p>This feels more modular in some sense:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">IWampChannelFactory factory = <span style="color:#66d9ef">new</span> WampChannelFactory();
 
 IWampChannel channel =
-    factory.ConnectToRealm(&quot;realm1&quot;)
-           .WebSocketTransport(&quot;ws://127.0.0.1:8080/ws&quot;)
-           .JsonSerialization(new JsonSerializer
+    factory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
+           .WebSocketTransport(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>)
+           .JsonSerialization(<span style="color:#66d9ef">new</span> JsonSerializer
            {
-               ContractResolver = new CamelCasePropertyNamesContractResolver()
+               ContractResolver = <span style="color:#66d9ef">new</span> CamelCasePropertyNamesContractResolver()
            })
-           .CraAuthentication(authenticationId: &quot;peter&quot;, secret: &quot;secret1&quot;)
+           .CraAuthentication(authenticationId: <span style="color:#e6db74">&#34;peter&#34;</span>, secret: <span style="color:#e6db74">&#34;secret1&#34;</span>)
            .Build();
 
-await channel.Open();
-</code></pre>
-
+<span style="color:#66d9ef">await</span> channel.Open();
+</code></pre></div>
 				</section>
 			</article>
 		</main>
@@ -211,13 +182,10 @@ await channel.Open();
 				<li><strong><a href="#title">WampChannel</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#defaultwampchannelfactory">DefaultWampChannelFactory</a></li>
-<li><a href="#fluent-syntax">Fluent syntax</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#defaultwampchannelfactory">DefaultWampChannelFactory</a></li>
+    <li><a href="#fluent-syntax">Fluent syntax</a></li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -360,6 +328,9 @@ await channel.Open();
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -526,7 +497,7 @@ await channel.Open();
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

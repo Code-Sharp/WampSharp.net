@@ -84,168 +84,130 @@
 					<span><time datetime="2017-08-01">August 01, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p>This pages describes the currently available router side WebSockets transports for WampSharp.</p>
-
-<h2 id="wampsharp-fleck">WampSharp.Fleck</h2>
-
+					<p>This pages describes the currently available router side WebSockets transports for WampSharp.</p>
+<h2 id="wampsharpfleck">WampSharp.Fleck</h2>
 <p>A <a href="https://github.com/statianzo/Fleck">Fleck</a> based transport. It is the default transport for WampSharp (DefaultWampHost uses it). Supports .NET Framework 4.0.</p>
-
 <p>Usage:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">WampHost host = <span style="color:#66d9ef">new</span> WampHost();
 
-<pre><code class="language-csharp">WampHost host = new WampHost();
-
-host.RegisterTransport(new FleckWebSocketTransport(&quot;ws://127.0.0.1:8080/ws&quot;),
-                       new JTokenJsonBinding(),
-                       new JTokenMsgpackBinding());
+host.RegisterTransport(<span style="color:#66d9ef">new</span> FleckWebSocketTransport(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>),
+                       <span style="color:#66d9ef">new</span> JTokenJsonBinding(),
+                       <span style="color:#66d9ef">new</span> JTokenMsgpackBinding());
 
 host.Open();
-</code></pre>
-
-<p>Or</p>
-
-<pre><code class="language-csharp">WampHost host = new DefaultWampHost(&quot;ws://127.0.0.1:8080/ws&quot;);
+</code></pre></div><p>Or</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">WampHost host = <span style="color:#66d9ef">new</span> DefaultWampHost(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>);
 
 host.Open();
-</code></pre>
-
-<h2 id="wampsharp-vtortola">WampSharp.Vtortola</h2>
-
-<p>A transport based on <a href="https://github.com/vtortola/WebSocketListener">vtortola&rsquo;s WebSocketListener</a>. Supports <a href="http://tools.ietf.org/html/draft-ietf-hybi-permessage-compression-17#section-8">permessage-deflate</a>.</p>
-
+</code></pre></div><h2 id="wampsharpvtortola">WampSharp.Vtortola</h2>
+<p>A transport based on <a href="https://github.com/vtortola/WebSocketListener">vtortola's WebSocketListener</a>. Supports <a href="http://tools.ietf.org/html/draft-ietf-hybi-permessage-compression-17#section-8">permessage-deflate</a>.</p>
 <p>Usage:</p>
-
-<pre><code class="language-csharp">WampHost host = new WampHost();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">WampHost host = <span style="color:#66d9ef">new</span> WampHost();
 
 IWampTransport transport =
-    new VtortolaWebSocketTransport
-        (endpoint: new IPEndPoint(IPAddress.Parse(&quot;127.0.0.1&quot;), 8080),
-            perMessageDeflate: true);
+    <span style="color:#66d9ef">new</span> VtortolaWebSocketTransport
+        (endpoint: <span style="color:#66d9ef">new</span> IPEndPoint(IPAddress.Parse(<span style="color:#e6db74">&#34;127.0.0.1&#34;</span>), <span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span>),
+            perMessageDeflate: <span style="color:#66d9ef">true</span>);
 
 host.RegisterTransport(transport,
-    new JTokenJsonBinding(),
-    new JTokenMsgpackBinding());
+    <span style="color:#66d9ef">new</span> JTokenJsonBinding(),
+    <span style="color:#66d9ef">new</span> JTokenMsgpackBinding());
 
 host.Open();
-</code></pre>
-
-<h2 id="wampsharp-httplistener">WampSharp.HttpListener</h2>
-
+</code></pre></div><h2 id="wampsharphttplistener">WampSharp.HttpListener</h2>
 <p>A transport based on <a href="https://docs.microsoft.com/en-us/dotnet/framework/network-programming/httplistener">HttpListener</a>.</p>
-
 <p>Usage:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;http://127.0.0.1:8080/ws/&#34;</span>;
 
-<pre><code class="language-csharp">const string serverAddress = &quot;http://127.0.0.1:8080/ws/&quot;;
+WampHost host = <span style="color:#66d9ef">new</span> WampHost();
 
-WampHost host = new WampHost();
-
-host.RegisterTransport(new HttpListenerWebSocketTransport(serverAddress),
-                       new JTokenJsonBinding());
+host.RegisterTransport(<span style="color:#66d9ef">new</span> HttpListenerWebSocketTransport(serverAddress),
+                       <span style="color:#66d9ef">new</span> JTokenJsonBinding());
 
 host.Open();
-</code></pre>
-
-<h2 id="wampsharp-aspnetcore-websockets-server">WampSharp.AspNetCore.WebSockets.Server</h2>
-
+</code></pre></div><h2 id="wampsharpaspnetcorewebsocketsserver">WampSharp.AspNetCore.WebSockets.Server</h2>
 <p>A transport for <a href="https://github.com/aspnet/Home">ASP.NET Core</a>.</p>
-
 <p>In order to use it, you need to create <a href="https://docs.asp.net/en/latest/getting-started.html">a new empty ASP.NET Core project</a>.</p>
-
-<p>Install the following packages: WampSharp.AspNetCore.WebSockets.Server, WampSharp.NewtonsoftMsgpack (you can also install only WampSharp.NewtonsoftJson if you&rsquo;re not interested in MsgPack support).</p>
-
+<p>Install the following packages: WampSharp.AspNetCore.WebSockets.Server, WampSharp.NewtonsoftMsgpack (you can also install only WampSharp.NewtonsoftJson if you're not interested in MsgPack support).</p>
 <p>Change your current Statup class to the following class</p>
-
-<pre><code class="language-csharp">public class Startup
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Startup</span>
 {
-    // This method gets called by the runtime. Use this method to add services to the container.
-    // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
-    public void ConfigureServices(IServiceCollection services)
+    <span style="color:#75715e">// This method gets called by the runtime. Use this method to add services to the container.
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> ConfigureServices(IServiceCollection services)
     {
     }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+    <span style="color:#75715e">// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
     {
         loggerFactory.AddConsole();
 
-        if (env.IsDevelopment())
+        <span style="color:#66d9ef">if</span> (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
 
-        WampHost host = new WampHost();
+        WampHost host = <span style="color:#66d9ef">new</span> WampHost();
 
-        app.Map(&quot;/ws&quot;, builder =&gt;
+        app.Map(<span style="color:#e6db74">&#34;/ws&#34;</span>, builder =&gt;
         {
-            // Comment this out to test native server implementations
-            builder.UseWebSockets(new WebSocketOptions
+            <span style="color:#75715e">// Comment this out to test native server implementations
+</span><span style="color:#75715e"></span>            builder.UseWebSockets(<span style="color:#66d9ef">new</span> WebSocketOptions
             {
-                ReplaceFeature = true
+                ReplaceFeature = <span style="color:#66d9ef">true</span>
             });
 
-            host.RegisterTransport(new AspNetCoreWebSocketTransport(builder),
-                                   new JTokenJsonBinding(),
-                                   new JTokenMsgpackBinding());
+            host.RegisterTransport(<span style="color:#66d9ef">new</span> AspNetCoreWebSocketTransport(builder),
+                                   <span style="color:#66d9ef">new</span> JTokenJsonBinding(),
+                                   <span style="color:#66d9ef">new</span> JTokenMsgpackBinding());
         });
 
         host.Open();
     }
 }
-</code></pre>
-
-<p>This code hosts a WampSharp Router in a ASP.NET Core application under the &ldquo;/ws&rdquo; path. The WampSharp relevant code begins in the line declaring the WampHost variable. ASP.NET Core runs by default from port 5000, so you&rsquo;ll need to access &ldquo;ws://localhost:5000/ws&rdquo;. You can change the default port in various ways, such as calling <code>&quot;.UseUrls(&quot;http://127.0.0.1:8080&quot;)&quot;</code> on the WebHostBuilder in your Main.</p>
-
-<h2 id="wampsharp-aspnet-websockets-server">WampSharp.AspNet.WebSockets.Server</h2>
-
+</code></pre></div><p>This code hosts a WampSharp Router in a ASP.NET Core application under the &ldquo;/ws&rdquo; path. The WampSharp relevant code begins in the line declaring the WampHost variable. ASP.NET Core runs by default from port 5000, so you'll need to access &ldquo;ws://localhost:5000/ws&rdquo;. You can change the default port in various ways, such as calling <code>&quot;.UseUrls(&quot;http://127.0.0.1:8080&quot;)&quot;</code> on the WebHostBuilder in your Main.</p>
+<h2 id="wampsharpaspnetwebsocketsserver">WampSharp.AspNet.WebSockets.Server</h2>
 <p>A transport for <a href="https://www.asp.net/">ASP.NET</a>.</p>
-
 <p>In order to use it, add the following lines to your Global.asax.cs file.</p>
-
-<pre><code class="language-csharp">protected void Application_Start()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> Application_Start()
 {
-    WampHost host = new WampHost();
+    WampHost host = <span style="color:#66d9ef">new</span> WampHost();
 
-    // Listens at http://localhost:49875/ws where 49875 is the relevant port
-    host.RegisterTransport(new AspNetWebSocketTransport(&quot;ws&quot;),
-                           new JTokenJsonBinding());
+    <span style="color:#75715e">// Listens at http://localhost:49875/ws where 49875 is the relevant port
+</span><span style="color:#75715e"></span>    host.RegisterTransport(<span style="color:#66d9ef">new</span> AspNetWebSocketTransport(<span style="color:#e6db74">&#34;ws&#34;</span>),
+                           <span style="color:#66d9ef">new</span> JTokenJsonBinding());
 
     host.Open();
 
-    // ..
-}
-</code></pre>
-
-<h2 id="wampsharp-owin">WampSharp.Owin</h2>
-
+    <span style="color:#75715e">// ..
+</span><span style="color:#75715e"></span>}
+</code></pre></div><h2 id="wampsharpowin">WampSharp.Owin</h2>
 <p>A transport for <a href="https://github.com/aspnet/AspNetKatana/">Microsoft.Owin</a>.</p>
-
 <p>Usage:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">using</span> Owin;
+<span style="color:#66d9ef">using</span> WampSharp.Binding;
+<span style="color:#66d9ef">using</span> WampSharp.Owin;
+<span style="color:#66d9ef">using</span> WampSharp.V2;
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[assembly: OwinStartup(typeof(Startup))]</span>
 
-<pre><code class="language-csharp">using Owin;
-using WampSharp.Binding;
-using WampSharp.Owin;
-using WampSharp.V2;
-
-[assembly: OwinStartup(typeof(Startup))]
-
-namespace WebApplication1
+<span style="color:#66d9ef">namespace</span> WebApplication1
 {
-    public class Startup
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Startup</span>
     {
-        public void Configuration(IAppBuilder app)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Configuration(IAppBuilder app)
         {
-            WampHost host = new WampHost();
+            WampHost host = <span style="color:#66d9ef">new</span> WampHost();
 
-            host.RegisterTransport(new OwinWebSocketTransport(app),
-                                   new JTokenJsonBinding());
+            host.RegisterTransport(<span style="color:#66d9ef">new</span> OwinWebSocketTransport(app),
+                                   <span style="color:#66d9ef">new</span> JTokenJsonBinding());
 
             host.Open();
         }
     }
 }
-</code></pre>
-
+</code></pre></div>
 				</section>
 			</article>
 		</main>
@@ -262,17 +224,14 @@ namespace WebApplication1
 				<li><strong><a href="#title">WebSocket transports</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#wampsharp-fleck">WampSharp.Fleck</a></li>
-<li><a href="#wampsharp-vtortola">WampSharp.Vtortola</a></li>
-<li><a href="#wampsharp-httplistener">WampSharp.HttpListener</a></li>
-<li><a href="#wampsharp-aspnetcore-websockets-server">WampSharp.AspNetCore.WebSockets.Server</a></li>
-<li><a href="#wampsharp-aspnet-websockets-server">WampSharp.AspNet.WebSockets.Server</a></li>
-<li><a href="#wampsharp-owin">WampSharp.Owin</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#wampsharpfleck">WampSharp.Fleck</a></li>
+    <li><a href="#wampsharpvtortola">WampSharp.Vtortola</a></li>
+    <li><a href="#wampsharphttplistener">WampSharp.HttpListener</a></li>
+    <li><a href="#wampsharpaspnetcorewebsocketsserver">WampSharp.AspNetCore.WebSockets.Server</a></li>
+    <li><a href="#wampsharpaspnetwebsocketsserver">WampSharp.AspNet.WebSockets.Server</a></li>
+    <li><a href="#wampsharpowin">WampSharp.Owin</a></li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -414,6 +373,9 @@ namespace WebApplication1
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -581,7 +543,7 @@ namespace WebApplication1
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

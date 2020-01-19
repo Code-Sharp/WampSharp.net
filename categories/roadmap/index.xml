@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Roadmap on WampSharp</title>
+    <title>roadmap on WampSharp</title>
     <link>https://wampsharp.net/categories/roadmap/</link>
-    <description>Recent content in Roadmap on WampSharp</description>
+    <description>Recent content in roadmap on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
+    <copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
     
 	<atom:link href="https://wampsharp.net/categories/roadmap/index.xml" rel="self" type="application/rss+xml" />
@@ -18,8 +18,8 @@
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
       <guid>https://wampsharp.net/roadmap/</guid>
-      <description>This is some proposal for WampSharp&amp;rsquo;s future.
-Short term roadmap  Bug fixes WAMP Advanced profile modifications (meta-api, disclose_caller, shared registrations, etc)  Long term roadmap  Replacing IAsyncDisposable with framework interface - see here Reactive Extensions Reactor Support - see #1 #2 #3  ISubscribable, ISubscription, IMultiSubject remote LINQ: IAsyncReactiveQbservable, IAsyncReactiveQbserver, IAsyncReactiveQubscription  WAMP schema router support See #1 #2 and #3 and Crossbar roadmap (0.13.0) and issue WAMP schema code generators (for C#/Typescript too?</description>
+      <description>This is some proposal for WampSharp&#39;s future.
+Short term roadmap  Bug fixes WAMP Advanced profile modifications (meta-api, disclose_caller, shared registrations, etc)  Long term roadmap  Replacing IAsyncDisposable with framework interface - see here Reactive Extensions Reactor Support - see #1 #2 #3 ISubscribable, ISubscription, IMultiSubject remote LINQ: IAsyncReactiveQbservable, IAsyncReactiveQbserver, IAsyncReactiveQubscription WAMP schema router support See #1 #2 and #3 and Crossbar roadmap (0.13.0) and issue WAMP schema code generators (for C#/Typescript too?</description>
     </item>
     
   </channel>

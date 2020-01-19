@@ -84,402 +84,340 @@
 					<span><time datetime="2016-08-29">August 29, 2016</time></span>
 				</div>
 				<section>
-					
-
-<h2 id="c-7-0-tuples-support">C# 7.0 tuples support</h2>
-
+					<h2 id="c-70-tuples-support">C# 7.0 tuples support</h2>
 <p>This verion mainly focuses on <a href="https://blogs.msdn.microsoft.com/dotnet/2016/08/24/whats-new-in-csharp-7-0/">C# 7.0 tuples</a> support.</p>
-
 <blockquote>
 <p>Note: C# 7.0 tuples syntax is currently supported only by <a href="https://www.visualstudio.com/en-us/news/releasenotes/vs15-relnotes">Visual Studio &ldquo;15&rdquo; Preview 4</a>. You can download it <a href="https://www.visualstudio.com/en-us/downloads/visual-studio-next-downloads-vs.aspx">here</a>.</p>
 </blockquote>
-
 <h3 id="reflection-based-callee-tuples-support">Reflection-based callee tuples support</h3>
-
 <p>From this version, you can return a C# 7.0 tuple from a reflection-based callee method. The tuple will be serialized to either the arguments keywords or to the arguments array of the YIELD message, depending on whether the returned tuple has named elements or positional elements. (tuples having elements which are partially named are not supported)</p>
-
 <p>For example: A reflection-based callee that returns a tuple:</p>
-
-<pre><code class="language-csharp">public interface IComplexResultService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IComplexResultService
 {
-    [WampProcedure(&quot;com.myapp.add_complex&quot;)]
-    (int c, int ci) AddComplex(int a, int ai, int b, int bi);
-
-    [WampProcedure(&quot;com.myapp.split_name&quot;)]
-    (string, string) SplitName(string fullname);
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.add_complex&#34;)]</span>
+    (<span style="color:#66d9ef">int</span> c, <span style="color:#66d9ef">int</span> ci) AddComplex(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> ai, <span style="color:#66d9ef">int</span> b, <span style="color:#66d9ef">int</span> bi);
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.split_name&#34;)]</span>
+    (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>) SplitName(<span style="color:#66d9ef">string</span> fullname);
 }
 
-public class ComplexResultService : IComplexResultService
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ComplexResultService</span> : IComplexResultService
 {
-    public (int c, int ci) AddComplex(int a, int ai, int b, int bi)
+    <span style="color:#66d9ef">public</span> (<span style="color:#66d9ef">int</span> c, <span style="color:#66d9ef">int</span> ci) AddComplex(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> ai, <span style="color:#66d9ef">int</span> b, <span style="color:#66d9ef">int</span> bi)
     {
-       return (a + b, ai + bi);
+       <span style="color:#66d9ef">return</span> (a + b, ai + bi);
     }
 
-    public (string, string) SplitName(string fullname)
+    <span style="color:#66d9ef">public</span> (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>) SplitName(<span style="color:#66d9ef">string</span> fullname)
     {
-        string[] splitted = fullname.Split(' ');
+        <span style="color:#66d9ef">string</span>[] splitted = fullname.Split(<span style="color:#e6db74">&#39; &#39;</span>);
 
-        string forename = splitted[0];
-        string surname = splitted[1];
+        <span style="color:#66d9ef">string</span> forename = splitted[<span style="color:#ae81ff">0</span>];
+        <span style="color:#66d9ef">string</span> surname = splitted[<span style="color:#ae81ff">1</span>];
 
-        return (forename, surname);
+        <span style="color:#66d9ef">return</span> (forename, surname);
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: as usual, you can put the WampProcedureAttributes on the methods themselves instead of implementing an interface, i.e:</p>
-
-<pre><code class="language-csharp">[WampProcedure(&quot;com.myapp.add_complex&quot;)]
-public (int c, int ci) AddComplex(int a, int ai, int b, int bi)
-{
-   // ...
-}
-
-[WampProcedure(&quot;com.myapp.split_name&quot;)]
-public (string, string) SplitName(string fullname)
-{
-   // ...
-}
-</code></pre>
 </blockquote>
-
-<p>Which can be consumed from <a href="https://github.com/crossbario/autobahn-js">AutobahnJS</a>:</p>
-
-<pre><code class="language-javascript">session.call('com.myapp.add_complex', [2, 3, 4, 5]).then(
-    function (res) {
-        console.log(&quot;Result: &quot; + res.kwargs.c + &quot; + &quot; + res.kwargs.ci + &quot;i&quot;);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#a6e22e">[WampProcedure(&#34;com.myapp.add_complex&#34;)]</span>
+<span style="color:#66d9ef">public</span> (<span style="color:#66d9ef">int</span> c, <span style="color:#66d9ef">int</span> ci) AddComplex(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> ai, <span style="color:#66d9ef">int</span> b, <span style="color:#66d9ef">int</span> bi)
+{
+   <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>}
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[WampProcedure(&#34;com.myapp.split_name&#34;)]</span>
+<span style="color:#66d9ef">public</span> (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>) SplitName(<span style="color:#66d9ef">string</span> fullname)
+{
+   <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>Which can be consumed from <a href="https://github.com/crossbario/autobahn-js">AutobahnJS</a>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">call</span>(<span style="color:#e6db74">&#39;com.myapp.add_complex&#39;</span>, [<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>]).<span style="color:#a6e22e">then</span>(
+    <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">res</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Result: &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">kwargs</span>.<span style="color:#a6e22e">c</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; + &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">kwargs</span>.<span style="color:#a6e22e">ci</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;i&#34;</span>);
     }
 );
 
-session.call('com.myapp.split_name', ['Homer Simpson']).then(
-    function (res) {
-        console.log(&quot;Forename: &quot; + res.args[0] + &quot;, Surname: &quot; + res.args[1]);
+<span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">call</span>(<span style="color:#e6db74">&#39;com.myapp.split_name&#39;</span>, [<span style="color:#e6db74">&#39;Homer Simpson&#39;</span>]).<span style="color:#a6e22e">then</span>(
+    <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">res</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Forename: &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">args</span>[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;, Surname: &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">args</span>[<span style="color:#ae81ff">1</span>]);
     }
 ;)
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note:  The samples are based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex">this</a> AutobahnJS/AutobahnPython sample</p>
 </blockquote>
-
 <h3 id="reflection-based-caller-tuples-support">Reflection-based caller tuples support</h3>
-
 <p>Reflection-based callers also support C# 7.0 tuple return values from this version. You can simply declare a method returning a C# 7.0 tuple in your callee proxy interface.</p>
-
 <p>For example, declare the following callee proxy interface:</p>
-
-<pre><code class="language-csharp">public interface IComplexResultServiceProxy
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IComplexResultServiceProxy
 {
-    [WampProcedure(&quot;com.myapp.add_complex&quot;)]
-    Task&lt;(int c, int ci)&gt; AddComplexAsync(int a, int ai, int b, int bi);
-
-    [WampProcedure(&quot;com.myapp.split_name&quot;)]
-    Task&lt;(string, string)&gt; SplitNameAsync(string fullname);
-
-    [WampProcedure(&quot;com.myapp.add_complex&quot;)]
-    (int c, int ci) AddComplex(int a, int ai, int b, int bi);
-
-    [WampProcedure(&quot;com.myapp.split_name&quot;)]
-    (string, string) SplitName(string fullname);
+<span style="color:#a6e22e">	[WampProcedure(&#34;com.myapp.add_complex&#34;)]</span>
+	Task&lt;(<span style="color:#66d9ef">int</span> c, <span style="color:#66d9ef">int</span> ci)&gt; AddComplexAsync(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> ai, <span style="color:#66d9ef">int</span> b, <span style="color:#66d9ef">int</span> bi);
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">	[WampProcedure(&#34;com.myapp.split_name&#34;)]</span>
+    Task&lt;(<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>)&gt; SplitNameAsync(<span style="color:#66d9ef">string</span> fullname);
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.add_complex&#34;)]</span>
+    (<span style="color:#66d9ef">int</span> c, <span style="color:#66d9ef">int</span> ci) AddComplex(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> ai, <span style="color:#66d9ef">int</span> b, <span style="color:#66d9ef">int</span> bi);
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.split_name&#34;)]</span>
+    (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>) SplitName(<span style="color:#66d9ef">string</span> fullname);
 }
-</code></pre>
-
-<p>And then obtain a callee proxy and simply call its methods:</p>
-
-<pre><code class="language-csharp">public async Task Run()
+</code></pre></div><p>And then obtain a callee proxy and simply call its methods:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
-        factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+        factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+    <span style="color:#66d9ef">await</span> channel.Open();
 
     IComplexResultServiceProxy proxy =
         channel.RealmProxy.Services.GetCalleeProxy&lt;IComplexResultServiceProxy&gt;();
 
-    (string forename, string surname) = await proxy.SplitNameAsync(&quot;Homer Simpson&quot;);
-    // Synchronous version: 
-    // (string forename, string surname) = proxy.SplitName(&quot;Homer Simpson&quot;);
+    (<span style="color:#66d9ef">string</span> forename, <span style="color:#66d9ef">string</span> surname) = <span style="color:#66d9ef">await</span> proxy.SplitNameAsync(<span style="color:#e6db74">&#34;Homer Simpson&#34;</span>);
+    <span style="color:#75715e">// Synchronous version: 
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// (string forename, string surname) = proxy.SplitName(&#34;Homer Simpson&#34;);
+</span><span style="color:#75715e"></span>
+    Console.WriteLine(<span style="color:#e6db74">$&#34;Forename: {forename}, Surname: {surname}&#34;</span>);
 
-    Console.WriteLine($&quot;Forename: {forename}, Surname: {surname}&quot;);
-
-    (int c, int ci) = await proxy.AddComplexAsync(2, 3, 4, 5);
-    // Synchronous version: 
-    // (int c, int ci) = proxy.AddComplex(2, 3, 4, 5);
-
-    Console.WriteLine($&quot;Result: {c} + {ci}i&quot;);
+    (<span style="color:#66d9ef">int</span> c, <span style="color:#66d9ef">int</span> ci) = <span style="color:#66d9ef">await</span> proxy.AddComplexAsync(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>);
+    <span style="color:#75715e">// Synchronous version: 
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// (int c, int ci) = proxy.AddComplex(2, 3, 4, 5);
+</span><span style="color:#75715e"></span>
+    Console.WriteLine(<span style="color:#e6db74">$&#34;Result: {c} + {ci}i&#34;</span>);
 }
-</code></pre>
-
-<p>This code can consume the following code written in Javascript:</p>
-
-<pre><code class="language-javascript">function add_complex(args, kwargs) {
-    return new autobahn.Result([], {c: args[0] + args[2], ci: args[1] + args[3]});
+</code></pre></div><p>This code can consume the following code written in Javascript:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">add_complex</span>(<span style="color:#a6e22e">args</span>, <span style="color:#a6e22e">kwargs</span>) {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">autobahn</span>.<span style="color:#a6e22e">Result</span>([], {<span style="color:#a6e22e">c</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">args</span>[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">+</span> <span style="color:#a6e22e">args</span>[<span style="color:#ae81ff">2</span>], <span style="color:#a6e22e">ci</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">args</span>[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> <span style="color:#a6e22e">args</span>[<span style="color:#ae81ff">3</span>]});
 }
 
-function split_name(args) {
-    var splitted = args[0].split(&quot; &quot;);
-    var forename = splitted[0];
-    var surname = splitted[1];
-    return new autobahn.Result([forename, surname]);
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">split_name</span>(<span style="color:#a6e22e">args</span>) {
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">splitted</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">args</span>[<span style="color:#ae81ff">0</span>].<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34; &#34;</span>);
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">forename</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">splitted</span>[<span style="color:#ae81ff">0</span>];
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">surname</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">splitted</span>[<span style="color:#ae81ff">1</span>];
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">autobahn</span>.<span style="color:#a6e22e">Result</span>([<span style="color:#a6e22e">forename</span>, <span style="color:#a6e22e">surname</span>]);
 }
 
-session.register('com.myapp.add_complex', add_complex).then(
-    function (registration) {
-        console.log(&quot;Procedure registered:&quot;, registration.id);
+<span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">register</span>(<span style="color:#e6db74">&#39;com.myapp.add_complex&#39;</span>, <span style="color:#a6e22e">add_complex</span>).<span style="color:#a6e22e">then</span>(
+    <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">registration</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Procedure registered:&#34;</span>, <span style="color:#a6e22e">registration</span>.<span style="color:#a6e22e">id</span>);
     },
-    function (error) {
-        console.log(&quot;Registration failed:&quot;, error);
+    <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">error</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Registration failed:&#34;</span>, <span style="color:#a6e22e">error</span>);
     }
 );
 
-session.register('com.myapp.split_name', split_name).then(
-    function (registration) {
-        console.log(&quot;Procedure registered:&quot;, registration.id);
+<span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">register</span>(<span style="color:#e6db74">&#39;com.myapp.split_name&#39;</span>, <span style="color:#a6e22e">split_name</span>).<span style="color:#a6e22e">then</span>(
+    <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">registration</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Procedure registered:&#34;</span>, <span style="color:#a6e22e">registration</span>.<span style="color:#a6e22e">id</span>);
     },
-    function (error) {
-        console.log(&quot;Registration failed:&quot;, error);
+    <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">error</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Registration failed:&#34;</span>, <span style="color:#a6e22e">error</span>);
     }
 );
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note:  The samples are based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex">this</a> AutobahnJS/AutobahnPython sample</p>
 </blockquote>
-
-<h3 id="rx-based-publish-subscribe-tuples-support">Rx-based publish/subscribe tuples support</h3>
-
+<h3 id="rx-based-publishsubscribe-tuples-support">Rx-based publish/subscribe tuples support</h3>
 <p>This version also introduces Rx-based publish/subscribe C# 7.0 tuple support. This allows to handle topics that have complex arguments in a strongly typed manner using ISubject&lt;&gt; api.</p>
-
 <p>In order to use this feature, a mechanism called IWampEventValueTupleConverter is introduced.</p>
-
 <p>This interface is responsible for converting a IWampSerializedEvent instance to a specified tuple and a specified tuple instance to a IWampEvent.</p>
-
 <p>Luckily enough, in order to implement this interface it is sufficient to derive from WampEventValueTupleConverter&lt;&gt; and specify the desired tuple type. Nothing else is needed to be done.</p>
-
-<p>(This might seem a bit odd, but that&rsquo;s the best way I&rsquo;m aware of for preserving ValueTuple element names after compilation)</p>
-
-<p>Then, just pass an instance of your IWampEventValueTupleConverter to the new overload of IWampRealmServiceProvider&rsquo;s GetSubject method, which receives the topic&rsquo;s uri and an instance of IWampEventValueTupleConverter, in order to receive a ISubject&lt;&gt; instance of your desired tuple type.</p>
-
+<p>(This might seem a bit odd, but that's the best way I'm aware of for preserving ValueTuple element names after compilation)</p>
+<p>Then, just pass an instance of your IWampEventValueTupleConverter to the new overload of IWampRealmServiceProvider's GetSubject method, which receives the topic's uri and an instance of IWampEventValueTupleConverter, in order to receive a ISubject&lt;&gt; instance of your desired tuple type.</p>
 <h4 id="rx-based-subscriber-tuples-support-sample">Rx-based subscriber tuples support sample</h4>
-
-<pre><code class="language-csharp">public async Task Run()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+	DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
-    IWampChannel channel =
-        factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+	IWampChannel channel =
+		factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+	<span style="color:#66d9ef">await</span> channel.Open();
 
-    ISubject&lt;(int, int)&gt; topic1Subject =
-        channel.RealmProxy.Services.GetSubject
-                (&quot;com.myapp.topic1&quot;,
-                new MyPositionalTupleEventConverter());
+	ISubject&lt;(<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span>)&gt; topic1Subject =
+		channel.RealmProxy.Services.GetSubject
+				(<span style="color:#e6db74">&#34;com.myapp.topic1&#34;</span>,
+				<span style="color:#66d9ef">new</span> MyPositionalTupleEventConverter());
 
-    topic1Subject.Subscribe(value =&gt;
-    {
-        (int number1, int number2) = value;
-        Console.WriteLine($&quot;&gt;com.myapp.topic1: Got event: number1:{number1}, number2:{number2}&quot;);
-    });
+	topic1Subject.Subscribe(<span style="color:#66d9ef">value</span> =&gt;
+	{
+		(<span style="color:#66d9ef">int</span> number1, <span style="color:#66d9ef">int</span> number2) = <span style="color:#66d9ef">value</span>;
+		Console.WriteLine(<span style="color:#e6db74">$&#34;&gt;com.myapp.topic1: Got event: number1:{number1}, number2:{number2}&#34;</span>);
+	});
 
-    ISubject&lt;(int number1, int number2, string c, MyClass d)&gt; topic2Subject =
-        channel.RealmProxy.Services.GetSubject
-                (&quot;com.myapp.topic2&quot;,
-                new MyKeywordTupleEventConverter());
+	ISubject&lt;(<span style="color:#66d9ef">int</span> number1, <span style="color:#66d9ef">int</span> number2, <span style="color:#66d9ef">string</span> c, MyClass d)&gt; topic2Subject =
+		channel.RealmProxy.Services.GetSubject
+				(<span style="color:#e6db74">&#34;com.myapp.topic2&#34;</span>,
+				<span style="color:#66d9ef">new</span> MyKeywordTupleEventConverter());
 
-    topic2Subject.Subscribe(value =&gt;
-    {
-        (int number1, int number2, string c, MyClass d) = value;
-        Console.WriteLine($&quot;&gt;com.myapp.topic2: Got event: number1:{number1}, number2:{number2}, c:{c}, d:{d}&quot;);
-    });
+	topic2Subject.Subscribe(<span style="color:#66d9ef">value</span> =&gt;
+	{
+		(<span style="color:#66d9ef">int</span> number1, <span style="color:#66d9ef">int</span> number2, <span style="color:#66d9ef">string</span> c, MyClass d) = <span style="color:#66d9ef">value</span>;
+		Console.WriteLine(<span style="color:#e6db74">$&#34;&gt;com.myapp.topic2: Got event: number1:{number1}, number2:{number2}, c:{c}, d:{d}&#34;</span>);
+	});
 }
 
-public class MyPositionalTupleEventConverter : WampEventValueTupleConverter&lt;(int, int)&gt;
-{
-}
-
-public class MyKeywordTupleEventConverter : WampEventValueTupleConverter&lt;(int number1, int number2, string c, MyClass d)&gt;
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyPositionalTupleEventConverter</span> : WampEventValueTupleConverter&lt;(<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span>)&gt;
 {
 }
 
-public class MyClass
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyKeywordTupleEventConverter</span> : WampEventValueTupleConverter&lt;(<span style="color:#66d9ef">int</span> number1, <span style="color:#66d9ef">int</span> number2, <span style="color:#66d9ef">string</span> c, MyClass d)&gt;
 {
-    [JsonProperty(&quot;counter&quot;)]
-    public int Counter { get; set; }
+}
 
-    [JsonProperty(&quot;foo&quot;)]
-    public int[] Foo { get; set; }
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyClass</span>
+{
+<span style="color:#a6e22e">    [JsonProperty(&#34;counter&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Counter { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [JsonProperty(&#34;foo&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span>[] Foo { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
 
-    public override string ToString()
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> ToString()
     {
-        return string.Format(&quot;counter: {0}, foo: [{1}]&quot;,
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">string</span>.Format(<span style="color:#e6db74">&#34;counter: {0}, foo: [{1}]&#34;</span>,
             Counter,
-            string.Join(&quot;, &quot;, Foo));
+            <span style="color:#66d9ef">string</span>.Join(<span style="color:#e6db74">&#34;, &#34;</span>, Foo));
     }
 }
-</code></pre>
+</code></pre></div><p>This code can consume events published by the following Javascript code:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">counter</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 
-<p>This code can consume events published by the following Javascript code:</p>
+<span style="color:#a6e22e">setInterval</span>(<span style="color:#66d9ef">function</span> () {
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">obj</span> <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;counter&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">counter</span>, <span style="color:#e6db74">&#39;foo&#39;</span><span style="color:#f92672">:</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>]};
 
-<pre><code class="language-javascript">var counter = 0;
+    <span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">publish</span>(<span style="color:#e6db74">&#39;com.myapp.topic1&#39;</span>, [<span style="color:#a6e22e">randint</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">100</span>), <span style="color:#ae81ff">23</span>], {});
+    <span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">publish</span>(<span style="color:#e6db74">&#39;com.myapp.topic2&#39;</span>, [], {<span style="color:#a6e22e">number1</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">randint</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">100</span>), <span style="color:#a6e22e">number2</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">23</span>, <span style="color:#a6e22e">c</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Hello&#34;</span>, <span style="color:#a6e22e">d</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">obj</span>});
 
-setInterval(function () {
-    var obj = {'counter': counter, 'foo': [1, 2, 3]};
+    <span style="color:#a6e22e">counter</span> <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
 
-    session.publish('com.myapp.topic1', [randint(0, 100), 23], {});
-    session.publish('com.myapp.topic2', [], {number1: randint(0, 100), number2: 23, c: &quot;Hello&quot;, d: obj});
-
-    counter += 1;
-
-    console.log(&quot;events published&quot;);
-}, 1000);
-</code></pre>
-
-<blockquote>
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;events published&#34;</span>);
+}, <span style="color:#ae81ff">1000</span>);
+</code></pre></div><blockquote>
 <p>This example is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/complex">this</a> AutobahnJS sample.</p>
 </blockquote>
-
 <h4 id="rx-based-publisher-tuples-support-sample">Rx-based publisher tuples support sample</h4>
-
-<pre><code class="language-csharp">public async Task Run()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+	DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
-    IWampChannel channel =
-        factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+	IWampChannel channel =
+		factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+	<span style="color:#66d9ef">await</span> channel.Open();
 
-    ISubject&lt;(int, int)&gt; topic1Subject =
-        channel.RealmProxy.Services.GetSubject
-                (&quot;com.myapp.topic1&quot;,
-                new MyPositionalTupleEventConverter());
+	ISubject&lt;(<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span>)&gt; topic1Subject =
+		channel.RealmProxy.Services.GetSubject
+				(<span style="color:#e6db74">&#34;com.myapp.topic1&#34;</span>,
+				<span style="color:#66d9ef">new</span> MyPositionalTupleEventConverter());
 
-    ISubject&lt;(int number1, int number2, string c, MyClass d)&gt; topic2Subject 
-        channel.RealmProxy.Services.GetSubject
-                (&quot;com.myapp.topic2&quot;,
-                new MyKeywordTupleEventConverter());
+	ISubject&lt;(<span style="color:#66d9ef">int</span> number1, <span style="color:#66d9ef">int</span> number2, <span style="color:#66d9ef">string</span> c, MyClass d)&gt; topic2Subject 
+		channel.RealmProxy.Services.GetSubject
+				(<span style="color:#e6db74">&#34;com.myapp.topic2&#34;</span>,
+				<span style="color:#66d9ef">new</span> MyKeywordTupleEventConverter());
 
-    IObservable&lt;int&gt; timer =
-        Observable.Timer(TimeSpan.FromMilliseconds(0),
-                         TimeSpan.FromMilliseconds(1000))
-                         .Select((x, i) =&gt; i);
+	IObservable&lt;<span style="color:#66d9ef">int</span>&gt; timer =
+		Observable.Timer(TimeSpan.FromMilliseconds(<span style="color:#ae81ff">0</span>),
+						 TimeSpan.FromMilliseconds(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>))
+						 .Select((x, i) =&gt; i);
 
-    Random random = new Random();
+	Random random = <span style="color:#66d9ef">new</span> Random();
 
-    IDisposable disposable =
-        timer.Subscribe(value =&gt;
-        {
-            topic1Subject.OnNext((random.Next(0, 100), 23));
-            topic2Subject.OnNext((random.Next(0, 100), 23, &quot;Hello&quot;,
-                                  new MyClass()
-                                  {
-                                      Counter = value,
-                                      Foo = new int[] { 1, 2, 3 }
-                                  }));
-        });
+	IDisposable disposable =
+		timer.Subscribe(<span style="color:#66d9ef">value</span> =&gt;
+		{
+			topic1Subject.OnNext((random.Next(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>), <span style="color:#ae81ff">2</span><span style="color:#ae81ff">3</span>));
+			topic2Subject.OnNext((random.Next(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>), <span style="color:#ae81ff">2</span><span style="color:#ae81ff">3</span>, <span style="color:#e6db74">&#34;Hello&#34;</span>,
+								  <span style="color:#66d9ef">new</span> MyClass()
+								  {
+									  Counter = <span style="color:#66d9ef">value</span>,
+									  Foo = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[] { <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span> }
+								  }));
+		});
 }
 
-public class MyPositionalTupleEventConverter : WampEventValueTupleConverter&lt;(int, int)&gt;
-{
-}
-
-public class MyKeywordTupleEventConverter : WampEventValueTupleConverter&lt;(int number1, int number2, string c, MyClass d)&gt;
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyPositionalTupleEventConverter</span> : WampEventValueTupleConverter&lt;(<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span>)&gt;
 {
 }
 
-public class MyClass
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyKeywordTupleEventConverter</span> : WampEventValueTupleConverter&lt;(<span style="color:#66d9ef">int</span> number1, <span style="color:#66d9ef">int</span> number2, <span style="color:#66d9ef">string</span> c, MyClass d)&gt;
 {
-    [JsonProperty(&quot;counter&quot;)]
-    public int Counter { get; set; }
+}
 
-    [JsonProperty(&quot;foo&quot;)]
-    public int[] Foo { get; set; }
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyClass</span>
+{
+<span style="color:#a6e22e">    [JsonProperty(&#34;counter&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Counter { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [JsonProperty(&#34;foo&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span>[] Foo { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
 
-    public override string ToString()
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> ToString()
     {
-        return string.Format(&quot;counter: {0}, foo: [{1}]&quot;,
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">string</span>.Format(<span style="color:#e6db74">&#34;counter: {0}, foo: [{1}]&#34;</span>,
             Counter,
-            string.Join(&quot;, &quot;, Foo));
+            <span style="color:#66d9ef">string</span>.Join(<span style="color:#e6db74">&#34;, &#34;</span>, Foo));
     }
 }
-</code></pre>
-
-<p>The following Javascript code can consume events published by the code above:</p>
-
-<pre><code class="language-javascript">function on_topic1(args, kwargs) {
-    console.log(&quot;com.myapp.topic1: Got event:&quot;, args, kwargs);
+</code></pre></div><p>The following Javascript code can consume events published by the code above:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">on_topic1</span>(<span style="color:#a6e22e">args</span>, <span style="color:#a6e22e">kwargs</span>) {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;com.myapp.topic1: Got event:&#34;</span>, <span style="color:#a6e22e">args</span>, <span style="color:#a6e22e">kwargs</span>);
 }
 
-function on_topic2(args, kwargs) {
-    console.log(&quot;com.myapp.topic2: Got event:&quot;, args, kwargs);
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">on_topic2</span>(<span style="color:#a6e22e">args</span>, <span style="color:#a6e22e">kwargs</span>) {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;com.myapp.topic2: Got event:&#34;</span>, <span style="color:#a6e22e">args</span>, <span style="color:#a6e22e">kwargs</span>);
 }
 
-session.subscribe('com.myapp.topic1', on_topic1);
-session.subscribe('com.myapp.topic2', on_topic2);
-</code></pre>
-
-<blockquote>
+<span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">subscribe</span>(<span style="color:#e6db74">&#39;com.myapp.topic1&#39;</span>, <span style="color:#a6e22e">on_topic1</span>);
+<span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">subscribe</span>(<span style="color:#e6db74">&#39;com.myapp.topic2&#39;</span>, <span style="color:#a6e22e">on_topic2</span>);
+</code></pre></div><blockquote>
 <p>This example is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/complex">this</a> AutobahnJS sample.</p>
 </blockquote>
-
 <h2 id="other-features">Other features</h2>
-
 <h3 id="instance-providers-for-reflection-based-callee">Instance providers for reflection-based callee</h3>
-
-<p>From this version, new overloads for IWampRealmServiceProvider&rsquo;s RegisterCallee method were added. These overloads allow you to specify an instance provider for your callee service instance, that is a Func&lt;&gt; delegate that returns an instance of your callee service provider.</p>
-
+<p>From this version, new overloads for IWampRealmServiceProvider's RegisterCallee method were added. These overloads allow you to specify an instance provider for your callee service instance, that is a Func&lt;&gt; delegate that returns an instance of your callee service provider.</p>
 <p>This allows you to control yourself the lifecycle of the callee service instance. You can of course use an dependency injection framework to help you manage that.</p>
-
 <p>For instance, using <a href="http://www.ninject.org/">Ninject</a>:</p>
-
-<pre><code class="language-csharp">public static async Task Run()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    IKernel kernel = new StandardKernel();
+    IKernel kernel = <span style="color:#66d9ef">new</span> StandardKernel();
 
     kernel.Bind&lt;IAddCalculator&gt;().To&lt;Calculator&gt;();
 
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
-    IWampChannel channel =
-        factory.CreateJsonChannel(&quot;ws://127.0.0.1:8080/ws&quot;, &quot;realm1&quot;);
+	IWampChannel channel =
+		factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+	<span style="color:#66d9ef">await</span> channel.Open();
 
-    await channel.RealmProxy.Services.RegisterCallee(() =&gt; kernel.Get&lt;IAddCalculator&gt;());
+    <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterCallee(() =&gt; kernel.Get&lt;IAddCalculator&gt;());
 }
 
-public interface IAddCalculator
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IAddCalculator
 {
-    [WampProcedure(&quot;com.arguments.add2&quot;)]
-    int Add2(int x, int y);
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.arguments.add2&#34;)]</span>
+    <span style="color:#66d9ef">int</span> Add2(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y);
 }
 
-public class Calculator : IAddCalculator
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Calculator</span> : IAddCalculator
 {
-    public int Add2(int x, int y)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Add2(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y)
     {
-        return (x + y);
+        <span style="color:#66d9ef">return</span> (x + y);
     }
 }
-</code></pre>
-
-<blockquote>
-<p>Note: if you&rsquo;re using Ninject, you&rsquo;re recomended to use <a href="https://github.com/ninject/Ninject.Extensions.Factory">Ninject.Extensions.Factory</a> which allows you to get typed factories instances or Func&lt;&gt; instances without being aware about the dependency injection container.</p>
+</code></pre></div><blockquote>
+<p>Note: if you're using Ninject, you're recomended to use <a href="https://github.com/ninject/Ninject.Extensions.Factory">Ninject.Extensions.Factory</a> which allows you to get typed factories instances or Func&lt;&gt; instances without being aware about the dependency injection container.</p>
 </blockquote>
-
 <h3 id="net-standard-websocket4net-support">.NET Standard WebSocket4Net support</h3>
-
 <p><a href="https://github.com/kerryjiang/WebSocket4Net">WebSocket4Net</a> has been ported to .NET Standard 1.3 recently. From this version WampSharp.WebSocket4Net is supported for .NET Standard 1.3 as well.</p>
-
 <p>This could be an alternative for running WampSharp over WebSockets on non-Windows platforms for now, until an update for .NET Core which supports WebSockets on non-Windows platforms is released.</p>
-
 <h3 id="structured-logging">Structured logging</h3>
-
 <p>From this version, some formatted logs are written using <a href="https://github.com/serilog/serilog/wiki/Structured-Data">structured logging</a>. These include properties such as session ids, incoming WAMP Json/MsgPack messages and more. This feature can be leveraged by <a href="https://serilog.net/">Serilog</a>.</p>
 
 				</section>
@@ -498,27 +436,22 @@ public class Calculator : IAddCalculator
 				<li><strong><a href="#title">WampSharp v1.2.5.21-beta release notes</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#c-7-0-tuples-support">C# 7.0 tuples support</a>
-<ul>
-<li><a href="#reflection-based-callee-tuples-support">Reflection-based callee tuples support</a></li>
-<li><a href="#reflection-based-caller-tuples-support">Reflection-based caller tuples support</a></li>
-<li><a href="#rx-based-publish-subscribe-tuples-support">Rx-based publish/subscribe tuples support</a>
-<ul>
-<li><a href="#rx-based-subscriber-tuples-support-sample">Rx-based subscriber tuples support sample</a></li>
-<li><a href="#rx-based-publisher-tuples-support-sample">Rx-based publisher tuples support sample</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#other-features">Other features</a>
-<ul>
-<li><a href="#instance-providers-for-reflection-based-callee">Instance providers for reflection-based callee</a></li>
-<li><a href="#net-standard-websocket4net-support">.NET Standard WebSocket4Net support</a></li>
-<li><a href="#structured-logging">Structured logging</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#c-70-tuples-support">C# 7.0 tuples support</a>
+      <ul>
+        <li><a href="#reflection-based-callee-tuples-support">Reflection-based callee tuples support</a></li>
+        <li><a href="#reflection-based-caller-tuples-support">Reflection-based caller tuples support</a></li>
+        <li><a href="#rx-based-publishsubscribe-tuples-support">Rx-based publish/subscribe tuples support</a></li>
+      </ul>
+    </li>
+    <li><a href="#other-features">Other features</a>
+      <ul>
+        <li><a href="#instance-providers-for-reflection-based-callee">Instance providers for reflection-based callee</a></li>
+        <li><a href="#net-standard-websocket4net-support">.NET Standard WebSocket4Net support</a></li>
+        <li><a href="#structured-logging">Structured logging</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -660,6 +593,9 @@ public class Calculator : IAddCalculator
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -827,7 +763,7 @@ public class Calculator : IAddCalculator
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

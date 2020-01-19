@@ -85,63 +85,53 @@
 				</div>
 				<section>
 					<p>Create a new Console Application in Visual Studio.</p>
-
 <p>Open Package Manager Console (Tools -&gt; Library Package Manager -&gt; Package Manager Console) and enter the command</p>
-
 <blockquote>
 <p>Install-Package WampSharp.Default -Pre</p>
 </blockquote>
-
 <p>This will install the pre-release version of WampSharp.</p>
-
 <p>In your Program file, add the following code:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">using</span> System;
+<span style="color:#66d9ef">using</span> WampSharp.V1;
+<span style="color:#66d9ef">using</span> WampSharp.V1.Rpc;
 
-<pre><code class="language-csharp">using System;
-using WampSharp.V1;
-using WampSharp.V1.Rpc;
-
-namespace MyNamespace
+<span style="color:#66d9ef">namespace</span> MyNamespace
 {
-    public interface ICalculator
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> ICalculator
     {
-        [WampRpcMethod(&quot;http://example.com/simple/calc#add&quot;)]
-        int Add(int x, int y);
+<span style="color:#a6e22e">        [WampRpcMethod(&#34;http://example.com/simple/calc#add&#34;)]</span>
+        <span style="color:#66d9ef">int</span> Add(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y);
     }
 
-    internal class Calculator : ICalculator
+    <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Calculator</span> : ICalculator
     {
-        public int Add(int x, int y)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Add(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y)
         {
-            return x + y;
+            <span style="color:#66d9ef">return</span> x + y;
         }
     }
 
-    class Program
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
     {
-        public static void Main(string[] args)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
         {
-            const string location = &quot;ws://127.0.0.1:9000/&quot;;
-            using (IWampHost host = new DefaultWampHost(location))
+            <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> location = <span style="color:#e6db74">&#34;ws://127.0.0.1:9000/&#34;</span>;
+            <span style="color:#66d9ef">using</span> (IWampHost host = <span style="color:#66d9ef">new</span> DefaultWampHost(location))
             {
-                ICalculator instance = new Calculator();
+                ICalculator instance = <span style="color:#66d9ef">new</span> Calculator();
                 host.HostService(instance);
 
                 host.Open();
 
-                Console.WriteLine(&quot;Server is running on &quot; + location);
+                Console.WriteLine(<span style="color:#e6db74">&#34;Server is running on &#34;</span> + location);
                 Console.ReadLine();
             }
         }
     }
 }
-</code></pre>
-
-<p>Compile and run.</p>
-
-<p>Congratulations! you&rsquo;ve just hosted your first WampSharp service!</p>
-
+</code></pre></div><p>Compile and run.</p>
+<p>Congratulations! you've just hosted your first WampSharp service!</p>
 <p>Try it! enter this <a href="http://autobahn.ws/static/file/autobahnjs.html">autobahnjs demo client</a> with a modern browser (Firefox or Chrome for instance). Open the web developer console (CTRL+Shift+I in Firefox and Chrome) - press the &ldquo;Call Procedure&rdquo; button - this calls your Add method with the parameters (23, 7).</p>
-
 <p>To test pub/sub open two tabs of the <a href="http://autobahn.ws/static/file/autobahnjs.html">autobahnjs demo client</a> and open the web developer console in each tab. Now press &ldquo;Publish Event&rdquo; in one of the tabs. Switch to the other tab. You should see a received event in the web developer console.</p>
 
 				</section>
@@ -159,7 +149,7 @@ namespace MyNamespace
 			<ul>
 				<li><strong><a href="#title">Getting started with WAMPv1</a></strong></li>
 			</ul>
-			
+			<nav id="TableOfContents"></nav>
 		</div>
 	</div>
 	<div class="sidebar-module">
@@ -300,6 +290,9 @@ namespace MyNamespace
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -467,7 +460,7 @@ namespace MyNamespace
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

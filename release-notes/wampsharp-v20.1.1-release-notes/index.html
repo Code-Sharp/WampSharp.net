@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="alternate" href="/index.xml" type="application/rss+xml" title="WampSharp">
 		<link rel="icon" href="https://wampsharp.net/favicon.ico">
-		<title>Testament service - WampSharp</title>
+		<title>WampSharp v20.1.1 release notes - WampSharp</title>
 		
 		<link rel="stylesheet" href="https://wampsharp.net/css/highlight/github.css">
 		<link rel="stylesheet" href="https://wampsharp.net/css/bootstrap.min.css">
@@ -79,77 +79,143 @@
 		<main role="main">
 			<article>
 				<a id="title"></a>
-				<h1 class="doc-entry-title">Testament service</h1>
+				<h1 class="doc-entry-title">WampSharp v20.1.1 release notes</h1>
 				<div class="doc-entry-meta">
-					<span><time datetime="2017-07-30">July 30, 2017</time></span>
+					<span><time datetime="2020-01-18">January 18, 2020</time></span>
 				</div>
 				<section>
-					<p>The <a href="http://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#rfc.section.14.4.11">Testament feature</a> is supported.</p>
-<p>This feature allows a client to request the router to publish some predefined events when the client disconnects.</p>
-<h2 id="enabling-the-testament-service-on-the-router-side">Enabling the testament service on the router-side</h2>
-<p>In order to enable it from router-side, call HostTestamentService extension method of the relevant realm (this is similiar to the <a href="https://wampsharp.net/wamp2/meta-api-service/#exposing-meta-api">Router-side meta-api usage</a>):</p>
+					<h2 id="breaking-changes">Breaking changes</h2>
+<h3 id="supported-frameworks">Supported frameworks</h3>
+<p>From this version, WampSharp targets only the following .NET variants: <a href="https://github.com/microsoft/dotnet/tree/master/releases/net461">net461</a>, <a href="https://devblogs.microsoft.com/dotnet/announcing-net-standard-2-0/">netstandard2.0</a>, <a href="https://devblogs.microsoft.com/dotnet/announcing-net-standard-2-1/">netstandard2.1</a>. Support for the following variants has been dropped: <code>net40</code>, <code>net45</code>, <code>netstandard1.3</code>, <code>pcl</code>, <code>uap</code>.</p>
+<p>.NET Standard 2.0/2.1 is the future for .NET libraries and every major .NET variant will implement .NET Standard. For instance, <a href="https://devblogs.microsoft.com/dotnet/announcing-uwp-support-for-net-standard-2-0/">UWP implements .NET Standard 2.0</a>.</p>
+<h3 id="removed-packages">Removed packages</h3>
+<ul>
+<li>The package <code>WampSharp.Windows</code> is removed - UWP targets should now use <code>WampSharp.WebSockets</code>.</li>
+<li>The package <code>WampSharp.SignalR</code> is removed.</li>
+</ul>
+<h3 id="wampsharpdefault">WampSharp.Default</h3>
+<ul>
+<li><code>DefaultWampChannelFactory</code> now uses <code>WampSharp.WebSockets</code> instead of <code>WampSharp.WebSocket4Net</code>. One can use <code>WampSharp.WebSocket4Net</code> instead by installing <code>WampSharp.WebSocket4Net</code> manually and calling the fluent syntax api <code>WebSocket4NetTransport</code> method.</li>
+<li><code>DefaultWampChannelFactory</code> now uses <code>WampSharp.NewtonsoftMessagePack</code> instead of <code>WampSharp.NewtonsoftMsgpack</code>. One can use <code>WampSharp.NewtonsoftMsgpack</code> instead by installing <code>WampSharp.NewtonsoftMsgpack</code> manually and calling the fluent syntax api <code>MsgpackSerialization</code> method.</li>
+<li><code>DefaultWampHost</code> now uses <code>WampSharp.NewtonsoftMessagePack</code> instead of <code>WampSharp.NewtonsoftMsgpack</code>. One can use <code>WampSharp.NewtonsoftMsgpack</code> instead by installing <code>WampSharp.NewtonsoftMsgpack</code> manually and creating a <code>DefaultWampHost</code> and calling its constructor with a list containing a <code>JTokenMsgpackBinding</code>.</li>
+</ul>
+<h3 id="proxy-implementation">Proxy implementation</h3>
+<p>WampSharp had several implementations for its <a href="https://wampsharp.net/wamp2/roles/caller/reflection-based-caller/">Reflection based Caller</a> feature. For several platforms (<code>net40</code>, <code>net45</code>, <code>netstandard1.3</code>, <code>netstandard2.0</code>) it used <a href="http://www.castleproject.org/projects/dynamicproxy/">Castle.Core DynamicProxy</a> and for others it used <a href="https://docs.microsoft.com/en-us/dotnet/api/system.reflection.dispatchproxy?view=netcore-3.1">System.Reflection.DispatchProxy</a>. From this version, <code>System.Reflection.DispatchProxy</code> is used for every platform. This is an internal change of the library that should not affect library users.</p>
+<h3 id="iasyncdisposable">IAsyncDisposable</h3>
+<p>In C# 8.0, the interface <code>IAsyncDisposable</code> <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iasyncdisposable?view=netcore-3.1">was introduced</a>. Previous versions of WampSharp contained a similar interface. From this version, WampSharp uses the above <code>IAsyncDisposable</code> interface. This interface is only available in .NET Standard 2.1. For other variants, the interface is imported from the NuGet package <a href="https://www.nuget.org/packages/Microsoft.Bcl.AsyncInterfaces/">Microsoft.Bcl.AsyncInterfaces</a>.</p>
+<p>Note that although the interfaces are similar, the signature of <code>DisposeAsync</code> is slightly different, as the new signature returns a <code>ValueTask</code>, while the previous signature returns a <code>Task</code>.</p>
+<h2 id="features">Features</h2>
+<h3 id="session-management-api">Session management api</h3>
+<p>From this version, <a href="https://wamp-proto.org/_static/gen/wamp_latest.html#x14-5-1-3-session-meta-procedures">WAMP session management api</a> is supported. This allows to disconnect router peers by calling rpc methods.</p>
+<p>To host the session management service call the <code>HostSessionManagementService</code> extension method on your hosted realm object</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">DefaultWampHost host = <span style="color:#66d9ef">new</span> DefaultWampHost(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>);
 
 IWampHostedRealm realm = host.RealmContainer.GetRealmByName(<span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-IDisposable disposable = realm.HostTestamentService();
+IDisposable disposable = realm.HostSessionManagementService();
 
-<span style="color:#75715e">// Uncomment to unregister the Testament service. 
-</span><span style="color:#75715e"></span><span style="color:#75715e">// disposable.Dispose(); 
+<span style="color:#75715e">// Uncomment to unregister the session management service.
+</span><span style="color:#75715e"></span><span style="color:#75715e">// disposable.Dispose();
 </span><span style="color:#75715e"></span>
 host.Open();
-</code></pre></div><h2 id="consuming-the-testament-service">Consuming the testament service</h2>
-<p>In order to consume the Testament service, one can define its contract and consume it using the CalleeProxy method. Another option is to use the GetTestamentServiceProxy extension method of IWampRealmProxy which returns such a proxy:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
+</code></pre></div><p>To disconnect a remote peer, obtain a proxy of and call one of its methods:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">WampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> WampChannelFactory();
+
+IWampChannel channel =
+    channelFactory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
+                  .WebSocketTransport(<span style="color:#66d9ef">new</span> Uri(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>))
+                  .JsonSerialization()
+                  .Build();
+
+<span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
+
+IWampSessionManagementServiceProxy proxy = 
+    channel.RealmProxy.GetManagementServiceProxy();
+
+<span style="color:#66d9ef">await</span> proxy.KillBySessionIdAsync(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">5</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">6</span><span style="color:#ae81ff">8</span><span style="color:#ae81ff">6</span><span style="color:#ae81ff">7</span><span style="color:#ae81ff">8</span><span style="color:#ae81ff">4</span><span style="color:#ae81ff">9</span><span style="color:#ae81ff">4</span><span style="color:#ae81ff">7</span><span style="color:#ae81ff">3</span><span style="color:#ae81ff">8</span>).ConfigureAwait(<span style="color:#66d9ef">false</span>);
+
+<span style="color:#66d9ef">await</span> proxy.KillByAuthIdAsync(<span style="color:#e6db74">&#34;peter&#34;</span>).ConfigureAwait(<span style="color:#66d9ef">false</span>);
+
+<span style="color:#66d9ef">await</span> proxy.KillByAuthRoleAsync(<span style="color:#e6db74">&#34;frontend&#34;</span>).ConfigureAwait(<span style="color:#66d9ef">false</span>);
+
+<span style="color:#66d9ef">await</span> proxy.KillAllAsync().ConfigureAwait(<span style="color:#66d9ef">false</span>);
+</code></pre></div><p>It is recommended to combine this feature with <a href="https://wampsharp.net/wamp2/router/router-side-authentication/">authentication</a>, to ensure that unauthorized users can not disconnect other users.</p>
+<h3 id="cbor-support">CBOR Support</h3>
+<p>From this version, WampSharp supports <a href="https://github.com/wamp-proto/wamp-proto/issues/151">CBOR serializaion</a>. This is provided by the <code>WampSharp.NewtonsoftCbor</code> package.</p>
+<p>Client side usage:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">WampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> WampChannelFactory();
+
+IWampChannel channel =
+    channelFactory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
+                  .WebSocketTransport(<span style="color:#66d9ef">new</span> Uri(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>))
+                  .CborSerialization()
+                  .Build();
+
+<span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
+</code></pre></div><p>Router side usage:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">WampHost host = <span style="color:#66d9ef">new</span> WampHost();
+
+host.RegisterTransport(<span style="color:#66d9ef">new</span> FleckWebSocketTransport(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>),
+                       <span style="color:#66d9ef">new</span> JTokenJsonBinding(),
+                       <span style="color:#66d9ef">new</span> JTokenCborBinding());
+
+
+<span style="color:#75715e">// Alternatively use:
+</span><span style="color:#75715e"></span><span style="color:#75715e">// DefaultWampHost host =
+</span><span style="color:#75715e"></span><span style="color:#75715e">//     new DefaultWampHost(&#34;ws://127.0.0.1:8080/ws&#34;,
+</span><span style="color:#75715e"></span><span style="color:#75715e">//                         new List&lt;IWampBinding&gt;
+</span><span style="color:#75715e"></span><span style="color:#75715e">//                         {
+</span><span style="color:#75715e"></span><span style="color:#75715e">//                             new JTokenJsonBinding(),
+</span><span style="color:#75715e"></span><span style="color:#75715e">//                             new JTokenCborBinding()
+</span><span style="color:#75715e"></span><span style="color:#75715e">//                         });
+</span><span style="color:#75715e"></span>
+host.Open();
+</code></pre></div><h3 id="iasyncdisposable-support">IAsyncDisposable support</h3>
+<p>As mentioned above, the <code>RegisterCallee</code>/<code>RegisterSubscriber</code> methods now return the new <code>System.IAsyncDisposable</code> type: for <code>netstandard2.1</code> this type is available, while for <code>net461</code> and <code>netstandard2.0</code> the package <a href="https://www.nuget.org/packages/Microsoft.Bcl.AsyncInterfaces/">Microsoft.Bcl.AsyncInterfaces</a> is used.</p>
+<p>This allows one to use the C# 8.0 <a href="https://www.tabsoverspaces.com/233779-using-await-using-iasyncdisposable-with-configureawait">await using</a> feature. For example:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
 {
-    WampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> WampChannelFactory();
-
-    IWampChannel channel =
-        channelFactory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
-                      .WebSocketTransport(<span style="color:#66d9ef">new</span> Uri(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>))
-                      .JsonSerialization()
-                      .Build();
-
-    TaskCompletionSource&lt;<span style="color:#66d9ef">long</span>&gt; sessionIdTask = <span style="color:#66d9ef">new</span> TaskCompletionSource&lt;<span style="color:#66d9ef">long</span>&gt;();
-
-    channel.RealmProxy.Monitor.ConnectionEstablished += (sender, args) =&gt; sessionIdTask.SetResult(args.SessionId);
-
-    <span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
-
-    <span style="color:#66d9ef">long</span> sessionId = <span style="color:#66d9ef">await</span> sessionIdTask.Task.ConfigureAwait(<span style="color:#66d9ef">false</span>);
-
-    IWampTestamentServiceProxy proxy = channel.RealmProxy.GetTestamentServiceProxy();
-
-    <span style="color:#66d9ef">string</span> testamentTopic = <span style="color:#e6db74">&#34;com.example.testament&#34;</span>;
-
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; <span style="color:#ae81ff">5</span>; ++i)
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Main()
     {
-        <span style="color:#66d9ef">object</span>[] testamentArgs = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] {<span style="color:#e6db74">&#34;this is my testament!&#34;</span>};
+        WampChannelFactory factory = <span style="color:#66d9ef">new</span> WampChannelFactory();
 
-        Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">object</span>&gt; testamentKwArgs =
-            <span style="color:#66d9ef">new</span> Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">object</span>&gt; {{<span style="color:#e6db74">&#34;foo&#34;</span>, i}, {<span style="color:#e6db74">&#34;bar&#34;</span>, <span style="color:#e6db74">&#34;baz&#34;</span>}, {<span style="color:#e6db74">&#34;sess&#34;</span>, sessionId}};
+        IWampChannel channel =
+            factory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
+                   .WebSocketTransport(<span style="color:#66d9ef">new</span> Uri(<span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>))
+                   .JsonSerialization()
+                   .Build();
 
-        <span style="color:#66d9ef">try</span>
+        <span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
+
+        Add2Service service = <span style="color:#66d9ef">new</span> Add2Service();
+
+        <span style="color:#66d9ef">await</span> <span style="color:#66d9ef">using</span> (IAsyncDisposable disposable =
+            <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterCallee(service))
         {
-            <span style="color:#66d9ef">await</span> proxy.AddTestamentAsync(testamentTopic, testamentArgs, testamentKwArgs)
-                       .ConfigureAwait(<span style="color:#66d9ef">false</span>);
+            Console.WriteLine(<span style="color:#e6db74">$&#34;Registered!&#34;</span>);
 
-            Console.WriteLine(<span style="color:#e6db74">&#34;testament added&#34;</span>);
+            <span style="color:#66d9ef">await</span> Task.Yield();
+
+            Console.WriteLine(<span style="color:#e6db74">&#34;Hit any key to unregister&#34;</span>);
+
+            Console.ReadKey();
         }
-        <span style="color:#66d9ef">catch</span> (Exception ex)
-        {
-            Console.WriteLine(<span style="color:#e6db74">&#34;adding testament failed! &#34;</span> + ex);
-        }
+
+        Console.WriteLine(<span style="color:#e6db74">&#34;Unregistered&#34;</span>);
+
+        Console.ReadLine();
     }
 
-    Console.WriteLine(<span style="color:#e6db74">@&#34;Press any key to close channel. 5 events should be published to &#34;&#34;com.example.testament&#34;&#34;&#34;</span>);
-    Console.ReadKey();
-    channel.Close();
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Add2Service</span>
+    {
+<span style="color:#a6e22e">        [WampProcedure(&#34;com.arguments.add2&#34;)]</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Add2(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> b)
+        {
+            <span style="color:#66d9ef">return</span> a + b;
+        }
+    }
 }
-</code></pre></div><blockquote>
-<p>This sample is based on this <a href="https://github.com/crossbario/crossbar-examples/tree/240c1f015990a859683a74de40e51a9f9ab3b5f9/pubsub/testament">Crossbar example</a>.</p>
-</blockquote>
-
+</code></pre></div>
 				</section>
 			</article>
 		</main>
@@ -163,12 +229,26 @@ host.Open();
 		<div class="sidebar-toc">
 			<h4 class="sidebar-heading">Table of Contents</h4>
 			<ul>
-				<li><strong><a href="#title">Testament service</a></strong></li>
+				<li><strong><a href="#title">WampSharp v20.1.1 release notes</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
   <ul>
-    <li><a href="#enabling-the-testament-service-on-the-router-side">Enabling the testament service on the router-side</a></li>
-    <li><a href="#consuming-the-testament-service">Consuming the testament service</a></li>
+    <li><a href="#breaking-changes">Breaking changes</a>
+      <ul>
+        <li><a href="#supported-frameworks">Supported frameworks</a></li>
+        <li><a href="#removed-packages">Removed packages</a></li>
+        <li><a href="#wampsharpdefault">WampSharp.Default</a></li>
+        <li><a href="#proxy-implementation">Proxy implementation</a></li>
+        <li><a href="#iasyncdisposable">IAsyncDisposable</a></li>
+      </ul>
+    </li>
+    <li><a href="#features">Features</a>
+      <ul>
+        <li><a href="#session-management-api">Session management api</a></li>
+        <li><a href="#cbor-support">CBOR Support</a></li>
+        <li><a href="#iasyncdisposable-support">IAsyncDisposable support</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
 		</div>
@@ -248,9 +328,8 @@ host.Open();
 					<li><a href="/wamp2/meta-api-service/">Meta-api descriptor service</a>
 					</li>
 				
-					<li>
-						<span class="active">Testament service</span>
-						</li>
+					<li><a href="/wamp2/testament-service/">Testament service</a>
+					</li>
 				
 					<li><a href="/wamp2/client/wamp-cra-client-side-authentication/">WAMP-CRA client side authentication</a>
 					</li>
@@ -312,8 +391,9 @@ host.Open();
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
-					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
-					</li>
+					<li>
+						<span class="active">WampSharp v20.1.1 release notes</span>
+						</li>
 				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
@@ -370,9 +450,8 @@ host.Open();
 					<li><a href="/wamp2/router/router-side-authentication/">Router-side authentication</a>
 					</li>
 				
-					<li>
-						<span class="active">Testament service</span>
-						</li>
+					<li><a href="/wamp2/testament-service/">Testament service</a>
+					</li>
 				
 					<li><a href="/wamp2/router/wamp-cra-router-side-authentication/">WAMP-CRA router-side authentication</a>
 					</li>

@@ -85,37 +85,34 @@
 				</div>
 				<section>
 					<p>The WampChannelReconnector class helps handling re-connection of WampChannel.</p>
-
 <p>Usage sample:</p>
-
-<pre><code class="language-csharp">public static async Task Run()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
-    string address = &quot;ws://localhost:8080/ws&quot;;
+    <span style="color:#66d9ef">string</span> address = <span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>;
 
-    MySubscriber mySubscriber = new MySubscriber();
+    MySubscriber mySubscriber = <span style="color:#66d9ef">new</span> MySubscriber();
 
     IWampChannel channel =
-        factory.CreateJsonChannel(address, &quot;realm1&quot;);
+        factory.CreateJsonChannel(address, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    Func&lt;Task&gt; connect = async () =&gt;
+    Func&lt;Task&gt; connect = <span style="color:#66d9ef">async</span> () =&gt;
     {
-        await channel.Open();
+        <span style="color:#66d9ef">await</span> channel.Open();
 
-        var subscriptionTask =
+        <span style="color:#66d9ef">var</span> subscriptionTask =
             channel.RealmProxy.Services.RegisterSubscriber(mySubscriber);
 
-        var asyncDisposable = await subscriptionTask;
+        <span style="color:#66d9ef">var</span> asyncDisposable = <span style="color:#66d9ef">await</span> subscriptionTask;
     };
 
     WampChannelReconnector reconnector =
-        new WampChannelReconnector(channel, connect);
+        <span style="color:#66d9ef">new</span> WampChannelReconnector(channel, connect);
 
     reconnector.Start();
 }
-</code></pre>
-
+</code></pre></div>
 				</section>
 			</article>
 		</main>
@@ -131,7 +128,7 @@
 			<ul>
 				<li><strong><a href="#title">WampChannelReconnector</a></strong></li>
 			</ul>
-			
+			<nav id="TableOfContents"></nav>
 		</div>
 	</div>
 	<div class="sidebar-module">
@@ -273,6 +270,9 @@
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -439,7 +439,7 @@
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

@@ -84,207 +84,182 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p>This page describes router-side authentication.</p>
-
-<p>In order to use router-side authentication, you&rsquo;ll need to create an instance of a (Default)WampAuthenticationHost and initialize it with a IWampSessionAuthenticatorFactory - that is an interface which will create a IWampSessionAuthenticator - a mechanism which is responsible of the authentication process of an individual client.</p>
-
+					<p>This page describes router-side authentication.</p>
+<p>In order to use router-side authentication, you'll need to create an instance of a (Default)WampAuthenticationHost and initialize it with a IWampSessionAuthenticatorFactory - that is an interface which will create a IWampSessionAuthenticator - a mechanism which is responsible of the authentication process of an individual client.</p>
 <h2 id="iwampsessionauthenticator">IWampSessionAuthenticator</h2>
-
 <p>IWampSessionAuthenticator is an interface which represents a mechanism which is responsible of the authentication process of an individual client. Whenever a client requests to join the router (i.e. sends a HELLO message), an IWampSessionAuthenticator is created by the IWampSessionAuthenticatorFactory passed to the WampHost.</p>
-
-<p>This instance handles the client&rsquo;s authentication process: after the IWampSessionAuthenticator is created, the router checks if the client is authenticated (by checking the IsAuthenticated property). If the client isn&rsquo;t authenticated, a CHALLENGE message is sent to the client, with authmethod and extra parameters which are specified by the IWampSessionAuthenticator instance&rsquo;s AuthenticationMethod and ChallengeDetails properties. When a client sends an AUTHENTICATE message, the IWampSessionAuthenticator&rsquo;s Authenticate method is called with the received signature and extra parameters. At this point, the IWampSessionAuthenticator&rsquo;s IsAuthenticated property should be set to true if the client is authenticated.</p>
-
+<p>This instance handles the client's authentication process: after the IWampSessionAuthenticator is created, the router checks if the client is authenticated (by checking the IsAuthenticated property). If the client isn't authenticated, a CHALLENGE message is sent to the client, with authmethod and extra parameters which are specified by the IWampSessionAuthenticator instance's AuthenticationMethod and ChallengeDetails properties. When a client sends an AUTHENTICATE message, the IWampSessionAuthenticator's Authenticate method is called with the received signature and extra parameters. At this point, the IWampSessionAuthenticator's IsAuthenticated property should be set to true if the client is authenticated.</p>
 <p>In any point of this process, a WampAuthenticationException can be thrown. If such an exception is thrown, an ABORT message will be sent to the client with exception specified parameters.</p>
-
-<p>Once the client is authenticated, a WELCOME message will be sent to the client with details and authid, authmethod parameters as specified in WelcomeDetails, AuthenticationId and AuthenticationMethod properties. After that, the Authorizer property of the IWampSessionAuthenticator&rsquo;s instance will be used determine if the client is allowed to perform certain operations. See IWampAuthorizer section for more info.</p>
-
+<p>Once the client is authenticated, a WELCOME message will be sent to the client with details and authid, authmethod parameters as specified in WelcomeDetails, AuthenticationId and AuthenticationMethod properties. After that, the Authorizer property of the IWampSessionAuthenticator's instance will be used determine if the client is allowed to perform certain operations. See IWampAuthorizer section for more info.</p>
 <h2 id="wampsessionauthenticator">WampSessionAuthenticator</h2>
-
 <p>In order to make it easier to implement the IWampSessionAuthenticator interface, the abstract class WampSessionAuthenticator is provided. In this class, the only members which are needed to be implemented are Authenticate, AuthenticationId and AuthenticationMethod. Other properties are implemented as auto-properties, which you can set their values. All members are virtual, so you can also override them.</p>
-
 <p>In addition, a WampSessionAuthenticator&lt;TExtra&gt; class is provided, which is the same as WampSessionAuthenticator, but deserializes the given extra dictionary passed in AUTHENTICATE message to the given TExtra type.</p>
-
 <h2 id="iwampauthorizer">IWampAuthorizer</h2>
-
 <p>IWampAuthorizer is an interface which checks whether an individual client is allowed to perform certain WAMP operations.</p>
-
-<pre><code class="language-csharp">public interface IWampAuthorizer
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IWampAuthorizer
 {
-    bool CanRegister(RegisterOptions options, string procedure);
-    bool CanCall(CallOptions options, string procedure);
-    bool CanPublish(PublishOptions options, string topicUri);
-    bool CanSubscribe(SubscribeOptions options, string topicUri);
+    <span style="color:#66d9ef">bool</span> CanRegister(RegisterOptions options, <span style="color:#66d9ef">string</span> procedure);
+    <span style="color:#66d9ef">bool</span> CanCall(CallOptions options, <span style="color:#66d9ef">string</span> procedure);
+    <span style="color:#66d9ef">bool</span> CanPublish(PublishOptions options, <span style="color:#66d9ef">string</span> topicUri);
+    <span style="color:#66d9ef">bool</span> CanSubscribe(SubscribeOptions options, <span style="color:#66d9ef">string</span> topicUri);
 }
 
-</code></pre>
-
-<p>Each method can return a false value in order to prevent access of the client to do certain actions. In addition, a WampException can be thrown by any method, which will result in sending an ERROR message to the client with the exception details (except in Publish case, where this will happen only if the client requested acknowledge).</p>
-
+</code></pre></div><p>Each method can return a false value in order to prevent access of the client to do certain actions. In addition, a WampException can be thrown by any method, which will result in sending an ERROR message to the client with the exception details (except in Publish case, where this will happen only if the client requested acknowledge).</p>
 <h2 id="ticket-based-authentication-example">Ticket-based authentication example</h2>
-
 <p>This is an example implementation of a very simplified version of <a href="https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_authentication_ticket.md">Ticket-based authentication</a>. It shows off a bit C# 6.0 features too.</p>
-
-<pre><code class="language-csharp">public class MyAuthenticatorFactory : IWampSessionAuthenticatorFactory
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyAuthenticatorFactory</span> : IWampSessionAuthenticatorFactory
 {
-    private readonly IDictionary&lt;string, string&gt; mUserToTicket =
-        new Dictionary&lt;string, string&gt;
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> IDictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>&gt; mUserToTicket =
+        <span style="color:#66d9ef">new</span> Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>&gt;
         {
-            [&quot;peter&quot;] = &quot;magic_secret_1&quot;,
-            [&quot;joe&quot;] = &quot;magic_secret_2&quot;
+<span style="color:#a6e22e">            [&#34;peter&#34;]</span> = <span style="color:#e6db74">&#34;magic_secret_1&#34;</span>,
+<span style="color:#a6e22e">            [&#34;joe&#34;]</span> = <span style="color:#e6db74">&#34;magic_secret_2&#34;</span>
         };
 
-    private readonly IDictionary&lt;string, IWampAuthorizer&gt; mUserToAuthorizer =
-        new Dictionary&lt;string, IWampAuthorizer&gt;
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> IDictionary&lt;<span style="color:#66d9ef">string</span>, IWampAuthorizer&gt; mUserToAuthorizer =
+        <span style="color:#66d9ef">new</span> Dictionary&lt;<span style="color:#66d9ef">string</span>, IWampAuthorizer&gt;
         {
-            [&quot;peter&quot;] = new FrontendStaticAuthorizer(),
-            [&quot;joe&quot;] = new FrontendStaticAuthorizer()
+<span style="color:#a6e22e">            [&#34;peter&#34;]</span> = <span style="color:#66d9ef">new</span> FrontendStaticAuthorizer(),
+<span style="color:#a6e22e">            [&#34;joe&#34;]</span> = <span style="color:#66d9ef">new</span> FrontendStaticAuthorizer()
         };
 
-    public IWampSessionAuthenticator GetSessionAuthenticator
+    <span style="color:#66d9ef">public</span> IWampSessionAuthenticator GetSessionAuthenticator
         (WampPendingClientDetails details,
          IWampSessionAuthenticator transportAuthenticator)
     {
         HelloDetails helloDetails = details.HelloDetails;
 
-        if (helloDetails.AuthenticationMethods?.Contains(&quot;ticket&quot;) != true)
+        <span style="color:#66d9ef">if</span> (helloDetails.AuthenticationMethods?.Contains(<span style="color:#e6db74">&#34;ticket&#34;</span>) != <span style="color:#66d9ef">true</span>)
         {
-            throw new WampAuthenticationException(&quot;supports only 'ticket' authentication&quot;);
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampAuthenticationException(<span style="color:#e6db74">&#34;supports only &#39;ticket&#39; authentication&#34;</span>);
         }
 
-        string user = helloDetails.AuthenticationId;
+        <span style="color:#66d9ef">string</span> user = helloDetails.AuthenticationId;
 
-        string ticket;
+        <span style="color:#66d9ef">string</span> ticket;
 
-        if (user == null ||
-            !mUserToTicket.TryGetValue(user, out ticket))
+        <span style="color:#66d9ef">if</span> (user == <span style="color:#66d9ef">null</span> ||
+            !mUserToTicket.TryGetValue(user, <span style="color:#66d9ef">out</span> ticket))
         {
-            throw new WampAuthenticationException
-                ($&quot;no user with authid '{user}' in user database&quot;);
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampAuthenticationException
+                (<span style="color:#e6db74">$&#34;no user with authid &#39;{user}&#39; in user database&#34;</span>);
         }
 
-        return new TicketSessionAuthenticator(user, ticket, mUserToAuthorizer[user]);
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> TicketSessionAuthenticator(user, ticket, mUserToAuthorizer[user]);
     }
 }
 
-public class TicketSessionAuthenticator : WampSessionAuthenticator
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TicketSessionAuthenticator</span> : WampSessionAuthenticator
 {
-    private readonly string mTicket;
-    private readonly IWampAuthorizer mAuthorizer;
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> <span style="color:#66d9ef">string</span> mTicket;
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> IWampAuthorizer mAuthorizer;
 
-    public TicketSessionAuthenticator(string authenticationId, string ticket, IWampAuthorizer authorizer)
+    <span style="color:#66d9ef">public</span> TicketSessionAuthenticator(<span style="color:#66d9ef">string</span> authenticationId, <span style="color:#66d9ef">string</span> ticket, IWampAuthorizer authorizer)
     {
         AuthenticationId = authenticationId;
         mTicket = ticket;
         mAuthorizer = authorizer;
     }
 
-    public override void Authenticate(string signature, AuthenticateExtraData extra)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> Authenticate(<span style="color:#66d9ef">string</span> signature, AuthenticateExtraData extra)
     {
-        if (signature == mTicket)
+        <span style="color:#66d9ef">if</span> (signature == mTicket)
         {
-            IsAuthenticated = true;
+            IsAuthenticated = <span style="color:#66d9ef">true</span>;
             Authorizer = mAuthorizer;
 
-            WelcomeDetails = new WelcomeDetails()
+            WelcomeDetails = <span style="color:#66d9ef">new</span> WelcomeDetails()
             {
-                AuthenticationProvider = &quot;hardcoded&quot;,
-                AuthenticationRole = &quot;frontend&quot;
+                AuthenticationProvider = <span style="color:#e6db74">&#34;hardcoded&#34;</span>,
+                AuthenticationRole = <span style="color:#e6db74">&#34;frontend&#34;</span>
             };
         }
     }
 
-    public override string AuthenticationId { get; }
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> AuthenticationId { <span style="color:#66d9ef">get</span>; }
 
-    public override string AuthenticationMethod =&gt; &quot;ticket&quot;;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> AuthenticationMethod =&gt; <span style="color:#e6db74">&#34;ticket&#34;</span>;
 }
 
-public class BackendStaticAuthorizer : IWampAuthorizer
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BackendStaticAuthorizer</span> : IWampAuthorizer
 {
-    public bool CanRegister(RegisterOptions options, string procedure) =&gt; true;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">bool</span> CanRegister(RegisterOptions options, <span style="color:#66d9ef">string</span> procedure) =&gt; <span style="color:#66d9ef">true</span>;
 
-    public bool CanCall(CallOptions options, string procedure) =&gt; true;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">bool</span> CanCall(CallOptions options, <span style="color:#66d9ef">string</span> procedure) =&gt; <span style="color:#66d9ef">true</span>;
 
-    public bool CanPublish(PublishOptions options, string topicUri) =&gt; true;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">bool</span> CanPublish(PublishOptions options, <span style="color:#66d9ef">string</span> topicUri) =&gt; <span style="color:#66d9ef">true</span>;
 
-    public bool CanSubscribe(SubscribeOptions options, string topicUri)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">bool</span> CanSubscribe(SubscribeOptions options, <span style="color:#66d9ef">string</span> topicUri)
     {
-        return topicUri != &quot;com.example.topic2&quot;;
+        <span style="color:#66d9ef">return</span> topicUri != <span style="color:#e6db74">&#34;com.example.topic2&#34;</span>;
     }
 }
 
-public class FrontendStaticAuthorizer : IWampAuthorizer
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FrontendStaticAuthorizer</span> : IWampAuthorizer
 {
-    public bool CanRegister(RegisterOptions options, string procedure) =&gt; false;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">bool</span> CanRegister(RegisterOptions options, <span style="color:#66d9ef">string</span> procedure) =&gt; <span style="color:#66d9ef">false</span>;
 
-    public bool CanCall(CallOptions options, string procedure) =&gt; procedure == &quot;com.example.add2&quot;;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">bool</span> CanCall(CallOptions options, <span style="color:#66d9ef">string</span> procedure) =&gt; procedure == <span style="color:#e6db74">&#34;com.example.add2&#34;</span>;
 
-    public bool CanPublish(PublishOptions options, string topicUri)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">bool</span> CanPublish(PublishOptions options, <span style="color:#66d9ef">string</span> topicUri)
     {
-        return (topicUri.StartsWith(&quot;com.example.&quot;) &amp;&amp; topicUri != &quot;com.example.topic2&quot;) ||
-               topicUri == &quot;com.foobar.topic1&quot;;
+        <span style="color:#66d9ef">return</span> (topicUri.StartsWith(<span style="color:#e6db74">&#34;com.example.&#34;</span>) &amp;&amp; topicUri != <span style="color:#e6db74">&#34;com.example.topic2&#34;</span>) ||
+               topicUri == <span style="color:#e6db74">&#34;com.foobar.topic1&#34;</span>;
     }
 
-    public bool CanSubscribe(SubscribeOptions options, string topicUri) =&gt; false;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">bool</span> CanSubscribe(SubscribeOptions options, <span style="color:#66d9ef">string</span> topicUri) =&gt; <span style="color:#66d9ef">false</span>;
 }
-</code></pre>
-
-<p>After that we create a WampAuthenticationHost and pass to it an instance of our MyAuthenticatorFactory:</p>
-
-<pre><code class="language-csharp">public class Program
+</code></pre></div><p>After that we create a WampAuthenticationHost and pass to it an instance of our MyAuthenticatorFactory:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
 {
-    private static void Main(string[] args)
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
     {
         DefaultWampAuthenticationHost host =
-            new DefaultWampAuthenticationHost(&quot;ws://127.0.0.1:8080/ws&quot;,
-                                              new MyAuthenticatorFactory());
+            <span style="color:#66d9ef">new</span> DefaultWampAuthenticationHost(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>,
+                                              <span style="color:#66d9ef">new</span> MyAuthenticatorFactory());
 
 
         IWampHostedRealm realm =
-            host.RealmContainer.GetRealmByName(&quot;realm1&quot;);
+            host.RealmContainer.GetRealmByName(<span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-        string[] topics = new[]
+        <span style="color:#66d9ef">string</span>[] topics = <span style="color:#66d9ef">new</span>[]
         {
-            &quot;com.example.topic1&quot;,
-            &quot;com.foobar.topic1&quot;,
-            &quot;com.foobar.topic2&quot;
+            <span style="color:#e6db74">&#34;com.example.topic1&#34;</span>,
+            <span style="color:#e6db74">&#34;com.foobar.topic1&#34;</span>,
+            <span style="color:#e6db74">&#34;com.foobar.topic2&#34;</span>
         };
 
-        foreach (string topic in topics)
+        <span style="color:#66d9ef">foreach</span> (<span style="color:#66d9ef">string</span> topic <span style="color:#66d9ef">in</span> topics)
         {
-            string currentTopic = topic;
+            <span style="color:#66d9ef">string</span> currentTopic = topic;
 
-            realm.Services.GetSubject&lt;string&gt;(topic).Subscribe
-                (x =&gt; Console.WriteLine(&quot;event received on {0}: {1}&quot;, currentTopic, x));
+            realm.Services.GetSubject&lt;<span style="color:#66d9ef">string</span>&gt;(topic).Subscribe
+                (x =&gt; Console.WriteLine(<span style="color:#e6db74">&#34;event received on {0}: {1}&#34;</span>, currentTopic, x));
         }
 
-        realm.Services.RegisterCallee(new Add2Service()).Wait();
+        realm.Services.RegisterCallee(<span style="color:#66d9ef">new</span> Add2Service()).Wait();
 
         host.Open();
 
         Console.ReadLine();
     }
 
-    public class Add2Service : IAdd2Service
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Add2Service</span> : IAdd2Service
     {
-        public int Add2(int x, int y)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Add2(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y)
         {
-            return (x + y);
+            <span style="color:#66d9ef">return</span> (x + y);
         }
     }
 
-    public interface IAdd2Service
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IAdd2Service
     {
-        [WampProcedure(&quot;com.example.add2&quot;)]
-        int Add2(int a, int b);
+<span style="color:#a6e22e">        [WampProcedure(&#34;com.example.add2&#34;)]</span>
+        <span style="color:#66d9ef">int</span> Add2(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> b);
     }
 }
-</code></pre>
-
-<h2 id="iwampsessionauthenticatorfactory">IWampSessionAuthenticatorFactory</h2>
-
-<p>You might been asking yourself what is the transportAuthenticator parameter in IWampSessionAuthenticatorFactory&rsquo;s GetSessionAuthenticator method. Glad you&rsquo;ve asked! This is an authenticator that can be provided by the transport of the session. Some transports have built-in metadata that can be used in order to authenticate a client. The common example is <a href="https://wampsharp.net/wamp2/router/cookie-based-router-side-authentication/">cookies</a>.</p>
+</code></pre></div><h2 id="iwampsessionauthenticatorfactory">IWampSessionAuthenticatorFactory</h2>
+<p>You might been asking yourself what is the transportAuthenticator parameter in IWampSessionAuthenticatorFactory's GetSessionAuthenticator method. Glad you've asked! This is an authenticator that can be provided by the transport of the session. Some transports have built-in metadata that can be used in order to authenticate a client. The common example is <a href="https://wampsharp.net/wamp2/router/cookie-based-router-side-authentication/">cookies</a>.</p>
 
 				</section>
 			</article>
@@ -302,16 +277,13 @@ public class FrontendStaticAuthorizer : IWampAuthorizer
 				<li><strong><a href="#title">Router-side authentication</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#iwampsessionauthenticator">IWampSessionAuthenticator</a></li>
-<li><a href="#wampsessionauthenticator">WampSessionAuthenticator</a></li>
-<li><a href="#iwampauthorizer">IWampAuthorizer</a></li>
-<li><a href="#ticket-based-authentication-example">Ticket-based authentication example</a></li>
-<li><a href="#iwampsessionauthenticatorfactory">IWampSessionAuthenticatorFactory</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#iwampsessionauthenticator">IWampSessionAuthenticator</a></li>
+    <li><a href="#wampsessionauthenticator">WampSessionAuthenticator</a></li>
+    <li><a href="#iwampauthorizer">IWampAuthorizer</a></li>
+    <li><a href="#ticket-based-authentication-example">Ticket-based authentication example</a></li>
+    <li><a href="#iwampsessionauthenticatorfactory">IWampSessionAuthenticatorFactory</a></li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -454,6 +426,9 @@ public class FrontendStaticAuthorizer : IWampAuthorizer
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -621,7 +596,7 @@ public class FrontendStaticAuthorizer : IWampAuthorizer
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

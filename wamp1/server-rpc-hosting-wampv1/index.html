@@ -84,34 +84,19 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p>As you&rsquo;ve seen in <a href="https://wampsharp.net/wamp1/getting-started-with-wampv1/">The getting started tutorial</a>, WampSharp allows you to host RPC services and consume them from a WAMP client.</p>
-
+					<p>As you've seen in <a href="https://wampsharp.net/wamp1/getting-started-with-wampv1/">The getting started tutorial</a>, WampSharp allows you to host RPC services and consume them from a WAMP client.</p>
 <h2 id="declaring-rpc-services">Declaring RPC services</h2>
-
 <p>In order to declare a RPC service, just place a [WampRpcMethod] attribute above a method you want to expose. You can place the attribute either on the implemented method itself, or on a method belonging to an interface the RPC service implements.</p>
-
 <p>The WampRpcMethod receives a ProcUri in its constructor - that is used as an identifier for the WAMP method (used by a WAMP CALL request).</p>
-
 <p>The ProcUri can be relative to base uri or absolute.</p>
-
 <h2 id="hosting-rpc-services">Hosting RPC services</h2>
-
-<p>Hosting RPC services is done using the DefaultWampHost&rsquo;s Host method. The method receives an instance of the service to host and a baseUri that methods ProcUri will be relative to.</p>
-
+<p>Hosting RPC services is done using the DefaultWampHost's Host method. The method receives an instance of the service to host and a baseUri that methods ProcUri will be relative to.</p>
 <p><em>Note</em>: the same instance of the service is used for all RPC clients.</p>
-
 <h2 id="asynchronous-services">Asynchronous services</h2>
-
 <p>WampSharp supports both synchronous and asynchronous RPC services.</p>
-
 <p>In order to declare an asynchronous service, just declare a method that returns a Task&lt;&gt;. When the task is complete, its result will be sent to the client.</p>
-
 <h2 id="error-calls">Error calls</h2>
-
-<p>WampSharp allows to send CALLERROR to clients using the exception mechanism, just throw an exception (or set a Task&rsquo;s exception in asynchronous version) and a CALLERROR will be sent.</p>
-
+<p>WampSharp allows to send CALLERROR to clients using the exception mechanism, just throw an exception (or set a Task's exception in asynchronous version) and a CALLERROR will be sent.</p>
 <p>In order to specify more details about the call error, throw a WampRpcCallException which allows you to specify more details, such as errorUri, error description an error details.</p>
 
 				</section>
@@ -130,15 +115,12 @@
 				<li><strong><a href="#title">Server RPC hosting (WAMPv1)</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#declaring-rpc-services">Declaring RPC services</a></li>
-<li><a href="#hosting-rpc-services">Hosting RPC services</a></li>
-<li><a href="#asynchronous-services">Asynchronous services</a></li>
-<li><a href="#error-calls">Error calls</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#declaring-rpc-services">Declaring RPC services</a></li>
+    <li><a href="#hosting-rpc-services">Hosting RPC services</a></li>
+    <li><a href="#asynchronous-services">Asynchronous services</a></li>
+    <li><a href="#error-calls">Error calls</a></li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -280,6 +262,9 @@
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -447,7 +432,7 @@
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

@@ -84,102 +84,94 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p>Like other roles, subscriber also has a raw version, which allows you treat EVENT messages as you like. In order to use it, you need to implement the IWampRawTopicClientSubscriber interface.</p>
-
+					<p>Like other roles, subscriber also has a raw version, which allows you treat EVENT messages as you like. In order to use it, you need to implement the IWampRawTopicClientSubscriber interface.</p>
 <h2 id="usage">Usage</h2>
-
 <h3 id="client-sample">Client sample</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">using</span> System;
+<span style="color:#66d9ef">using</span> System.Collections.Generic;
+<span style="color:#66d9ef">using</span> System.Threading.Tasks;
+<span style="color:#66d9ef">using</span> SystemEx;
+<span style="color:#66d9ef">using</span> WampSharp.Core.Serialization;
+<span style="color:#66d9ef">using</span> WampSharp.V2;
+<span style="color:#66d9ef">using</span> WampSharp.V2.Client;
+<span style="color:#66d9ef">using</span> WampSharp.V2.Core.Contracts;
+<span style="color:#66d9ef">using</span> WampSharp.V2.PubSub;
 
-<pre><code class="language-csharp">using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SystemEx;
-using WampSharp.Core.Serialization;
-using WampSharp.V2;
-using WampSharp.V2.Client;
-using WampSharp.V2.Core.Contracts;
-using WampSharp.V2.PubSub;
-
-namespace MyNamespace
+<span style="color:#66d9ef">namespace</span> MyNamespace
 {
-    internal class Program
+    <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
     {
-        public static void Main(string[] args)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
         {
-            const string serverAddress = &quot;ws://127.0.0.1:8080/ws&quot;;
+            <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
-            DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+            DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
             IWampChannel channel =
-                factory.CreateJsonChannel(serverAddress, &quot;realm1&quot;);
+                factory.CreateJsonChannel(serverAddress, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
             Task openTask = channel.Open();
 
-            openTask.Wait(TimeSpan.FromSeconds(5));
+            openTask.Wait(TimeSpan.FromSeconds(<span style="color:#ae81ff">5</span>));
 
             IWampTopicProxy topicProxy =
-                channel.RealmProxy.TopicContainer.GetTopicByUri(&quot;com.myapp.topic1&quot;);
+                channel.RealmProxy.TopicContainer.GetTopicByUri(<span style="color:#e6db74">&#34;com.myapp.topic1&#34;</span>);
 
             Task&lt;IAsyncDisposable&gt; subscribeTask =
-                topicProxy.Subscribe(new MySubscriber(), new SubscribeOptions());
+                topicProxy.Subscribe(<span style="color:#66d9ef">new</span> MySubscriber(), <span style="color:#66d9ef">new</span> SubscribeOptions());
 
             Console.ReadLine();
         }
     }
 
-    internal class MySubscriber : IWampRawTopicClientSubscriber
+    <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MySubscriber</span> : IWampRawTopicClientSubscriber
     {
-        public void Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, long publicationId, EventDetails details)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, <span style="color:#66d9ef">long</span> publicationId, EventDetails details)
         {
-            Console.WriteLine(&quot;Got event with publication id: &quot; + publicationId);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Got event with publication id: &#34;</span> + publicationId);
         }
 
-        public void Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, long publicationId, EventDetails details, TMessage[] arguments)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, <span style="color:#66d9ef">long</span> publicationId, EventDetails details, TMessage[] arguments)
         {
-            int number = formatter.Deserialize&lt;int&gt;(arguments[0]);
+            <span style="color:#66d9ef">int</span> number = formatter.Deserialize&lt;<span style="color:#66d9ef">int</span>&gt;(arguments[<span style="color:#ae81ff">0</span>]);
 
-            Console.WriteLine(&quot;Got event &quot; + number + &quot; with publication id: &quot; + publicationId);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Got event &#34;</span> + number + <span style="color:#e6db74">&#34; with publication id: &#34;</span> + publicationId);
         }
 
-        public void Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, long publicationId, EventDetails details, TMessage[] arguments,
-                                    IDictionary&lt;string, TMessage&gt; argumentsKeywords)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, <span style="color:#66d9ef">long</span> publicationId, EventDetails details, TMessage[] arguments,
+                                    IDictionary&lt;<span style="color:#66d9ef">string</span>, TMessage&gt; argumentsKeywords)
         {
-            int number = formatter.Deserialize&lt;int&gt;(arguments[0]);
+            <span style="color:#66d9ef">int</span> number = formatter.Deserialize&lt;<span style="color:#66d9ef">int</span>&gt;(arguments[<span style="color:#ae81ff">0</span>]);
 
-            Console.WriteLine(&quot;Got event &quot; + number + &quot; with publication id: &quot; + publicationId);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Got event &#34;</span> + number + <span style="color:#e6db74">&#34; with publication id: &#34;</span> + publicationId);
         }
     }
 }
-</code></pre>
+</code></pre></div><h3 id="router-sample">Router sample</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">using</span> System;
+<span style="color:#66d9ef">using</span> System.Collections.Generic;
+<span style="color:#66d9ef">using</span> WampSharp.Core.Serialization;
+<span style="color:#66d9ef">using</span> WampSharp.V2;
+<span style="color:#66d9ef">using</span> WampSharp.V2.Core.Contracts;
+<span style="color:#66d9ef">using</span> WampSharp.V2.PubSub;
+<span style="color:#66d9ef">using</span> WampSharp.V2.Realm;
 
-<h3 id="router-sample">Router sample</h3>
-
-<pre><code class="language-csharp">using System;
-using System.Collections.Generic;
-using WampSharp.Core.Serialization;
-using WampSharp.V2;
-using WampSharp.V2.Core.Contracts;
-using WampSharp.V2.PubSub;
-using WampSharp.V2.Realm;
-
-namespace MyNamespace
+<span style="color:#66d9ef">namespace</span> MyNamespace
 {
-    internal class Program
+    <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
     {
-        public static void Main(string[] args)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
         {
-            const string serverAddress = &quot;ws://127.0.0.1:8080/ws&quot;;
+            <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
-            DefaultWampHost host = new DefaultWampHost(serverAddress);
+            DefaultWampHost host = <span style="color:#66d9ef">new</span> DefaultWampHost(serverAddress);
 
-            IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&quot;realm1&quot;);
+            IWampHostedRealm realm = host.RealmContainer.GetRealmByName(<span style="color:#e6db74">&#34;realm1&#34;</span>);
 
             IWampTopic topic =
-                realm.TopicContainer.GetOrCreateTopicByUri(&quot;com.myapp.topic1&quot;);
+                realm.TopicContainer.GetOrCreateTopicByUri(<span style="color:#e6db74">&#34;com.myapp.topic1&#34;</span>);
 
-            MySubscriber subscriber = new MySubscriber();
+            MySubscriber subscriber = <span style="color:#66d9ef">new</span> MySubscriber();
 
             IDisposable subscription = topic.Subscribe(subscriber);
 
@@ -189,107 +181,99 @@ namespace MyNamespace
         }
     }
 
-    internal class MySubscriber : IWampRawTopicRouterSubscriber
+    <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MySubscriber</span> : IWampRawTopicRouterSubscriber
     {
-        public void Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, long publicationId, PublishOptions options)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, <span style="color:#66d9ef">long</span> publicationId, PublishOptions options)
         {
-            Console.WriteLine(&quot;Got event with publication id: &quot; + publicationId);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Got event with publication id: &#34;</span> + publicationId);
         }
 
-        public void Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, long publicationId, PublishOptions options, TMessage[] arguments)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, <span style="color:#66d9ef">long</span> publicationId, PublishOptions options, TMessage[] arguments)
         {
-            int number = formatter.Deserialize&lt;int&gt;(arguments[0]);
+            <span style="color:#66d9ef">int</span> number = formatter.Deserialize&lt;<span style="color:#66d9ef">int</span>&gt;(arguments[<span style="color:#ae81ff">0</span>]);
 
-            Console.WriteLine(&quot;Got event &quot; + number + &quot; with publication id: &quot; + publicationId);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Got event &#34;</span> + number + <span style="color:#e6db74">&#34; with publication id: &#34;</span> + publicationId);
         }
 
-        public void Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, long publicationId, PublishOptions options, TMessage[] arguments,
-                                    IDictionary&lt;string, TMessage&gt; argumentsKeywords)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Event&lt;TMessage&gt;(IWampFormatter&lt;TMessage&gt; formatter, <span style="color:#66d9ef">long</span> publicationId, PublishOptions options, TMessage[] arguments,
+                                    IDictionary&lt;<span style="color:#66d9ef">string</span>, TMessage&gt; argumentsKeywords)
         {
-            int number = formatter.Deserialize&lt;int&gt;(arguments[0]);
+            <span style="color:#66d9ef">int</span> number = formatter.Deserialize&lt;<span style="color:#66d9ef">int</span>&gt;(arguments[<span style="color:#ae81ff">0</span>]);
 
-            Console.WriteLine(&quot;Got event &quot; + number + &quot; with publication id: &quot; + publicationId);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Got event &#34;</span> + number + <span style="color:#e6db74">&#34; with publication id: &#34;</span> + publicationId);
         }
     }
 }
-</code></pre>
-
-<h2 id="local-subscriber">Local Subscriber</h2>
-
+</code></pre></div><h2 id="local-subscriber">Local Subscriber</h2>
 <p>WampSharp defines a base-class named LocalSubscriber that makes it easier to implement IWampRawTopicClientSubscriber.</p>
-
 <p>In this class, we define the parameters we expect to receive and let WampSharp deserialize them for us.</p>
-
 <h3 id="example">Example</h3>
-
-<pre><code class="language-csharp">public class MySubscriber : LocalSubscriber
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MySubscriber</span> : LocalSubscriber
 {
-    private readonly LocalParameter[] mEventParameters = new[]
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> LocalParameter[] mEventParameters = <span style="color:#66d9ef">new</span>[]
     {
-        new LocalParameter(&quot;number1&quot;, typeof (int), 0),
-        new LocalParameter(&quot;number2&quot;, typeof (int), 1),
-        new LocalParameter(&quot;c&quot;, typeof (string), 2),
-        new LocalParameter(&quot;d&quot;, typeof (MyClass), 3),
+        <span style="color:#66d9ef">new</span> LocalParameter(<span style="color:#e6db74">&#34;number1&#34;</span>, <span style="color:#66d9ef">typeof</span> (<span style="color:#66d9ef">int</span>), <span style="color:#ae81ff">0</span>),
+        <span style="color:#66d9ef">new</span> LocalParameter(<span style="color:#e6db74">&#34;number2&#34;</span>, <span style="color:#66d9ef">typeof</span> (<span style="color:#66d9ef">int</span>), <span style="color:#ae81ff">1</span>),
+        <span style="color:#66d9ef">new</span> LocalParameter(<span style="color:#e6db74">&#34;c&#34;</span>, <span style="color:#66d9ef">typeof</span> (<span style="color:#66d9ef">string</span>), <span style="color:#ae81ff">2</span>),
+        <span style="color:#66d9ef">new</span> LocalParameter(<span style="color:#e6db74">&#34;d&#34;</span>, <span style="color:#66d9ef">typeof</span> (MyClass), <span style="color:#ae81ff">3</span>),
     };
 
-    protected override void InnerEvent&lt;TMessage&gt;
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> InnerEvent&lt;TMessage&gt;
         (IWampFormatter&lt;TMessage&gt; formatter,
-         long publicationId,
+         <span style="color:#66d9ef">long</span> publicationId,
          EventDetails details,
          TMessage[] arguments,
-         IDictionary&lt;string, TMessage&gt; argumentsKeywords)
+         IDictionary&lt;<span style="color:#66d9ef">string</span>, TMessage&gt; argumentsKeywords)
     {
-        object[] unpacked =
-            base.UnpackParameters(formatter, arguments, argumentsKeywords);
+        <span style="color:#66d9ef">object</span>[] unpacked =
+            <span style="color:#66d9ef">base</span>.UnpackParameters(formatter, arguments, argumentsKeywords);
 
-        int number1 = (int) unpacked[0];
-        int number2 = (int) unpacked[1];
-        string c = (string) unpacked[2];
-        MyClass d = (MyClass) unpacked[3];
+        <span style="color:#66d9ef">int</span> number1 = (<span style="color:#66d9ef">int</span>) unpacked[<span style="color:#ae81ff">0</span>];
+        <span style="color:#66d9ef">int</span> number2 = (<span style="color:#66d9ef">int</span>) unpacked[<span style="color:#ae81ff">1</span>];
+        <span style="color:#66d9ef">string</span> c = (<span style="color:#66d9ef">string</span>) unpacked[<span style="color:#ae81ff">2</span>];
+        MyClass d = (MyClass) unpacked[<span style="color:#ae81ff">3</span>];
 
-        Console.WriteLine(&quot;Got event: number1:{0}, number2:{1}, c:{2}, d:{3}&quot;,
+        Console.WriteLine(<span style="color:#e6db74">&#34;Got event: number1:{0}, number2:{1}, c:{2}, d:{3}&#34;</span>,
                           number1, number2, c, d);
     }
 
-    public override LocalParameter[] Parameters
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> LocalParameter[] Parameters
     {
-        get { return mEventParameters; }
+        <span style="color:#66d9ef">get</span> { <span style="color:#66d9ef">return</span> mEventParameters; }
     }
 }
 
-private static void Run()
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Run()
 {
-    const string serverAddress = &quot;ws://127.0.0.1:8080/ws&quot;;
+    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
-        factory.CreateJsonChannel(serverAddress, &quot;realm1&quot;);
+        factory.CreateJsonChannel(serverAddress, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
     Task openTask = channel.Open();
 
-    openTask.Wait(TimeSpan.FromSeconds(5));
+    openTask.Wait(TimeSpan.FromSeconds(<span style="color:#ae81ff">5</span>));
 
     IWampTopicProxy topicProxy =
-        channel.RealmProxy.TopicContainer.GetTopicByUri(&quot;com.myapp.topic2&quot;);
+        channel.RealmProxy.TopicContainer.GetTopicByUri(<span style="color:#e6db74">&#34;com.myapp.topic2&#34;</span>);
 
     Task&lt;IAsyncDisposable&gt; subscribeTask =
-        topicProxy.Subscribe(new MySubscriber(), new SubscribeOptions());
+        topicProxy.Subscribe(<span style="color:#66d9ef">new</span> MySubscriber(), <span style="color:#66d9ef">new</span> SubscribeOptions());
 
     Console.ReadLine();
 }
 
-public class MyClass
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyClass</span>
 {
-    [JsonProperty(&quot;counter&quot;)]
-    public int Counter { get; set; }
-
-    [JsonProperty(&quot;foo&quot;)]
-    public int[] Foo { get; set; }
+<span style="color:#a6e22e">    [JsonProperty(&#34;counter&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Counter { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [JsonProperty(&#34;foo&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span>[] Foo { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
 }
-</code></pre>
-
-<p>This handles lookups for parameters named number1, number2, c and d (or positioned at 0, 1, 2, 3), and throws an exception if not all are present.</p>
+</code></pre></div><p>This handles lookups for parameters named number1, number2, c and d (or positioned at 0, 1, 2, 3), and throws an exception if not all are present.</p>
 
 				</section>
 			</article>
@@ -307,20 +291,19 @@ public class MyClass
 				<li><strong><a href="#title">Raw Subscriber</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#usage">Usage</a>
-<ul>
-<li><a href="#client-sample">Client sample</a></li>
-<li><a href="#router-sample">Router sample</a></li>
-</ul></li>
-<li><a href="#local-subscriber">Local Subscriber</a>
-<ul>
-<li><a href="#example">Example</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#client-sample">Client sample</a></li>
+        <li><a href="#router-sample">Router sample</a></li>
+      </ul>
+    </li>
+    <li><a href="#local-subscriber">Local Subscriber</a>
+      <ul>
+        <li><a href="#example">Example</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -462,6 +445,9 @@ public class MyClass
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -629,7 +615,7 @@ public class MyClass
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

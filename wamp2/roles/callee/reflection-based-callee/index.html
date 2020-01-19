@@ -84,655 +84,551 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p><strong>Reflection-based Callee</strong> allows you to register classes instances with method decorated with a [WampProcedure] attribute as remote procedure operation to a WAMP realm.</p>
-
+					<p><strong>Reflection-based Callee</strong> allows you to register classes instances with method decorated with a [WampProcedure] attribute as remote procedure operation to a WAMP realm.</p>
 <h2 id="basic-usage">Basic usage</h2>
-
-<pre><code class="language-csharp">public interface IArgumentsService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IArgumentsService
 {
-    [WampProcedure(&quot;com.arguments.ping&quot;)]
-    void Ping();
-
-    [WampProcedure(&quot;com.arguments.add2&quot;)]
-    int Add2(int a, int b);
-
-    [WampProcedure(&quot;com.arguments.stars&quot;)]
-    string Stars(string nick = &quot;somebody&quot;, int stars = 0);
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.arguments.ping&#34;)]</span>
+    <span style="color:#66d9ef">void</span> Ping();
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [WampProcedure(&#34;com.arguments.add2&#34;)]</span>
+    <span style="color:#66d9ef">int</span> Add2(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> b);
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [WampProcedure(&#34;com.arguments.stars&#34;)]</span>
+    <span style="color:#66d9ef">string</span> Stars(<span style="color:#66d9ef">string</span> nick = <span style="color:#e6db74">&#34;somebody&#34;</span>, <span style="color:#66d9ef">int</span> stars = <span style="color:#ae81ff">0</span>);
 }
 
-public class ArgumentsService : IArgumentsService
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ArgumentsService</span> : IArgumentsService
 {
-    public void Ping()
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Ping()
     {
     }
 
-    public int Add2(int a, int b)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Add2(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> b)
     {
-        return a + b;
+        <span style="color:#66d9ef">return</span> a + b;
     }
 
-    public string Stars(string nick = &quot;somebody&quot;, int stars = 0)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> Stars(<span style="color:#66d9ef">string</span> nick = <span style="color:#e6db74">&#34;somebody&#34;</span>, <span style="color:#66d9ef">int</span> stars = <span style="color:#ae81ff">0</span>)
     {
-        return string.Format(&quot;{0} starred {1}x&quot;, nick, stars);
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">string</span>.Format(<span style="color:#e6db74">&#34;{0} starred {1}x&#34;</span>, nick, stars);
     }
 }
 
 
-public static async Task Run()
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    const string location = &quot;ws://127.0.0.1:8080/&quot;;
+    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> location = <span style="color:#e6db74">&#34;ws://127.0.0.1:8080/&#34;</span>;
 
-    DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
-    IWampChannel channel = channelFactory.CreateJsonChannel(location, &quot;realm1&quot;);
+    IWampChannel channel = channelFactory.CreateJsonChannel(location, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open().ConfigureAwait(false);
+    <span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-    IArgumentsService instance = new ArgumentsService();
+    IArgumentsService instance = <span style="color:#66d9ef">new</span> ArgumentsService();
 
     IWampRealmProxy realm = channel.RealmProxy;
 
     IAsyncDisposable disposable =
-        await realm.Services.RegisterCallee(instance).ConfigureAwait(false);
+        <span style="color:#66d9ef">await</span> realm.Services.RegisterCallee(instance).ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-    // Call await disposable.DisposeAsync().ConfigureAwait(false);
-    // to unregister
-}
+    <span style="color:#75715e">// Call await disposable.DisposeAsync().ConfigureAwait(false);
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// to unregister
+</span><span style="color:#75715e"></span>}
 
-</code></pre>
-
-<h2 id="supprted-features">Supprted features</h2>
-
+</code></pre></div><h2 id="supprted-features">Supprted features</h2>
 <p>Both placing attributes on a class method and placing attributes on an interface implemented by the class are supported.</p>
-
 <h3 id="instance-providers">Instance providers</h3>
-
-<p>IWampRealmServiceProvider&rsquo;s RegisterCallee method has some overloads which allow you to specify an instance provider for your callee service instance, that is a Func&lt;&gt; delegate that returns an instance of your callee service provider.</p>
-
+<p>IWampRealmServiceProvider's RegisterCallee method has some overloads which allow you to specify an instance provider for your callee service instance, that is a Func&lt;&gt; delegate that returns an instance of your callee service provider.</p>
 <p>This allows you to control yourself the lifecycle of the callee service instance. You can of course use an dependency injection framework to help you manage that.</p>
-
 <p>For instance, using <a href="http://www.ninject.org/">Ninject</a>:</p>
-
-<pre><code class="language-csharp">public static async Task Run()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    IKernel kernel = new StandardKernel();
+    IKernel kernel = <span style="color:#66d9ef">new</span> StandardKernel();
 
     kernel.Bind&lt;IAddCalculator&gt;().To&lt;Calculator&gt;();
 
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
-    IWampChannel channel =
-        factory.CreateJsonChannel(&quot;ws://127.0.0.1:8080/ws&quot;, &quot;realm1&quot;);
+	IWampChannel channel =
+		factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+	<span style="color:#66d9ef">await</span> channel.Open();
 
-    await channel.RealmProxy.Services.RegisterCallee(() =&gt; kernel.Get&lt;IAddCalculator&gt;());
+    <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterCallee(() =&gt; kernel.Get&lt;IAddCalculator&gt;());
 }
 
-public interface IAddCalculator
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IAddCalculator
 {
-    [WampProcedure(&quot;com.arguments.add2&quot;)]
-    int Add2(int x, int y);
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.arguments.add2&#34;)]</span>
+    <span style="color:#66d9ef">int</span> Add2(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y);
 }
 
-public class Calculator : IAddCalculator
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Calculator</span> : IAddCalculator
 {
-    public int Add2(int x, int y)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Add2(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y)
     {
-        return (x + y);
+        <span style="color:#66d9ef">return</span> (x + y);
     }
 }
-</code></pre>
-
-<blockquote>
-<p>Note: if you&rsquo;re using Ninject, you&rsquo;re recomended to use <a href="https://github.com/ninject/Ninject.Extensions.Factory">Ninject.Extensions.Factory</a> which allows you to get typed factories instances or Func&lt;&gt; instances without being aware about the dependency injection container.</p>
+</code></pre></div><blockquote>
+<p>Note: if you're using Ninject, you're recomended to use <a href="https://github.com/ninject/Ninject.Extensions.Factory">Ninject.Extensions.Factory</a> which allows you to get typed factories instances or Func&lt;&gt; instances without being aware about the dependency injection container.</p>
 </blockquote>
-
 <h3 id="default-parameter-values">Default parameter values</h3>
-
-<p>A method can have default value parameters. These will be used in case the user sends only part of the method&rsquo;s parameters. Example:</p>
-
-<pre><code class="language-csharp">public interface IArgumentsService
+<p>A method can have default value parameters. These will be used in case the user sends only part of the method's parameters. Example:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IArgumentsService
 {
-    [WampProcedure(&quot;com.arguments.stars&quot;)]
-    string Stars(string nick = &quot;somebody&quot;, int stars = 0);
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.arguments.stars&#34;)]</span>
+    <span style="color:#66d9ef">string</span> Stars(<span style="color:#66d9ef">string</span> nick = <span style="color:#e6db74">&#34;somebody&#34;</span>, <span style="color:#66d9ef">int</span> stars = <span style="color:#ae81ff">0</span>);
 }
-</code></pre>
-
-<h3 id="async-method-support">Async method support</h3>
-
+</code></pre></div><h3 id="async-method-support">Async method support</h3>
 <p>A method returning a Task&lt;&gt; will be awaited. Example:</p>
-
-<pre><code class="language-csharp">public class SlowSquareService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SlowSquareService</span>
 {
-    [WampProcedure(&quot;com.math.slowsquare&quot;)]
-    public async Task&lt;int&gt; SlowSquare(int x)
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.math.slowsquare&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;<span style="color:#66d9ef">int</span>&gt; SlowSquare(<span style="color:#66d9ef">int</span> x)
     {
-        await Task.Delay(1000);
-        return x * x;
+        <span style="color:#66d9ef">await</span> Task.Delay(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>);
+        <span style="color:#66d9ef">return</span> x * x;
     }
-
-    [WampProcedure(&quot;com.math.square&quot;)]
-    public int Square(int x)
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [WampProcedure(&#34;com.math.square&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Square(<span style="color:#66d9ef">int</span> x)
     {
-        return x * x;
+        <span style="color:#66d9ef">return</span> x * x;
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/slowsquare">this</a> AutobahnJS sample</p>
 </blockquote>
-
 <h3 id="tuples-support">Tuples support</h3>
-
 <p>C# 7.0 tuples are supported as return values of reflection-based callee methods. The tuple will be serialized to either the arguments keywords or to the arguments array of the YIELD message, depending on whether the returned tuple has named elements or positional elements (tuples having elements which are partially named are not supported).</p>
-
 <p>For example: A reflection-based callee that returns a tuple:</p>
-
-<pre><code class="language-csharp">public interface IComplexResultService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IComplexResultService
 {
-    [WampProcedure(&quot;com.myapp.add_complex&quot;)]
-    (int c, int ci) AddComplex(int a, int ai, int b, int bi);
-
-    [WampProcedure(&quot;com.myapp.split_name&quot;)]
-    (string, string) SplitName(string fullname);
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.add_complex&#34;)]</span>
+    (<span style="color:#66d9ef">int</span> c, <span style="color:#66d9ef">int</span> ci) AddComplex(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> ai, <span style="color:#66d9ef">int</span> b, <span style="color:#66d9ef">int</span> bi);
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.split_name&#34;)]</span>
+    (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>) SplitName(<span style="color:#66d9ef">string</span> fullname);
 }
 
-public class ComplexResultService : IComplexResultService
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ComplexResultService</span> : IComplexResultService
 {
-    public (int c, int ci) AddComplex(int a, int ai, int b, int bi)
+    <span style="color:#66d9ef">public</span> (<span style="color:#66d9ef">int</span> c, <span style="color:#66d9ef">int</span> ci) AddComplex(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> ai, <span style="color:#66d9ef">int</span> b, <span style="color:#66d9ef">int</span> bi)
     {
-       return (a + b, ai + bi);
+       <span style="color:#66d9ef">return</span> (a + b, ai + bi);
     }
 
-    public (string, string) SplitName(string fullname)
+    <span style="color:#66d9ef">public</span> (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>) SplitName(<span style="color:#66d9ef">string</span> fullname)
     {
-        string[] splitted = fullname.Split(' ');
+        <span style="color:#66d9ef">string</span>[] splitted = fullname.Split(<span style="color:#e6db74">&#39; &#39;</span>);
 
-        string forename = splitted[0];
-        string surname = splitted[1];
+        <span style="color:#66d9ef">string</span> forename = splitted[<span style="color:#ae81ff">0</span>];
+        <span style="color:#66d9ef">string</span> surname = splitted[<span style="color:#ae81ff">1</span>];
 
-        return (forename, surname);
+        <span style="color:#66d9ef">return</span> (forename, surname);
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: as usual, you can put the WampProcedureAttributes on the methods themselves instead of implementing an interface, i.e:</p>
-
-<pre><code class="language-csharp">[WampProcedure(&quot;com.myapp.add_complex&quot;)]
-public (int c, int ci) AddComplex(int a, int ai, int b, int bi)
-{
-   // ...
-}
-
-[WampProcedure(&quot;com.myapp.split_name&quot;)]
-public (string, string) SplitName(string fullname)
-{
-   // ...
-}
-</code></pre>
 </blockquote>
-
-<p>Which can be consumed from <a href="https://github.com/crossbario/autobahn-js">AutobahnJS</a>:</p>
-
-<pre><code class="language-javascript">session.call('com.myapp.add_complex', [2, 3, 4, 5]).then(
-    function (res) {
-        console.log(&quot;Result: &quot; + res.kwargs.c + &quot; + &quot; + res.kwargs.ci + &quot;i&quot;);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#a6e22e">[WampProcedure(&#34;com.myapp.add_complex&#34;)]</span>
+<span style="color:#66d9ef">public</span> (<span style="color:#66d9ef">int</span> c, <span style="color:#66d9ef">int</span> ci) AddComplex(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> ai, <span style="color:#66d9ef">int</span> b, <span style="color:#66d9ef">int</span> bi)
+{
+   <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>}
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">[WampProcedure(&#34;com.myapp.split_name&#34;)]</span>
+<span style="color:#66d9ef">public</span> (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>) SplitName(<span style="color:#66d9ef">string</span> fullname)
+{
+   <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>Which can be consumed from <a href="https://github.com/crossbario/autobahn-js">AutobahnJS</a>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">call</span>(<span style="color:#e6db74">&#39;com.myapp.add_complex&#39;</span>, [<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>]).<span style="color:#a6e22e">then</span>(
+    <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">res</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Result: &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">kwargs</span>.<span style="color:#a6e22e">c</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; + &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">kwargs</span>.<span style="color:#a6e22e">ci</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;i&#34;</span>);
     }
 );
 
-session.call('com.myapp.split_name', ['Homer Simpson']).then(
-    function (res) {
-        console.log(&quot;Forename: &quot; + res.args[0] + &quot;, Surname: &quot; + res.args[1]);
+<span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">call</span>(<span style="color:#e6db74">&#39;com.myapp.split_name&#39;</span>, [<span style="color:#e6db74">&#39;Homer Simpson&#39;</span>]).<span style="color:#a6e22e">then</span>(
+    <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">res</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Forename: &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">args</span>[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;, Surname: &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">args</span>[<span style="color:#ae81ff">1</span>]);
     }
 ;)
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note:  The samples are based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex">this</a> AutobahnJS/AutobahnPython sample</p>
-
+</blockquote>
+<blockquote>
 <p>Note: this feature can be combined with other features, such as async method support or progressive call results.</p>
 </blockquote>
-
 <h3 id="exception-support">Exception support</h3>
-
 <p>throw a WampException/WampRpcRuntimeException in order to send a ERROR message.</p>
-
 <p>Example:</p>
-
-<pre><code class="language-csharp">[WampProcedure(&quot;com.myapp.checkname&quot;)]
-public void CheckName(string name)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#a6e22e">[WampProcedure(&#34;com.myapp.checkname&#34;)]</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> CheckName(<span style="color:#66d9ef">string</span> name)
 {
-    if (new[] {&quot;foo&quot;, &quot;bar&quot;}.Contains(name))
+    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">new</span>[] {<span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#e6db74">&#34;bar&#34;</span>}.Contains(name))
     {
-        throw new WampException(&quot;com.myapp.error.reserved&quot;);
+        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampException(<span style="color:#e6db74">&#34;com.myapp.error.reserved&#34;</span>);
     }
 
-    if (name.ToLower() != name.ToUpper())
+    <span style="color:#66d9ef">if</span> (name.ToLower() != name.ToUpper())
     {
-        throw new WampException(&quot;com.myapp.error.mixed_case&quot;, name.ToLower(), name.ToUpper());
+        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampException(<span style="color:#e6db74">&#34;com.myapp.error.mixed_case&#34;</span>, name.ToLower(), name.ToUpper());
     }
 
-    if ((name.Length &lt; 3) || (name.Length &gt; 10))
+    <span style="color:#66d9ef">if</span> ((name.Length &lt; <span style="color:#ae81ff">3</span>) || (name.Length &gt; <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span>))
     {
-        object[] arguments = new object[] {};
+        <span style="color:#66d9ef">object</span>[] arguments = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] {};
 
-        IDictionary&lt;string, object&gt; argumentKeywords =
-            new Dictionary&lt;string, object&gt;()
+        IDictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">object</span>&gt; argumentKeywords =
+            <span style="color:#66d9ef">new</span> Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">object</span>&gt;()
                 {
-                    {&quot;min&quot;, 3},
-                    {&quot;max&quot;, 10}
+                    {<span style="color:#e6db74">&#34;min&#34;</span>, <span style="color:#ae81ff">3</span>},
+                    {<span style="color:#e6db74">&#34;max&#34;</span>, <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span>}
                 };
 
-        throw new WampException(&quot;com.myapp.error.invalid_length&quot;, arguments, argumentKeywords);
+        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampException(<span style="color:#e6db74">&#34;com.myapp.error.invalid_length&#34;</span>, arguments, argumentKeywords);
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/errors">this</a> AutobahnJS sample</p>
 </blockquote>
-
 <h3 id="progressive-call-results">Progressive call results</h3>
-
 <p>In order to use progressive call result as a Callee, declare in your callee service a [WampProcedure] method having a [WampProgressiveResultProcedure] attribute and a IProgress&lt;T&gt; as the last parameter.</p>
-
 <blockquote>
 <p>Note that the method return type should be Task&lt;T&gt; where this is the same T as in the IProgress&lt;T&gt; of the last parameter.</p>
 </blockquote>
-
 <p>Example:</p>
-
-<pre><code class="language-csharp">public interface ILongOpService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> ILongOpService
 {
-    [WampProcedure(&quot;com.myapp.longop&quot;)]
-    [WampProgressiveResultProcedure]
-    Task&lt;int&gt; LongOp(int n, IProgress&lt;int&gt; progress);
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.longop&#34;)]</span>
+<span style="color:#a6e22e">    [WampProgressiveResultProcedure]</span>
+    Task&lt;<span style="color:#66d9ef">int</span>&gt; LongOp(<span style="color:#66d9ef">int</span> n, IProgress&lt;<span style="color:#66d9ef">int</span>&gt; progress);
 }
-</code></pre>
-
-<p>create a service with that implements that interface.
+</code></pre></div><p>create a service with that implements that interface.
 In order to report progress, call the progress Report method. Example:</p>
-
-<pre><code class="language-csharp">public class LongOpService : ILongOpService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LongOpService</span> : ILongOpService
 {
-    public async Task&lt;int&gt; LongOp(int n, IProgress&lt;int&gt; progress)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;<span style="color:#66d9ef">int</span>&gt; LongOp(<span style="color:#66d9ef">int</span> n, IProgress&lt;<span style="color:#66d9ef">int</span>&gt; progress)
     {
-        for (int i = 0; i &lt; n; i++)
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; n; i++)
         {
             progress.Report(i);
-            await Task.Delay(100);
+            <span style="color:#66d9ef">await</span> Task.Delay(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>);
         }
 
-        return n;
+        <span style="color:#66d9ef">return</span> n;
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: you can put the attributes on the method itself instead of implementing an interface, i.e:</p>
-
-<pre><code class="language-csharp">public class LongOpService
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LongOpService</span>
 {
-    [WampProcedure(&quot;com.myapp.longop&quot;)]
-    [WampProgressiveResultProcedure]
-    public async Task&lt;int&gt; LongOp(int n, IProgress&lt;int&gt; progress)
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.longop&#34;)]</span>
+<span style="color:#a6e22e">    [WampProgressiveResultProcedure]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;<span style="color:#66d9ef">int</span>&gt; LongOp(<span style="color:#66d9ef">int</span> n, IProgress&lt;<span style="color:#66d9ef">int</span>&gt; progress)
     {
-        // ...
-    }
+	    <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>    }
  }
-</code></pre>
-
+</code></pre></div><blockquote>
 <p>Then register it to the realm regularly:</p>
-
-<pre><code class="language-csharp">public async Task Run()
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
-    IWampChannel channel = factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+    IWampChannel channel = factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+    <span style="color:#66d9ef">await</span> channel.Open();
 
-    ILongOpService service = new LongOpService();
+    ILongOpService service = <span style="color:#66d9ef">new</span> LongOpService();
 
     IAsyncDisposable disposable =
-        await channel.RealmProxy.Services.RegisterCallee(service);
+        <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterCallee(service);
 
-    Console.WriteLine(&quot;Registered LongOpService&quot;);
+    Console.WriteLine(<span style="color:#e6db74">&#34;Registered LongOpService&#34;</span>);
 }
-</code></pre>
-
+</code></pre></div><blockquote>
 <p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/progress">this</a> AutobahnJS sample</p>
 </blockquote>
-
 <h3 id="cancellation-support">Cancellation support</h3>
-
 <p>Cancellation is supported via the <a href="https://msdn.microsoft.com/en-us/library/system.threading.cancellationtoken(v=vs.110).aspx">CancellationToken api</a>. In order to declare a callee procedure which supports cancellation, declare an async method which receives as its last argument a CancellationToken:</p>
-
-<pre><code class="language-csharp">public class CancellableOpService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CancellableOpService</span>
 {
-    [WampProcedure(&quot;com.myapp.cancellableop&quot;)]
-    public async Task&lt;int&gt; CancellableOp(int n, CancellationToken token)
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.cancellableop&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;<span style="color:#66d9ef">int</span>&gt; CancellableOp(<span style="color:#66d9ef">int</span> n, CancellationToken token)
     {
-        for (int i = 0; i &lt; n; i++)
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; n; i++)
         {
-            if (token.IsCancellationRequested)
+            <span style="color:#66d9ef">if</span> (token.IsCancellationRequested)
             {
-                throw new WampRpcCanceledException($&quot; {i * 100.0 / n}% of the work was done&quot;);
+                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampRpcCanceledException(<span style="color:#e6db74">$&#34; {i * 100.0 / n}% of the work was done&#34;</span>);
             }
 
-            await Task.Delay(100, token);
+            <span style="color:#66d9ef">await</span> Task.Delay(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>, token);
         }
 
-        return n;
+        <span style="color:#66d9ef">return</span> n;
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p><strong>Note</strong>: This works also with progressive call results:</p>
-
-<pre><code class="language-csharp">public class LongCancellableOpService
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LongCancellableOpService</span>
 {
-    [WampProgressiveResultProcedure]
-    [WampProcedure(&quot;com.myapp.longop&quot;)]
-    public async Task&lt;int&gt; LongCancellableOp(int n, IProgress&lt;int&gt; progress, CancellationToken token)
+<span style="color:#a6e22e">    [WampProgressiveResultProcedure]</span>
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.longop&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;<span style="color:#66d9ef">int</span>&gt; LongCancellableOp(<span style="color:#66d9ef">int</span> n, IProgress&lt;<span style="color:#66d9ef">int</span>&gt; progress, CancellationToken token)
     {
-        for (int i = 0; i &lt; n; i++)
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; n; i++)
         {
-            if (token.IsCancellationRequested)
+            <span style="color:#66d9ef">if</span> (token.IsCancellationRequested)
             {
-                throw new WampRpcCanceledException($&quot; {i * 100.0 / n}% of the work was done&quot;);
+                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampRpcCanceledException(<span style="color:#e6db74">$&#34; {i * 100.0 / n}% of the work was done&#34;</span>);
             }
 
             progress.Report(i);
-            await Task.Delay(100, token);
+            <span style="color:#66d9ef">await</span> Task.Delay(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>, token);
         }
 
-        return n;
+        <span style="color:#66d9ef">return</span> n;
     }
 }
-</code></pre>
-</blockquote>
-
-<h3 id="out-ref-parameters">out/ref parameters</h3>
-
+</code></pre></div><h3 id="outref-parameters">out/ref parameters</h3>
 <p>For synchronous methods, out/ref parameters are supported.</p>
-
 <blockquote>
 <p>Note: this is not supported for asynchronous methods.</p>
 </blockquote>
-
 <p>Example:</p>
-
-<pre><code class="language-csharp">public class ComplexResultService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ComplexResultService</span>
 {
-    [WampProcedure(&quot;com.myapp.add_complex&quot;)]
-    public void AddComplex(int a, int ai, int b, int bi, out int c, out int ci)
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.add_complex&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> AddComplex(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> ai, <span style="color:#66d9ef">int</span> b, <span style="color:#66d9ef">int</span> bi, <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">int</span> c, <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">int</span> ci)
     {
         c = a + b;
         ci = ai + bi;
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex">this</a> AutobahnJS sample</p>
 </blockquote>
-
 <h3 id="multivalued-results">Multivalued results</h3>
-
 <p>Multi-valued results: in order to return an multivalued array in the RESULT/YIELD WAMPv2 message, return an array from a rpc method and place above it a [return: WampResult(CollectionResultTreatment.Multivalued)] attribute. Example:</p>
-
-<pre><code class="language-csharp">public class MultivaluedResultService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MultivaluedResultService</span>
 {
-    [WampProcedure(&quot;com.myapp.split_name&quot;)]
-    [return: WampResult(CollectionResultTreatment.Multivalued)]
-    public string[] SplitName(string fullname)
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.split_name&#34;)]</span>
+<span style="color:#a6e22e">    [return: WampResult(CollectionResultTreatment.Multivalued)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span>[] SplitName(<span style="color:#66d9ef">string</span> fullname)
     {
-        string[] splitted = fullname.Split(' ');
-        return splitted;
+        <span style="color:#66d9ef">string</span>[] splitted = fullname.Split(<span style="color:#e6db74">&#39; &#39;</span>);
+        <span style="color:#66d9ef">return</span> splitted;
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex">this</a> AutobahnJS sample</p>
 </blockquote>
-
 <h3 id="wampinvocationcontext">WampInvocationContext</h3>
-
 <p>WampInvocationContext allows you to get the invocation details provided with the current invocation. It currently contains the caller identification (if present) and whether the caller requested a progressive call.
 Example:</p>
-
-<pre><code class="language-csharp">public class LongOpService : ILongOpService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LongOpService</span> : ILongOpService
 {
-    public async Task&lt;int&gt; LongOp(int n, IProgress&lt;int&gt; progress)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;<span style="color:#66d9ef">int</span>&gt; LongOp(<span style="color:#66d9ef">int</span> n, IProgress&lt;<span style="color:#66d9ef">int</span>&gt; progress)
     {
         InvocationDetails details =
             WampInvocationContext.Current.InvocationDetails;
 
-        for (int i = 0; i &lt; n; i++)
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; n; i++)
         {
-            if (details.ReceiveProgress == true)
+            <span style="color:#66d9ef">if</span> (details.ReceiveProgress == <span style="color:#66d9ef">true</span>)
             {
                 progress.Report(i);                    
             }
 
-            await Task.Delay(100);
+            <span style="color:#66d9ef">await</span> Task.Delay(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>);
         }
 
-        return n;
+        <span style="color:#66d9ef">return</span> n;
     }
 }
-</code></pre>
-
-<h2 id="registration-customization">Registration customization</h2>
-
+</code></pre></div><h2 id="registration-customization">Registration customization</h2>
 <p>The RegisterCallee method of IWampRealmServiceProvider has an overload that receives an &ldquo;interceptor&rdquo; instance. The &ldquo;interceptor&rdquo; allows customizing the registration being performed.</p>
-
 <p>This allows customizing the register options and the procedure uri sent upon REGISTER message.</p>
-
 <p>The following sections discuss register options modifications that can be used in order to leverage WAMP advanced profile features.</p>
-
 <h3 id="caller-identification">Caller identification</h3>
-
 <p>It is possible to get caller identification details. According to WAMP2 specification, a Callee can request to get caller identification details (by specifying <code>disclose_caller = true</code> on registration).</p>
-
 <p>Specifying this is possible on callee registration.</p>
-
 <p>Callee registration example:</p>
-
-<pre><code class="language-csharp">public async Task Run()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
-        factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+        factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+    <span style="color:#66d9ef">await</span> channel.Open();
 
-    SquareService service = new SquareService();
+    SquareService service = <span style="color:#66d9ef">new</span> SquareService();
 
-    var registerOptions =
-        new RegisterOptions
+    <span style="color:#66d9ef">var</span> registerOptions =
+        <span style="color:#66d9ef">new</span> RegisterOptions
         {
-            DiscloseCaller = true
+            DiscloseCaller = <span style="color:#66d9ef">true</span>
         };
 
     IAsyncDisposable disposable =
-        await channel.RealmProxy.Services.RegisterCallee(service,
-            new CalleeRegistrationInterceptor(registerOptions));
+        <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterCallee(service,
+            <span style="color:#66d9ef">new</span> CalleeRegistrationInterceptor(registerOptions));
 }
-</code></pre>
-
-<p>In order to obtain these details as a Callee, access WampInvocationContext.Current.</p>
-
+</code></pre></div><p>In order to obtain these details as a Callee, access WampInvocationContext.Current.</p>
 <p>Sample:</p>
-
-<pre><code class="language-csharp">public class SquareService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SquareService</span>
 {
-    [WampProcedure(&quot;com.myapp.square&quot;)]
-    public int Square(int n)
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.square&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Square(<span style="color:#66d9ef">int</span> n)
     {
         InvocationDetails details =
             WampInvocationContext.Current.InvocationDetails;
 
-        Console.WriteLine(&quot;Someone is calling me: &quot; + details.Caller);
+        Console.WriteLine(<span style="color:#e6db74">&#34;Someone is calling me: &#34;</span> + details.Caller);
 
-        return n*n;
+        <span style="color:#66d9ef">return</span> n*n;
     }
 }
 
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: This sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/options">this</a> AutobahnJS sample</p>
 </blockquote>
-
 <h3 id="shared-registrations">Shared registrations</h3>
-
 <p><a href="http://crossbar.io/docs/Shared-Registrations/">Shared registrations</a> are supported.</p>
-
 <p>In order to use shared registrations, pass to the Register methods, RegisterOptions with a desired Invoke (the policy to be used). The possible options are: single/first/last/random/roundrobin (there exists a static class named WampInvokePolicy with these values).</p>
-
 <p>Example:</p>
-
-<pre><code class="language-csharp">public async Task Run()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
         channelFactory.CreateJsonChannel
-            (&quot;ws://127.0.0.1:8080/ws&quot;,
-             &quot;realm1&quot;);
+            (<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>,
+             <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    TaskCompletionSource&lt;string&gt; identTask = new TaskCompletionSource&lt;string&gt;();
+    TaskCompletionSource&lt;<span style="color:#66d9ef">string</span>&gt; identTask = <span style="color:#66d9ef">new</span> TaskCompletionSource&lt;<span style="color:#66d9ef">string</span>&gt;();
 
     channel.RealmProxy.Monitor.ConnectionEstablished += (sender, args) =&gt;
     {
-        string ident =
-            string.Format(&quot;MyComponent (PID {0}, Session {1})&quot;,
+        <span style="color:#66d9ef">string</span> ident =
+            <span style="color:#66d9ef">string</span>.Format(<span style="color:#e6db74">&#34;MyComponent (PID {0}, Session {1})&#34;</span>,
                           Process.GetCurrentProcess().Id,
                           args.SessionId);
 
         identTask.SetResult(ident);
     };
 
-    await channel.Open().ConfigureAwait(false);
+    <span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-    string identValue = await identTask.Task;
+    <span style="color:#66d9ef">string</span> identValue = <span style="color:#66d9ef">await</span> identTask.Task;
 
-    await channel.RealmProxy.Services.RegisterCallee(new MyComponent(identValue),
-        new CalleeRegistrationInterceptor(new RegisterOptions()
+    <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterCallee(<span style="color:#66d9ef">new</span> MyComponent(identValue),
+        <span style="color:#66d9ef">new</span> CalleeRegistrationInterceptor(<span style="color:#66d9ef">new</span> RegisterOptions()
         {
             Invoke = WampInvokePolicy.Roundrobin
         }))
-        .ConfigureAwait(false);
+        .ConfigureAwait(<span style="color:#66d9ef">false</span>);
 }
 
-public class MyComponent
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyComponent</span>
 {
-    private readonly string mIdent;
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> <span style="color:#66d9ef">string</span> mIdent;
 
-    public MyComponent(string ident)
+    <span style="color:#66d9ef">public</span> MyComponent(<span style="color:#66d9ef">string</span> ident)
     {
         mIdent = ident;
     }
-
-    [WampProcedure(&quot;com.example.add2&quot;)]
-    public object Add2(double x, double y)
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [WampProcedure(&#34;com.example.add2&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">object</span> Add2(<span style="color:#66d9ef">double</span> x, <span style="color:#66d9ef">double</span> y)
     {
-        Console.WriteLine(&quot;add2 called on {0}&quot;, mIdent);
+        Console.WriteLine(<span style="color:#e6db74">&#34;add2 called on {0}&#34;</span>, mIdent);
 
-        return new
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span>
         {
             result = x + y,
             ident = mIdent
         };
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: this sample is based on <a href="https://github.com/crossbario/crossbarexamples/tree/master/sharedregs">this</a> Autobahn sample</p>
 </blockquote>
-
 <h3 id="pattern-based-registrations">Pattern-based registrations</h3>
-
 <p><a href="http://crossbar.io/docs/Pattern-Based-Registrations/">Pattern-based registrations</a> are supported.</p>
-
 <p>In order to use pattern-based registrations, pass to the Register methods, RegisterOptions with a desired Match (the match pattern to be used). The possible options are: exact/prefix/wildcard. (these values are also available in a static class named WampMatchPattern)</p>
-
 <p>Example:</p>
-
-<pre><code class="language-csharp">public static async Task Run()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
-        channelFactory.CreateJsonChannel(&quot;ws://127.0.0.1:8080/ws&quot;,
-            &quot;realm1&quot;);
+        channelFactory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>,
+            <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open().ConfigureAwait(false);
+    <span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-    await channel.RealmProxy.Services.RegisterCallee(new Callee1())
-        .ConfigureAwait(false);
+    <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterCallee(<span style="color:#66d9ef">new</span> Callee1())
+        .ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-    await channel.RealmProxy.Services.RegisterCallee
-        (new Callee2(),
-         new CalleeRegistrationInterceptor(new RegisterOptions
+    <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterCallee
+        (<span style="color:#66d9ef">new</span> Callee2(),
+         <span style="color:#66d9ef">new</span> CalleeRegistrationInterceptor(<span style="color:#66d9ef">new</span> RegisterOptions
          {
              Match = WampMatchPattern.Prefix
          }))
-         .ConfigureAwait(false);
+         .ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-    await channel.RealmProxy.Services.RegisterCallee
-        (new Callee3(),
-         new CalleeRegistrationInterceptor(new RegisterOptions
+    <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterCallee
+        (<span style="color:#66d9ef">new</span> Callee3(),
+         <span style="color:#66d9ef">new</span> CalleeRegistrationInterceptor(<span style="color:#66d9ef">new</span> RegisterOptions
          {
              Match = WampMatchPattern.Wildcard
          }))
-         .ConfigureAwait(false);
+         .ConfigureAwait(<span style="color:#66d9ef">false</span>);
 }
 
-public class Callee1
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Callee1</span>
 {
-    [WampProcedure(&quot;com.example.procedure1&quot;)]
-    public void Endpoint1(string message)
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.example.procedure1&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Endpoint1(<span style="color:#66d9ef">string</span> message)
     {
-        Console.WriteLine(&quot;endpoint1: msg = '{0}', procedure = '{1}'&quot;, message,
+        Console.WriteLine(<span style="color:#e6db74">&#34;endpoint1: msg = &#39;{0}&#39;, procedure = &#39;{1}&#39;&#34;</span>, message,
                           WampInvocationContext.Current.InvocationDetails.Procedure);
     }
 }
 
-public class Callee2
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Callee2</span>
 {
-    [WampProcedure(&quot;com.example&quot;)]
-    public void Endpoint2(string message)
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.example&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Endpoint2(<span style="color:#66d9ef">string</span> message)
     {
-        Console.WriteLine(&quot;endpoint2: msg = '{0}', procedure = '{1}'&quot;, message,
+        Console.WriteLine(<span style="color:#e6db74">&#34;endpoint2: msg = &#39;{0}&#39;, procedure = &#39;{1}&#39;&#34;</span>, message,
                           WampInvocationContext.Current.InvocationDetails.Procedure);
     }             
 }
 
-public class Callee3
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Callee3</span>
 {
-    [WampProcedure(&quot;com..procedure1&quot;)]
-    public void Endpoint3(string message)
+<span style="color:#a6e22e">    [WampProcedure(&#34;com..procedure1&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Endpoint3(<span style="color:#66d9ef">string</span> message)
     {
-        Console.WriteLine(&quot;endpoint3: msg = '{0}', procedure = '{1}'&quot;, message,
+        Console.WriteLine(<span style="color:#e6db74">&#34;endpoint3: msg = &#39;{0}&#39;, procedure = &#39;{1}&#39;&#34;</span>, message,
                           WampInvocationContext.Current.InvocationDetails.Procedure);
     }             
 }
 
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: this sample is based on <a href="https://github.com/crossbario/crossbarexamples/tree/master/patternregs">this</a> Autobahn sample</p>
 </blockquote>
 
@@ -752,31 +648,30 @@ public class Callee3
 				<li><strong><a href="#title">Reflection-based Callee</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#basic-usage">Basic usage</a></li>
-<li><a href="#supprted-features">Supprted features</a>
-<ul>
-<li><a href="#instance-providers">Instance providers</a></li>
-<li><a href="#default-parameter-values">Default parameter values</a></li>
-<li><a href="#async-method-support">Async method support</a></li>
-<li><a href="#tuples-support">Tuples support</a></li>
-<li><a href="#exception-support">Exception support</a></li>
-<li><a href="#progressive-call-results">Progressive call results</a></li>
-<li><a href="#cancellation-support">Cancellation support</a></li>
-<li><a href="#out-ref-parameters">out/ref parameters</a></li>
-<li><a href="#multivalued-results">Multivalued results</a></li>
-<li><a href="#wampinvocationcontext">WampInvocationContext</a></li>
-</ul></li>
-<li><a href="#registration-customization">Registration customization</a>
-<ul>
-<li><a href="#caller-identification">Caller identification</a></li>
-<li><a href="#shared-registrations">Shared registrations</a></li>
-<li><a href="#pattern-based-registrations">Pattern-based registrations</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#basic-usage">Basic usage</a></li>
+    <li><a href="#supprted-features">Supprted features</a>
+      <ul>
+        <li><a href="#instance-providers">Instance providers</a></li>
+        <li><a href="#default-parameter-values">Default parameter values</a></li>
+        <li><a href="#async-method-support">Async method support</a></li>
+        <li><a href="#tuples-support">Tuples support</a></li>
+        <li><a href="#exception-support">Exception support</a></li>
+        <li><a href="#progressive-call-results">Progressive call results</a></li>
+        <li><a href="#cancellation-support">Cancellation support</a></li>
+        <li><a href="#outref-parameters">out/ref parameters</a></li>
+        <li><a href="#multivalued-results">Multivalued results</a></li>
+        <li><a href="#wampinvocationcontext">WampInvocationContext</a></li>
+      </ul>
+    </li>
+    <li><a href="#registration-customization">Registration customization</a>
+      <ul>
+        <li><a href="#caller-identification">Caller identification</a></li>
+        <li><a href="#shared-registrations">Shared registrations</a></li>
+        <li><a href="#pattern-based-registrations">Pattern-based registrations</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -919,6 +814,9 @@ public class Callee3
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -1085,7 +983,7 @@ public class Callee3
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

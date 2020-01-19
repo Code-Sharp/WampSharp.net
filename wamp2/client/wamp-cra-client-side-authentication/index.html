@@ -84,137 +84,131 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p><a href="https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_authentication_cra.md">WAMP-CRA</a> client side authentication is  supported. In order to use it, instantiate a new instance of WampCraAuthenticator and pass it to the channel factory.</p>
-
+					<p><a href="https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_authentication_cra.md">WAMP-CRA</a> client side authentication is  supported. In order to use it, instantiate a new instance of WampCraAuthenticator and pass it to the channel factory.</p>
 <h2 id="example">Example</h2>
-
-<pre><code class="language-csharp">public async Task Run()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
     IWampClientAuthenticator authenticator;
 
-    if (false)
+    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">false</span>)
     {
-        authenticator = new WampCraClientAuthenticator(authenticationId: &quot;joe&quot;, secret: &quot;secret2&quot;);
+        authenticator = <span style="color:#66d9ef">new</span> WampCraClientAuthenticator(authenticationId: <span style="color:#e6db74">&#34;joe&#34;</span>, secret: <span style="color:#e6db74">&#34;secret2&#34;</span>);
     }
-    else
+    <span style="color:#66d9ef">else</span>
     {
         authenticator =
-            new WampCraClientAuthenticator(authenticationId: &quot;peter&quot;, secret: &quot;secret1&quot;, salt: &quot;salt123&quot;,
-                                           iterations: 100, keyLen: 16);
+            <span style="color:#66d9ef">new</span> WampCraClientAuthenticator(authenticationId: <span style="color:#e6db74">&#34;peter&#34;</span>, secret: <span style="color:#e6db74">&#34;secret1&#34;</span>, salt: <span style="color:#e6db74">&#34;salt123&#34;</span>,
+                                           iterations: <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>, keyLen: <span style="color:#ae81ff">1</span><span style="color:#ae81ff">6</span>);
     }
 
     IWampChannel channel =
-        channelFactory.CreateJsonChannel(&quot;ws://127.0.0.1:8080/ws&quot;,
-                                         &quot;realm1&quot;,
+        channelFactory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>,
+                                         <span style="color:#e6db74">&#34;realm1&#34;</span>,
                                          authenticator);
 
     channel.RealmProxy.Monitor.ConnectionEstablished +=
         (sender, args) =&gt;
         {
-            Console.WriteLine(&quot;connected session with ID &quot; + args.SessionId);
+            Console.WriteLine(<span style="color:#e6db74">&#34;connected session with ID &#34;</span> + args.SessionId);
 
-            dynamic details = args.WelcomeDetails.OriginalValue.Deserialize&lt;dynamic&gt;();
+            <span style="color:#66d9ef">dynamic</span> details = args.WelcomeDetails.OriginalValue.Deserialize&lt;<span style="color:#66d9ef">dynamic</span>&gt;();
 
-            Console.WriteLine(&quot;authenticated using method '{0}' and provider '{1}'&quot;, details.authmethod,
+            Console.WriteLine(<span style="color:#e6db74">&#34;authenticated using method &#39;{0}&#39; and provider &#39;{1}&#39;&#34;</span>, details.authmethod,
                               details.authprovider);
 
-            Console.WriteLine(&quot;authenticated with authid '{0}' and authrole '{1}'&quot;, details.authid,
+            Console.WriteLine(<span style="color:#e6db74">&#34;authenticated with authid &#39;{0}&#39; and authrole &#39;{1}&#39;&#34;</span>, details.authid,
                               details.authrole);
         };
 
     channel.RealmProxy.Monitor.ConnectionBroken += (sender, args) =&gt;
     {
-        dynamic details = args.Details.OriginalValue.Deserialize&lt;dynamic&gt;();
-        Console.WriteLine(&quot;disconnected &quot; + args.Reason + &quot; &quot; + details.reason + details);
+        <span style="color:#66d9ef">dynamic</span> details = args.Details.OriginalValue.Deserialize&lt;<span style="color:#66d9ef">dynamic</span>&gt;();
+        Console.WriteLine(<span style="color:#e6db74">&#34;disconnected &#34;</span> + args.Reason + <span style="color:#e6db74">&#34; &#34;</span> + details.reason + details);
     };
 
     IWampRealmProxy realmProxy = channel.RealmProxy;
 
-    await channel.Open().ConfigureAwait(false);
+    <span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-    // call a procedure we are allowed to call (so this should succeed)
-    //
-    IAdd2Service proxy = realmProxy.Services.GetCalleeProxy&lt;IAdd2Service&gt;();
+    <span style="color:#75715e">// call a procedure we are allowed to call (so this should succeed)
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>    IAdd2Service proxy = realmProxy.Services.GetCalleeProxy&lt;IAdd2Service&gt;();
 
-    try
+    <span style="color:#66d9ef">try</span>
     {
-        var five = await proxy.Add2Async(2, 3)
-                              .ConfigureAwait(false);
+        <span style="color:#66d9ef">var</span> five = <span style="color:#66d9ef">await</span> proxy.Add2Async(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>)
+                              .ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-        Console.WriteLine(&quot;call result {0}&quot;, five);
+        Console.WriteLine(<span style="color:#e6db74">&#34;call result {0}&#34;</span>, five);
     }
-    catch (Exception e)
+    <span style="color:#66d9ef">catch</span> (Exception e)
     {
-        Console.WriteLine(&quot;call error {0}&quot;, e);
-    }
-
-    // (try to) register a procedure where we are not allowed to (so this should fail)
-    //
-    Mul2Service service = new Mul2Service();
-
-    try
-    {
-        await realmProxy.Services.RegisterCallee(service)
-                        .ConfigureAwait(false);
-
-        Console.WriteLine(&quot;huh, function registered!&quot;);
-    }
-    catch (WampException ex)
-    {
-        Console.WriteLine(&quot;registration failed - this is expected: &quot; + ex.ErrorUri);
+        Console.WriteLine(<span style="color:#e6db74">&#34;call error {0}&#34;</span>, e);
     }
 
-    // (try to) publish to some topics
-    //
-    string[] topics =
+    <span style="color:#75715e">// (try to) register a procedure where we are not allowed to (so this should fail)
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>    Mul2Service service = <span style="color:#66d9ef">new</span> Mul2Service();
+
+    <span style="color:#66d9ef">try</span>
     {
-        &quot;com.example.topic1&quot;,
-        &quot;com.example.topic2&quot;,
-        &quot;com.foobar.topic1&quot;,
-        &quot;com.foobar.topic2&quot;
+        <span style="color:#66d9ef">await</span> realmProxy.Services.RegisterCallee(service)
+                        .ConfigureAwait(<span style="color:#66d9ef">false</span>);
+
+        Console.WriteLine(<span style="color:#e6db74">&#34;huh, function registered!&#34;</span>);
+    }
+    <span style="color:#66d9ef">catch</span> (WampException ex)
+    {
+        Console.WriteLine(<span style="color:#e6db74">&#34;registration failed - this is expected: &#34;</span> + ex.ErrorUri);
+    }
+
+    <span style="color:#75715e">// (try to) publish to some topics
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">string</span>[] topics =
+    {
+        <span style="color:#e6db74">&#34;com.example.topic1&#34;</span>,
+        <span style="color:#e6db74">&#34;com.example.topic2&#34;</span>,
+        <span style="color:#e6db74">&#34;com.foobar.topic1&#34;</span>,
+        <span style="color:#e6db74">&#34;com.foobar.topic2&#34;</span>
     };
 
 
-    foreach (string topic in topics)
+    <span style="color:#66d9ef">foreach</span> (<span style="color:#66d9ef">string</span> topic <span style="color:#66d9ef">in</span> topics)
     {
         IWampTopicProxy topicProxy = realmProxy.TopicContainer.GetTopicByUri(topic);
 
-        try
+        <span style="color:#66d9ef">try</span>
         {
-            await topicProxy.Publish(new PublishOptions() {Acknowledge = true})
-                            .ConfigureAwait(false);
+            <span style="color:#66d9ef">await</span> topicProxy.Publish(<span style="color:#66d9ef">new</span> PublishOptions() {Acknowledge = <span style="color:#66d9ef">true</span>})
+                            .ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-            Console.WriteLine(&quot;event published to topic &quot; + topic);
+            Console.WriteLine(<span style="color:#e6db74">&#34;event published to topic &#34;</span> + topic);
         }
-        catch (WampException ex)
+        <span style="color:#66d9ef">catch</span> (WampException ex)
         {
-            Console.WriteLine(&quot;publication to topic &quot; + topic + &quot; failed: &quot; + ex.ErrorUri);
+            Console.WriteLine(<span style="color:#e6db74">&#34;publication to topic &#34;</span> + topic + <span style="color:#e6db74">&#34; failed: &#34;</span> + ex.ErrorUri);
         }
     }
 }
 
 
-public interface IAdd2Service
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IAdd2Service
 {
-    [WampProcedure(&quot;com.example.add2&quot;)]
-    Task&lt;int&gt; Add2Async(int x, int y);
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.example.add2&#34;)]</span>
+    Task&lt;<span style="color:#66d9ef">int</span>&gt; Add2Async(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y);
 }
 
-public class Mul2Service
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Mul2Service</span>
 {
-    [WampProcedure(&quot;com.example.mul2&quot;)]
-    public int Multiply2(int x, int y)
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.example.mul2&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Multiply2(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y)
     {
-        return x*y;
+        <span style="color:#66d9ef">return</span> x*y;
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note:  The sample is based on <a href="https://github.com/crossbario/crossbar-examples/blob/master/authentication/wampcra/static/web/index.html">this</a> AutobahnJS sample</p>
 </blockquote>
 
@@ -234,12 +228,9 @@ public class Mul2Service
 				<li><strong><a href="#title">WAMP-CRA client side authentication</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#example">Example</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#example">Example</a></li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -383,6 +374,9 @@ public class Mul2Service
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -549,7 +543,7 @@ public class Mul2Service
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

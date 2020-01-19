@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Getting Started on WampSharp</title>
+    <title>getting started on WampSharp</title>
     <link>https://wampsharp.net/categories/getting-started/</link>
-    <description>Recent content in Getting Started on WampSharp</description>
+    <description>Recent content in getting started on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
+    <copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
     
 	<atom:link href="https://wampsharp.net/categories/getting-started/index.xml" rel="self" type="application/rss+xml" />
@@ -19,7 +19,7 @@
       
       <guid>https://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/</guid>
       <description>Before you begin, see Getting started with WAMPv2 and create a WampChannel/WampHost your calleee will be registered to.
-About Callee role WAMPv2 defines a Callee role, that is a role that can register a remote procedure call to the router (using the REGISTER/UNREGISTER messages). The callee&amp;rsquo;s procedure can be invoked by the router (using the INVOCATION message). The callee can respond with a result or an error to the router (using the YIELD/ERROR message).</description>
+About Callee role WAMPv2 defines a Callee role, that is a role that can register a remote procedure call to the router (using the REGISTER/UNREGISTER messages). The callee&#39;s procedure can be invoked by the router (using the INVOCATION message). The callee can respond with a result or an error to the router (using the YIELD/ERROR message).</description>
     </item>
     
     <item>
@@ -40,7 +40,7 @@ Callee proxy The Callee proxy is the easiest way to call rpc methods of a WAMP r
       
       <guid>https://wampsharp.net/wamp2/roles/publisher/getting-started-with-publisher/</guid>
       <description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your publisher will use.
-About Publisher role WAMPv2 defines a Publisher role, that is a role that can publish events to a WAMP realm&amp;rsquo;s topic.
+About Publisher role WAMPv2 defines a Publisher role, that is a role that can publish events to a WAMP realm&#39;s topic.
 WampSubject The WampSubject is the easiest way to publish to a topic of a WAMP router.
 In order to use it, call the GetSubject method of the Services property
 of the IWampRealm/IWampRealmProxy instance with a generic type representing the type you want to send to the router.</description>
@@ -53,7 +53,7 @@ of the IWampRealm/IWampRealmProxy instance with a generic type representing the 
       
       <guid>https://wampsharp.net/wamp2/roles/subscriber/getting-started-with-subscriber/</guid>
       <description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your subscriber will use.
-About Subscriber role WAMPv2 defines a Subscriber role, that is a role that can subscribe to a WAMP realm&amp;rsquo;s topic. The subscriber will be notified about events published to the topic by publishers.
+About Subscriber role WAMPv2 defines a Subscriber role, that is a role that can subscribe to a WAMP realm&#39;s topic. The subscriber will be notified about events published to the topic by publishers.
 WampSubject The WampSubject is the easiest way to subscribe to a topic of a WAMP router.
 In order to use it, call the GetSubject method of the Services property</description>
     </item>

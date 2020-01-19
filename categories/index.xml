@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on WampSharp</title>
@@ -6,41 +6,23 @@
     <description>Recent content in Categories on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
-    <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
+    <copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright>
+    <lastBuildDate>Sat, 18 Jan 2020 00:12:00 +0000</lastBuildDate>
     
 	<atom:link href="https://wampsharp.net/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Authentication</title>
-      <link>https://wampsharp.net/categories/authentication/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      <title>release notes</title>
+      <link>https://wampsharp.net/categories/release-notes/</link>
+      <pubDate>Sat, 18 Jan 2020 00:12:00 +0000</pubDate>
       
-      <guid>https://wampsharp.net/categories/authentication/</guid>
+      <guid>https://wampsharp.net/categories/release-notes/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Callee</title>
-      <link>https://wampsharp.net/categories/callee/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/categories/callee/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Caller</title>
-      <link>https://wampsharp.net/categories/caller/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/categories/caller/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Client</title>
+      <title>client</title>
       <link>https://wampsharp.net/categories/client/</link>
       <pubDate>Tue, 01 Aug 2017 10:25:07 +0900</pubDate>
       
@@ -49,43 +31,7 @@
     </item>
     
     <item>
-      <title>Getting Started</title>
-      <link>https://wampsharp.net/categories/getting-started/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/categories/getting-started/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Publisher</title>
-      <link>https://wampsharp.net/categories/publisher/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/categories/publisher/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Release Notes</title>
-      <link>https://wampsharp.net/categories/release-notes/</link>
-      <pubDate>Fri, 01 Jun 2018 09:51:52 -0400</pubDate>
-      
-      <guid>https://wampsharp.net/categories/release-notes/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Roadmap</title>
-      <link>https://wampsharp.net/categories/roadmap/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/categories/roadmap/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Router</title>
+      <title>router</title>
       <link>https://wampsharp.net/categories/router/</link>
       <pubDate>Tue, 01 Aug 2017 10:25:07 +0900</pubDate>
       
@@ -94,7 +40,61 @@
     </item>
     
     <item>
-      <title>Subscriber</title>
+      <title>authentication</title>
+      <link>https://wampsharp.net/categories/authentication/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>https://wampsharp.net/categories/authentication/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>callee</title>
+      <link>https://wampsharp.net/categories/callee/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>https://wampsharp.net/categories/callee/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>caller</title>
+      <link>https://wampsharp.net/categories/caller/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>https://wampsharp.net/categories/caller/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>getting started</title>
+      <link>https://wampsharp.net/categories/getting-started/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>https://wampsharp.net/categories/getting-started/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>publisher</title>
+      <link>https://wampsharp.net/categories/publisher/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>https://wampsharp.net/categories/publisher/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>roadmap</title>
+      <link>https://wampsharp.net/categories/roadmap/</link>
+      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
+      
+      <guid>https://wampsharp.net/categories/roadmap/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>subscriber</title>
       <link>https://wampsharp.net/categories/subscriber/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       
@@ -103,7 +103,7 @@
     </item>
     
     <item>
-      <title>Wamp1</title>
+      <title>wamp1</title>
       <link>https://wampsharp.net/categories/wamp1/</link>
       <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
       

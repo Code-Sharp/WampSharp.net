@@ -84,65 +84,56 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p>It is possible to build authenticators that are cookie-based. In order to that, one needs to implement an interface named ICookieAuthenticatorFactory and pass it to DefaultWampAuthenticationHost&rsquo;s constructor, (or to FleckAuthenticatedWebSocketTransport/VtortolaAuthenticatedWebSocketTransport constructors).</p>
-
+					<p>It is possible to build authenticators that are cookie-based. In order to that, one needs to implement an interface named ICookieAuthenticatorFactory and pass it to DefaultWampAuthenticationHost's constructor, (or to FleckAuthenticatedWebSocketTransport/VtortolaAuthenticatedWebSocketTransport constructors).</p>
 <p>The interface consists of a single method named &ldquo;CreateAuthenticator&rdquo;, which receives as a parameter an ICookieProvider, that is an interface that allows to access client cookies for read-only.</p>
-
 <p>The authenticator created by the &ldquo;CreateAuthenticator&rdquo; method will be passed to the IWampSessionAuthenticatorFactory passed to the (Default)WampAuthenticationHost as the transportAuthenticator parameter. This allows to combine between authentication methods.</p>
-
 <blockquote>
-<p>Note: it is not possible to set cookies from WampSharp. At this moment <a href="https://github.com/statianzo/Fleck">Fleck</a> doesn&rsquo;t support cookie set on Handshake, so this won&rsquo;t be possible until someone implements this feature.</p>
+<p>Note: it is not possible to set cookies from WampSharp. At this moment <a href="https://github.com/statianzo/Fleck">Fleck</a> doesn't support cookie set on Handshake, so this won't be possible until someone implements this feature.</p>
 </blockquote>
-
 <h2 id="example">Example</h2>
-
 <p>This example demonstrates cookie-based authenticator usage. Cookies are set using an embedded <a href="https://github.com/Code-Sharp/uHttpSharp">uhttpSharp server</a>.</p>
-
 <p>Open <code>http://localhost</code> in your browser to see this demo in action.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">using</span> System;
+<span style="color:#66d9ef">using</span> System.Collections.Generic;
+<span style="color:#66d9ef">using</span> System.IO;
+<span style="color:#66d9ef">using</span> System.Net;
+<span style="color:#66d9ef">using</span> System.Net.Sockets;
+<span style="color:#66d9ef">using</span> System.Text;
+<span style="color:#66d9ef">using</span> System.Threading.Tasks;
+<span style="color:#66d9ef">using</span> uhttpsharp;
+<span style="color:#66d9ef">using</span> uhttpsharp.Handlers;
+<span style="color:#66d9ef">using</span> uhttpsharp.Headers;
+<span style="color:#66d9ef">using</span> uhttpsharp.Listeners;
+<span style="color:#66d9ef">using</span> uhttpsharp.RequestProviders;
+<span style="color:#66d9ef">using</span> WampSharp.V2;
+<span style="color:#66d9ef">using</span> WampSharp.V2.Authentication;
+<span style="color:#66d9ef">using</span> WampSharp.V2.Core.Contracts;
+<span style="color:#66d9ef">using</span> WampSharp.V2.Realm;
+<span style="color:#66d9ef">using</span> WampSharp.V2.Rpc;
 
-<pre><code class="language-csharp">using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using uhttpsharp;
-using uhttpsharp.Handlers;
-using uhttpsharp.Headers;
-using uhttpsharp.Listeners;
-using uhttpsharp.RequestProviders;
-using WampSharp.V2;
-using WampSharp.V2.Authentication;
-using WampSharp.V2.Core.Contracts;
-using WampSharp.V2.Realm;
-using WampSharp.V2.Rpc;
-
-namespace CookieDemo
+<span style="color:#66d9ef">namespace</span> CookieDemo
 {
-    class Program
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
     {
-        static void Main(string[] args)
+        <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
         {
             DefaultWampAuthenticationHost host =
-                new DefaultWampAuthenticationHost(&quot;ws://0.0.0.0:8080/ws&quot;,
-                                                  new MyAuthenticationFactory(),
-                                                  new MyCookieAuthenticatorFactory());
+                <span style="color:#66d9ef">new</span> DefaultWampAuthenticationHost(<span style="color:#e6db74">&#34;ws://0.0.0.0:8080/ws&#34;</span>,
+                                                  <span style="color:#66d9ef">new</span> MyAuthenticationFactory(),
+                                                  <span style="color:#66d9ef">new</span> MyCookieAuthenticatorFactory());
 
-            IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&quot;realm1&quot;);
+            IWampHostedRealm realm = host.RealmContainer.GetRealmByName(<span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-            realm.Services.RegisterCallee(new Calculator());
+            realm.Services.RegisterCallee(<span style="color:#66d9ef">new</span> Calculator());
 
             host.Open();
 
-            using (var httpServer = new HttpServer(new HttpRequestProvider()))
+            <span style="color:#66d9ef">using</span> (<span style="color:#66d9ef">var</span> httpServer = <span style="color:#66d9ef">new</span> HttpServer(<span style="color:#66d9ef">new</span> HttpRequestProvider()))
             {
-                httpServer.Use(new TcpListenerAdapter(new TcpListener(IPAddress.Any, 80)));
+                httpServer.Use(<span style="color:#66d9ef">new</span> TcpListenerAdapter(<span style="color:#66d9ef">new</span> TcpListener(IPAddress.Any, <span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span>)));
 
-                httpServer.Use(new HttpRouter().With(&quot;&quot;, new FrontendHandler())
-                                               .With(&quot;setcookie&quot;, new CookieHandler()));
+                httpServer.Use(<span style="color:#66d9ef">new</span> HttpRouter().With(<span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#66d9ef">new</span> FrontendHandler())
+                                               .With(<span style="color:#e6db74">&#34;setcookie&#34;</span>, <span style="color:#66d9ef">new</span> CookieHandler()));
 
                 httpServer.Use((context, next) =&gt; Task.Factory.GetCompleted());
 
@@ -153,291 +144,290 @@ namespace CookieDemo
         }
     }
 
-    public class Calculator
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Calculator</span>
     {
-        [WampProcedure(&quot;com.arguments.add2&quot;)]
-        public int Add2(int x, int y)
+<span style="color:#a6e22e">        [WampProcedure(&#34;com.arguments.add2&#34;)]</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Add2(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y)
         {
-            return (x + y);
+            <span style="color:#66d9ef">return</span> (x + y);
         }
-
-        [WampProcedure(&quot;com.arguments.mul2&quot;)]
-        public int Mul2(int x, int y)
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">        [WampProcedure(&#34;com.arguments.mul2&#34;)]</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Mul2(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y)
         {
-            return (x * y);
+            <span style="color:#66d9ef">return</span> (x * y);
         }
-
-        [WampProcedure(&quot;com.arguments.sub2&quot;)]
-        public int Sub2(int x, int y)
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">        [WampProcedure(&#34;com.arguments.sub2&#34;)]</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Sub2(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y)
         {
-            return (x - y);
+            <span style="color:#66d9ef">return</span> (x - y);
         }
-
-        [WampProcedure(&quot;com.arguments.div2&quot;)]
-        public int Div2(int x, int y)
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">        [WampProcedure(&#34;com.arguments.div2&#34;)]</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Div2(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y)
         {
-            return (x / y);
+            <span style="color:#66d9ef">return</span> (x / y);
         }
     }
 
-    internal class MyCookieAuthenticatorFactory : ICookieAuthenticatorFactory
+    <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCookieAuthenticatorFactory</span> : ICookieAuthenticatorFactory
     {
-        public IWampSessionAuthenticator CreateAuthenticator(ICookieProvider cookieProvider)
+        <span style="color:#66d9ef">public</span> IWampSessionAuthenticator CreateAuthenticator(ICookieProvider cookieProvider)
         {
-            return new MyCookieAuthenticator(cookieProvider);
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> MyCookieAuthenticator(cookieProvider);
         }
     }
 
-    internal class MyCookieAuthenticator : WampSessionAuthenticator
+    <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCookieAuthenticator</span> : WampSessionAuthenticator
     {
-        private readonly ICookieProvider mCookieProvider;
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> ICookieProvider mCookieProvider;
 
-        private readonly IDictionary&lt;string, IWampAuthorizer&gt; mBeetleToAuthorizers =
-            new Dictionary&lt;string, IWampAuthorizer&gt;()
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> IDictionary&lt;<span style="color:#66d9ef">string</span>, IWampAuthorizer&gt; mBeetleToAuthorizers =
+            <span style="color:#66d9ef">new</span> Dictionary&lt;<span style="color:#66d9ef">string</span>, IWampAuthorizer&gt;()
             {
-                [&quot;John&quot;] =
-                    new WampStaticAuthorizer(new List&lt;WampUriPermissions&gt;()
+<span style="color:#a6e22e">                [&#34;John&#34;]</span> =
+                    <span style="color:#66d9ef">new</span> WampStaticAuthorizer(<span style="color:#66d9ef">new</span> List&lt;WampUriPermissions&gt;()
                     {
-                        new WampUriPermissions()
+                        <span style="color:#66d9ef">new</span> WampUriPermissions()
                         {
-                            Uri = &quot;com.arguments.add2&quot;,
-                            CanCall = true
+                            Uri = <span style="color:#e6db74">&#34;com.arguments.add2&#34;</span>,
+                            CanCall = <span style="color:#66d9ef">true</span>
                         }
                     }),
-                [&quot;Ringo&quot;] =
-                    new WampStaticAuthorizer(new List&lt;WampUriPermissions&gt;()
+<span style="color:#a6e22e">                [&#34;Ringo&#34;]</span> =
+                    <span style="color:#66d9ef">new</span> WampStaticAuthorizer(<span style="color:#66d9ef">new</span> List&lt;WampUriPermissions&gt;()
                     {
-                        new WampUriPermissions()
+                        <span style="color:#66d9ef">new</span> WampUriPermissions()
                         {
-                            Uri = &quot;com.arguments.add2&quot;,
-                            CanCall = true
+                            Uri = <span style="color:#e6db74">&#34;com.arguments.add2&#34;</span>,
+                            CanCall = <span style="color:#66d9ef">true</span>
                         },
-                        new WampUriPermissions()
+                        <span style="color:#66d9ef">new</span> WampUriPermissions()
                         {
-                            Uri = &quot;com.arguments.mul2&quot;,
-                            CanCall = true
+                            Uri = <span style="color:#e6db74">&#34;com.arguments.mul2&#34;</span>,
+                            CanCall = <span style="color:#66d9ef">true</span>
                         }
                     }),
-                [&quot;Paul&quot;] =
-                    new WampStaticAuthorizer(new List&lt;WampUriPermissions&gt;()
+<span style="color:#a6e22e">                [&#34;Paul&#34;]</span> =
+                    <span style="color:#66d9ef">new</span> WampStaticAuthorizer(<span style="color:#66d9ef">new</span> List&lt;WampUriPermissions&gt;()
                     {
-                        new WampUriPermissions()
+                        <span style="color:#66d9ef">new</span> WampUriPermissions()
                         {
-                            Uri = &quot;com.arguments.sub2&quot;,
-                            CanCall = true
+                            Uri = <span style="color:#e6db74">&#34;com.arguments.sub2&#34;</span>,
+                            CanCall = <span style="color:#66d9ef">true</span>
                         },
-                        new WampUriPermissions()
+                        <span style="color:#66d9ef">new</span> WampUriPermissions()
                         {
-                            Uri = &quot;com.arguments.div2&quot;,
-                            CanCall = true
+                            Uri = <span style="color:#e6db74">&#34;com.arguments.div2&#34;</span>,
+                            CanCall = <span style="color:#66d9ef">true</span>
                         }
                     }),
-                [&quot;George&quot;] =
-                    new WampStaticAuthorizer(new List&lt;WampUriPermissions&gt;()
+<span style="color:#a6e22e">                [&#34;George&#34;]</span> =
+                    <span style="color:#66d9ef">new</span> WampStaticAuthorizer(<span style="color:#66d9ef">new</span> List&lt;WampUriPermissions&gt;()
                     {
-                        new WampUriPermissions()
+                        <span style="color:#66d9ef">new</span> WampUriPermissions()
                         {
-                            Uri = &quot;com.arguments.add2&quot;,
-                            CanCall = true
+                            Uri = <span style="color:#e6db74">&#34;com.arguments.add2&#34;</span>,
+                            CanCall = <span style="color:#66d9ef">true</span>
                         },
-                        new WampUriPermissions()
+                        <span style="color:#66d9ef">new</span> WampUriPermissions()
                         {
-                            Uri = &quot;com.arguments.mul2&quot;,
-                            CanCall = true
+                            Uri = <span style="color:#e6db74">&#34;com.arguments.mul2&#34;</span>,
+                            CanCall = <span style="color:#66d9ef">true</span>
                         },
-                        new WampUriPermissions()
+                        <span style="color:#66d9ef">new</span> WampUriPermissions()
                         {
-                            Uri = &quot;com.arguments.sub2&quot;,
-                            CanCall = true
+                            Uri = <span style="color:#e6db74">&#34;com.arguments.sub2&#34;</span>,
+                            CanCall = <span style="color:#66d9ef">true</span>
                         }
                     })
             };
 
-        public MyCookieAuthenticator(ICookieProvider cookieProvider)
+        <span style="color:#66d9ef">public</span> MyCookieAuthenticator(ICookieProvider cookieProvider)
         {
             mCookieProvider = cookieProvider;
 
-            Cookie cookie = mCookieProvider.GetCookieByName(&quot;beetle&quot;);
+            Cookie cookie = mCookieProvider.GetCookieByName(<span style="color:#e6db74">&#34;beetle&#34;</span>);
 
-            if (cookie != null)
+            <span style="color:#66d9ef">if</span> (cookie != <span style="color:#66d9ef">null</span>)
             {
                 Beetle = cookie.Value;
-                this.Authorizer = mBeetleToAuthorizers[Beetle];
-                IsAuthenticated = true;
+                <span style="color:#66d9ef">this</span>.Authorizer = mBeetleToAuthorizers[Beetle];
+                IsAuthenticated = <span style="color:#66d9ef">true</span>;
             }
         }
 
-        public override void Authenticate(string signature, AuthenticateExtraData extra)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> Authenticate(<span style="color:#66d9ef">string</span> signature, AuthenticateExtraData extra)
         {
-            throw new WampAuthenticationException(&quot;Cookie wasn't present&quot;);
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampAuthenticationException(<span style="color:#e6db74">&#34;Cookie wasn&#39;t present&#34;</span>);
         }
 
-        public string Beetle { get; set; }
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> Beetle { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
 
-        public override string AuthenticationId
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> AuthenticationId
         {
-            get
+            <span style="color:#66d9ef">get</span>
             {
-                return Beetle;
+                <span style="color:#66d9ef">return</span> Beetle;
             }
         }
 
-        public override string AuthenticationMethod
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> AuthenticationMethod
         {
-            get
+            <span style="color:#66d9ef">get</span>
             {
-                return &quot;cookie&quot;;
+                <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;cookie&#34;</span>;
             }
         }
     }
 
-    internal class MyAuthenticationFactory : IWampSessionAuthenticatorFactory
+    <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyAuthenticationFactory</span> : IWampSessionAuthenticatorFactory
     {
-        public IWampSessionAuthenticator GetSessionAuthenticator
+        <span style="color:#66d9ef">public</span> IWampSessionAuthenticator GetSessionAuthenticator
             (WampPendingClientDetails details,
              IWampSessionAuthenticator transportAuthenticator)
         {
-            if (!transportAuthenticator.IsAuthenticated)
+            <span style="color:#66d9ef">if</span> (!transportAuthenticator.IsAuthenticated)
             {
-                throw new WampAuthenticationException(&quot;Cookie wasn't present&quot;);
+                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampAuthenticationException(<span style="color:#e6db74">&#34;Cookie wasn&#39;t present&#34;</span>);
             }
 
-            return transportAuthenticator;
+            <span style="color:#66d9ef">return</span> transportAuthenticator;
         }
     }
 
-    internal class HtmlHandler : IHttpRequestHandler
+    <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">HtmlHandler</span> : IHttpRequestHandler
     {
-        private readonly HttpResponse mResponse;
-        private readonly HttpResponse mKeepAliveResponse;
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> HttpResponse mResponse;
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> HttpResponse mKeepAliveResponse;
 
-        public HtmlHandler(string contents)
+        <span style="color:#66d9ef">public</span> HtmlHandler(<span style="color:#66d9ef">string</span> contents)
         {
-            MemoryStream memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(contents));
+            MemoryStream memoryStream = <span style="color:#66d9ef">new</span> MemoryStream(Encoding.UTF8.GetBytes(contents));
 
-            mKeepAliveResponse = new HttpResponse(HttpResponseCode.Ok, &quot;text/html&quot;,
+            mKeepAliveResponse = <span style="color:#66d9ef">new</span> HttpResponse(HttpResponseCode.Ok, <span style="color:#e6db74">&#34;text/html&#34;</span>,
                                                   memoryStream,
-                                                  true);
+                                                  <span style="color:#66d9ef">true</span>);
 
-            mResponse = new HttpResponse(HttpResponseCode.Ok, &quot;text/html&quot;,
+            mResponse = <span style="color:#66d9ef">new</span> HttpResponse(HttpResponseCode.Ok, <span style="color:#e6db74">&#34;text/html&#34;</span>,
                                          memoryStream,
-                                         false);
+                                         <span style="color:#66d9ef">false</span>);
         }
 
-        public virtual Task Handle(IHttpContext context, Func&lt;Task&gt; next)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">virtual</span> Task Handle(IHttpContext context, Func&lt;Task&gt; next)
         {
             context.Response = context.Request.Headers.KeepAliveConnection()
                 ? mKeepAliveResponse
                 : mResponse;
 
-            return Task.Factory.GetCompleted();
+            <span style="color:#66d9ef">return</span> Task.Factory.GetCompleted();
         }
     }
 
-    internal class FrontendHandler : HtmlHandler
+    <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FrontendHandler</span> : HtmlHandler
     {
-        private const string TemplateHtml = @&quot;&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;body&gt;
-    &lt;h1&gt;Cookie authentication frontend&lt;/h1&gt;
-    &lt;p&gt;Open JavaScript console to watch output.&lt;/p&gt;
-    &lt;p&gt;&lt;a href=&quot;&quot;http://{0}/setcookie&quot;&quot;&gt;Set cookie.&lt;/a&gt;&lt;/p&gt;
-    &lt;script src=&quot;&quot;https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz&quot;&quot;&gt;&lt;/script&gt;
-    &lt;script type=&quot;&quot;text/javascript&quot;&quot;&gt;
-        var connection = new autobahn.Connection({{
-            url: 'ws://{0}:8080/ws',
-            realm: 'realm1'
-        }});
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> TemplateHtml = <span style="color:#e6db74">@&#34;&lt;!DOCTYPE html&gt;
+</span><span style="color:#e6db74">&lt;html&gt;
+</span><span style="color:#e6db74">&lt;body&gt;
+</span><span style="color:#e6db74">    &lt;h1&gt;Cookie authentication frontend&lt;/h1&gt;
+</span><span style="color:#e6db74">    &lt;p&gt;Open JavaScript console to watch output.&lt;/p&gt;
+</span><span style="color:#e6db74">    &lt;p&gt;&lt;a href=&#34;&#34;http://{0}/setcookie&#34;&#34;&gt;Set cookie.&lt;/a&gt;&lt;/p&gt;
+</span><span style="color:#e6db74">    &lt;script src=&#34;&#34;https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz&#34;&#34;&gt;&lt;/script&gt;
+</span><span style="color:#e6db74">    &lt;script type=&#34;&#34;text/javascript&#34;&#34;&gt;
+</span><span style="color:#e6db74">        var connection = new autobahn.Connection({{
+</span><span style="color:#e6db74">            url: &#39;ws://{0}:8080/ws&#39;,
+</span><span style="color:#e6db74">            realm: &#39;realm1&#39;
+</span><span style="color:#e6db74">        }});
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">        connection.onopen = function (session) {{
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">            session.call(&#39;com.arguments.add2&#39;, [2, 3]).then(
+</span><span style="color:#e6db74">                function (res) {{
+</span><span style="color:#e6db74">                    console.log(&#34;&#34;Add2:&#34;&#34;, res);
+</span><span style="color:#e6db74">                }},
+</span><span style="color:#e6db74">                function (err) {{
+</span><span style="color:#e6db74">                    console.log(&#34;&#34;Add2 Error:&#34;&#34;, err.error, err.args, err.kwargs);
+</span><span style="color:#e6db74">                }}
+</span><span style="color:#e6db74">            );
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">            session.call(&#39;com.arguments.mul2&#39;, [5, 6]).then(
+</span><span style="color:#e6db74">                function (res) {{
+</span><span style="color:#e6db74">                    console.log(&#34;&#34;Mul2:&#34;&#34;, res);
+</span><span style="color:#e6db74">                }},
+</span><span style="color:#e6db74">                function (err) {{
+</span><span style="color:#e6db74">                    console.log(&#34;&#34;Mul2 Error:&#34;&#34;, err.error, err.args, err.kwargs);
+</span><span style="color:#e6db74">                }}
+</span><span style="color:#e6db74">            );
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">            session.call(&#39;com.arguments.sub2&#39;, [1, 9]).then(
+</span><span style="color:#e6db74">                function (res) {{
+</span><span style="color:#e6db74">                    console.log(&#34;&#34;Sub2:&#34;&#34;, res);
+</span><span style="color:#e6db74">                }},
+</span><span style="color:#e6db74">                function (err) {{
+</span><span style="color:#e6db74">                    console.log(&#34;&#34;Sub2 Error:&#34;&#34;, err.error, err.args, err.kwargs);
+</span><span style="color:#e6db74">                }}
+</span><span style="color:#e6db74">            );
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">            session.call(&#39;com.arguments.div2&#39;, [10, 4]).then(
+</span><span style="color:#e6db74">                function (res) {{
+</span><span style="color:#e6db74">                    console.log(&#34;&#34;Div2:&#34;&#34;, res);
+</span><span style="color:#e6db74">                }},
+</span><span style="color:#e6db74">                function (err) {{
+</span><span style="color:#e6db74">                    console.log(&#34;&#34;Div2 Error:&#34;&#34;, err.error, err.args, err.kwargs);
+</span><span style="color:#e6db74">                }}
+</span><span style="color:#e6db74">            );
+</span><span style="color:#e6db74">        }};
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">        connection.open();
+</span><span style="color:#e6db74">    &lt;/script&gt;
+</span><span style="color:#e6db74">&lt;/body&gt;
+</span><span style="color:#e6db74">&lt;/html&gt;&#34;</span>;
 
-        connection.onopen = function (session) {{
-
-            session.call('com.arguments.add2', [2, 3]).then(
-                function (res) {{
-                    console.log(&quot;&quot;Add2:&quot;&quot;, res);
-                }},
-                function (err) {{
-                    console.log(&quot;&quot;Add2 Error:&quot;&quot;, err.error, err.args, err.kwargs);
-                }}
-            );
-
-            session.call('com.arguments.mul2', [5, 6]).then(
-                function (res) {{
-                    console.log(&quot;&quot;Mul2:&quot;&quot;, res);
-                }},
-                function (err) {{
-                    console.log(&quot;&quot;Mul2 Error:&quot;&quot;, err.error, err.args, err.kwargs);
-                }}
-            );
-
-            session.call('com.arguments.sub2', [1, 9]).then(
-                function (res) {{
-                    console.log(&quot;&quot;Sub2:&quot;&quot;, res);
-                }},
-                function (err) {{
-                    console.log(&quot;&quot;Sub2 Error:&quot;&quot;, err.error, err.args, err.kwargs);
-                }}
-            );
-
-            session.call('com.arguments.div2', [10, 4]).then(
-                function (res) {{
-                    console.log(&quot;&quot;Div2:&quot;&quot;, res);
-                }},
-                function (err) {{
-                    console.log(&quot;&quot;Div2 Error:&quot;&quot;, err.error, err.args, err.kwargs);
-                }}
-            );
-        }};
-
-        connection.open();
-    &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;&quot;;
-
-        public FrontendHandler() : base(string.Format(TemplateHtml, Environment.MachineName))
+        <span style="color:#66d9ef">public</span> FrontendHandler() : <span style="color:#66d9ef">base</span>(<span style="color:#66d9ef">string</span>.Format(TemplateHtml, Environment.MachineName))
         {
         }
     }
 
-    internal class CookieHandler : HtmlHandler
+    <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CookieHandler</span> : HtmlHandler
     {
-        private static readonly string[] mNames = new[] {&quot;John&quot;, &quot;Paul&quot;, &quot;George&quot;, &quot;Ringo&quot;};
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">readonly</span> <span style="color:#66d9ef">string</span>[] mNames = <span style="color:#66d9ef">new</span>[] {<span style="color:#e6db74">&#34;John&#34;</span>, <span style="color:#e6db74">&#34;Paul&#34;</span>, <span style="color:#e6db74">&#34;George&#34;</span>, <span style="color:#e6db74">&#34;Ringo&#34;</span>};
 
-        private readonly Random mRandom = new Random();
-        private readonly object mLock = new object();
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> Random mRandom = <span style="color:#66d9ef">new</span> Random();
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> <span style="color:#66d9ef">object</span> mLock = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>();
 
-        private const string HtmlTemplate = @&quot;&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;body&gt;
-    &lt;h1&gt;Cookie authentication frontend&lt;/h1&gt;
-    &lt;p&gt;Cookie set! visit &lt;a href=&quot;&quot;/&quot;&quot;&gt;home&lt;/a&gt;&lt;/p&gt;.
-&lt;/body&gt;
-&lt;/html&gt;&quot;;
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> HtmlTemplate = <span style="color:#e6db74">@&#34;&lt;!DOCTYPE html&gt;
+</span><span style="color:#e6db74">&lt;html&gt;
+</span><span style="color:#e6db74">&lt;body&gt;
+</span><span style="color:#e6db74">    &lt;h1&gt;Cookie authentication frontend&lt;/h1&gt;
+</span><span style="color:#e6db74">    &lt;p&gt;Cookie set! visit &lt;a href=&#34;&#34;/&#34;&#34;&gt;home&lt;/a&gt;&lt;/p&gt;.
+</span><span style="color:#e6db74">&lt;/body&gt;
+</span><span style="color:#e6db74">&lt;/html&gt;&#34;</span>;
 
-        public CookieHandler() : base(HtmlTemplate)
+        <span style="color:#66d9ef">public</span> CookieHandler() : <span style="color:#66d9ef">base</span>(HtmlTemplate)
         {
         }
 
-        public override Task Handle(IHttpContext context, Func&lt;Task&gt; next)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> Task Handle(IHttpContext context, Func&lt;Task&gt; next)
         {
-            context.Cookies.Upsert(&quot;beetle&quot;, GetBeetleName());
-            return base.Handle(context, next);
+            context.Cookies.Upsert(<span style="color:#e6db74">&#34;beetle&#34;</span>, GetBeetleName());
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">base</span>.Handle(context, next);
         }
 
-        private string GetBeetleName()
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">string</span> GetBeetleName()
         {
-            int random;
+            <span style="color:#66d9ef">int</span> random;
 
-            lock (mLock)
+            <span style="color:#66d9ef">lock</span> (mLock)
             {
                 random = mRandom.Next(mNames.Length);
             }
 
-            return mNames[random];
+            <span style="color:#66d9ef">return</span> mNames[random];
         }
     }
 }
-</code></pre>
-
+</code></pre></div>
 				</section>
 			</article>
 		</main>
@@ -454,12 +444,9 @@ namespace CookieDemo
 				<li><strong><a href="#title">Cookie based router-side authentication</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#example">Example</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#example">Example</a></li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -602,6 +589,9 @@ namespace CookieDemo
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -769,7 +759,7 @@ namespace CookieDemo
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

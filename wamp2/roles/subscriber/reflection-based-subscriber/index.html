@@ -84,180 +84,156 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p><strong>Reflection-based Subscriber</strong> allows to use WAMPv2 subscriber features in a similar fashion as <a href="https://wampsharp.net/wamp2/roles/callee/reflection-based-callee/">Reflection based Callee</a>.</p>
-
+					<p><strong>Reflection-based Subscriber</strong> allows to use WAMPv2 subscriber features in a similar fashion as <a href="https://wampsharp.net/wamp2/roles/callee/reflection-based-callee/">Reflection based Callee</a>.</p>
 <p>In order to use it, create a class with a method having a [WampTopic] attribute, Then call RegisterSubscriber of IWampRealmServiceProvider.</p>
-
 <p>Both placing attributes on a class method and placing attributes on an interface implemented by the class are supported.</p>
-
 <h2 id="basic-usage">Basic usage</h2>
-
-<pre><code class="language-csharp">public class MyClass
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyClass</span>
 {
-    [JsonProperty(&quot;counter&quot;)]
-    public int Counter { get; set; }
+<span style="color:#a6e22e">    [JsonProperty(&#34;counter&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Counter { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [JsonProperty(&#34;foo&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span>[] Foo { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
 
-    [JsonProperty(&quot;foo&quot;)]
-    public int[] Foo { get; set; }
-
-    public override string ToString()
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> ToString()
     {
-        return string.Format(&quot;counter: {0}, foo: [{1}]&quot;,
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">string</span>.Format(<span style="color:#e6db74">&#34;counter: {0}, foo: [{1}]&#34;</span>,
             Counter,
-            string.Join(&quot;, &quot;, Foo));
+            <span style="color:#66d9ef">string</span>.Join(<span style="color:#e6db74">&#34;, &#34;</span>, Foo));
     }
 }
 
-public interface IMySubscriber
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IMySubscriber
 {
-    [WampTopic(&quot;com.myapp.heartbeat&quot;)]
-    void OnHeartbeat();
-
-    [WampTopic(&quot;com.myapp.topic2&quot;)]
-    void OnTopic2(int number1, int number2, string c, MyClass d);
+<span style="color:#a6e22e">    [WampTopic(&#34;com.myapp.heartbeat&#34;)]</span>
+    <span style="color:#66d9ef">void</span> OnHeartbeat();
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [WampTopic(&#34;com.myapp.topic2&#34;)]</span>
+    <span style="color:#66d9ef">void</span> OnTopic2(<span style="color:#66d9ef">int</span> number1, <span style="color:#66d9ef">int</span> number2, <span style="color:#66d9ef">string</span> c, MyClass d);
 }
 
-public class MySubscriber : IMySubscriber
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MySubscriber</span> : IMySubscriber
 {
-    public void OnHeartbeat()
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> OnHeartbeat()
     {
-        long publicationId = WampEventContext.Current.PublicationId;
-        Console.WriteLine(&quot;Got heartbeat (publication ID &quot; + publicationId + &quot;)&quot;);
+        <span style="color:#66d9ef">long</span> publicationId = WampEventContext.Current.PublicationId;
+        Console.WriteLine(<span style="color:#e6db74">&#34;Got heartbeat (publication ID &#34;</span> + publicationId + <span style="color:#e6db74">&#34;)&#34;</span>);
     }
 
-    public void OnTopic2(int number1, int number2, string c, MyClass d)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> OnTopic2(<span style="color:#66d9ef">int</span> number1, <span style="color:#66d9ef">int</span> number2, <span style="color:#66d9ef">string</span> c, MyClass d)
     {
-        Console.WriteLine(&quot;Got event: number1:{0}, number2:{1}, c:{2}, d:{3}&quot;,
+        Console.WriteLine(<span style="color:#e6db74">&#34;Got event: number1:{0}, number2:{1}, c:{2}, d:{3}&#34;</span>,
             number1, number2, c, d);
     }
 }
 
-public static async Task Run()
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
-        factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+        factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+    <span style="color:#66d9ef">await</span> channel.Open();
 
     Task&lt;IAsyncDisposable&gt; subscriptionTask =
-        channel.RealmProxy.Services.RegisterSubscriber(new MySubscriber());
+        channel.RealmProxy.Services.RegisterSubscriber(<span style="color:#66d9ef">new</span> MySubscriber());
 
-    IAsyncDisposable asyncDisposable = await subscriptionTask;
+    IAsyncDisposable asyncDisposable = <span style="color:#66d9ef">await</span> subscriptionTask;
 
-    // call await asyncDisposable.DisposeAsync(); to unsubscribe from the topic.
-}
+    <span style="color:#75715e">// call await asyncDisposable.DisposeAsync(); to unsubscribe from the topic.
+</span><span style="color:#75715e"></span>}
 
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note:  This sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/complex">this</a> AutobahnJS sample</p>
 </blockquote>
-
 <h2 id="supported-features">Supported features</h2>
-
 <h3 id="wampeventcontext">WampEventContext</h3>
-
 <p>You can use WampEventContext.Current in order to get details about the current received event:</p>
-
-<pre><code class="language-csharp">public class MySubscriber
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MySubscriber</span>
 {
-    [WampTopic(&quot;com.myapp.topic1&quot;)]
-    public void OnTopic1(int counter)
+<span style="color:#a6e22e">    [WampTopic(&#34;com.myapp.topic1&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> OnTopic1(<span style="color:#66d9ef">int</span> counter)
     {
         WampEventContext context = WampEventContext.Current;
 
-        Console.WriteLine(&quot;Got event, publication ID {0}, publisher {1}: {2}&quot;,
+        Console.WriteLine(<span style="color:#e6db74">&#34;Got event, publication ID {0}, publisher {1}: {2}&#34;</span>,
             context.PublicationId,
             context.EventDetails.Publisher,
             counter);
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/options">this</a> AutobahnJS sample.</p>
 </blockquote>
-
 <h3 id="subscription-customization">Subscription customization</h3>
-
 <p>The RegisterSubscriber method of IWampRealmServiceProvider has an overload that receives an &ldquo;interceptor&rdquo; instance. The &ldquo;interceptor&rdquo; allow customizing the subscription being performed.</p>
-
 <p>This allows customizing the subscribe options and the topic uri sent upon SUBSCRIBE message.</p>
-
 <p>The following sections discuss subscribe options modifications that can be used in order to leverage WAMP advanced profile features.</p>
-
 <h3 id="pattern-based-subscriptions">Pattern based subscriptions</h3>
-
 <p><a href="http://crossbar.io/docs/Pattern-Based-Subscriptions/">Pattern based subscriptions</a>, for both router side and client side.</p>
-
 <p>In order to use it, pass SubscribeOptions with Match = &ldquo;exact&rdquo;/&ldquo;prefix&rdquo;/&ldquo;wildcard&rdquo; depending on your criteria (these are also available in a static class called WampMatchPattern):</p>
-
-<pre><code class="language-csharp">public async Task Run()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
-        channelFactory.CreateJsonChannel(&quot;ws://127.0.0.1:8080/ws&quot;,
-            &quot;realm1&quot;);
+        channelFactory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>,
+            <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open().ConfigureAwait(false);
+    <span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-    await channel.RealmProxy.Services.RegisterSubscriber(new Subscriber1())
-        .ConfigureAwait(false);
+    <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterSubscriber(<span style="color:#66d9ef">new</span> Subscriber1())
+        .ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-    await channel.RealmProxy.Services.RegisterSubscriber
-        (new Subscriber2(),
-         new SubscriberRegistrationInterceptor(new SubscribeOptions
+    <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterSubscriber
+        (<span style="color:#66d9ef">new</span> Subscriber2(),
+         <span style="color:#66d9ef">new</span> SubscriberRegistrationInterceptor(<span style="color:#66d9ef">new</span> SubscribeOptions
          {
              Match = WampMatchPattern.Prefix
          }))
-         .ConfigureAwait(false);
+         .ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-    await channel.RealmProxy.Services.RegisterSubscriber
-        (new Subscriber3(),
-         new SubscriberRegistrationInterceptor(new SubscribeOptions
+    <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterSubscriber
+        (<span style="color:#66d9ef">new</span> Subscriber3(),
+         <span style="color:#66d9ef">new</span> SubscriberRegistrationInterceptor(<span style="color:#66d9ef">new</span> SubscribeOptions
          {
              Match = WampMatchPattern.Wildcard
          }))
-         .ConfigureAwait(false);
+         .ConfigureAwait(<span style="color:#66d9ef">false</span>);
 }
 
-public class Subscriber1
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Subscriber1</span>
 {
-    [WampTopic(&quot;com.example.topic1&quot;)]
-    public void Handler1(string message)
+<span style="color:#a6e22e">    [WampTopic(&#34;com.example.topic1&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Handler1(<span style="color:#66d9ef">string</span> message)
     {
-        Console.WriteLine(&quot;handler1: msg = '{0}', topic = '{1}'&quot;, message,
+        Console.WriteLine(<span style="color:#e6db74">&#34;handler1: msg = &#39;{0}&#39;, topic = &#39;{1}&#39;&#34;</span>, message,
                           WampEventContext.Current.EventDetails.Topic);
     }
 }
 
-public class Subscriber2
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Subscriber2</span>
 {
-    [WampTopic(&quot;com.example&quot;)]
-    public void Handler2(string message)
+<span style="color:#a6e22e">    [WampTopic(&#34;com.example&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Handler2(<span style="color:#66d9ef">string</span> message)
     {
-        Console.WriteLine(&quot;handler2: msg = '{0}', topic = '{1}'&quot;, message,
+        Console.WriteLine(<span style="color:#e6db74">&#34;handler2: msg = &#39;{0}&#39;, topic = &#39;{1}&#39;&#34;</span>, message,
                           WampEventContext.Current.EventDetails.Topic);
     }             
 }
 
-public class Subscriber3
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Subscriber3</span>
 {
-    [WampTopic(&quot;com..topic1&quot;)]
-    public void Handler3(string message)
+<span style="color:#a6e22e">    [WampTopic(&#34;com..topic1&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Handler3(<span style="color:#66d9ef">string</span> message)
     {
-        Console.WriteLine(&quot;handler3: msg = '{0}', topic = '{1}'&quot;, message,
+        Console.WriteLine(<span style="color:#e6db74">&#34;handler3: msg = &#39;{0}&#39;, topic = &#39;{1}&#39;&#34;</span>, message,
                           WampEventContext.Current.EventDetails.Topic);
     }             
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: this sample is based on <a href="https://github.com/crossbario/crossbarexamples/tree/master/patternsubs">this</a> Autobahn sample</p>
 </blockquote>
 
@@ -277,18 +253,16 @@ public class Subscriber3
 				<li><strong><a href="#title">Reflection-based Subscriber</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#basic-usage">Basic usage</a></li>
-<li><a href="#supported-features">Supported features</a>
-<ul>
-<li><a href="#wampeventcontext">WampEventContext</a></li>
-<li><a href="#subscription-customization">Subscription customization</a></li>
-<li><a href="#pattern-based-subscriptions">Pattern based subscriptions</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#basic-usage">Basic usage</a></li>
+    <li><a href="#supported-features">Supported features</a>
+      <ul>
+        <li><a href="#wampeventcontext">WampEventContext</a></li>
+        <li><a href="#subscription-customization">Subscription customization</a></li>
+        <li><a href="#pattern-based-subscriptions">Pattern based subscriptions</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -430,6 +404,9 @@ public class Subscriber3
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -597,7 +574,7 @@ public class Subscriber3
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

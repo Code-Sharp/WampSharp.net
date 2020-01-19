@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Transports on WampSharp</title>
+    <title>transports on WampSharp</title>
     <link>https://wampsharp.net/tags/transports/</link>
-    <description>Recent content in Transports on WampSharp</description>
+    <description>Recent content in transports on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
+    <copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Tue, 01 Aug 2017 10:25:07 +0900</lastBuildDate>
     
 	<atom:link href="https://wampsharp.net/tags/transports/index.xml" rel="self" type="application/rss+xml" />
@@ -19,9 +19,8 @@
       
       <guid>https://wampsharp.net/wamp2/router/transports/rawsocket/</guid>
       <description>WampSharp supports the RawSocket transport. It is available through the WampSharp.RawSocket NuGet package.
-Router-side usage IWampHost host = new WampHost(); RawSocketTransport transport = new RawSocketTransport(TcpListener.Create(8080)); host.RegisterTransport(transport, new JTokenJsonBinding());  Client-side usage In order to obtain a RawSocket IWampChannel, you can use the fluent syntax api:
-IWampChannelFactory factory = new WampChannelFactory(); IWampChannel channel = factory.ConnectToRealm(&amp;quot;realm1&amp;quot;) .RawSocketTransport(&amp;quot;127.0.0.1&amp;quot;, 8080) .MsgpackSerialization() .Build();  This fluent-api allows some RawSocket customization features:
-IWampChannelFactory factory = new WampChannelFactory(); IWampChannel channel = factory.</description>
+Router-side usage TcpListener implementation This is a standalone implementation which uses TcpListener. In order to use it, install the WampSharp.RawSocket NuGet package. Usage example:
+IWampHost host = new WampHost();RawSocketTransport transport =new RawSocketTransport(TcpListener.Create(8080));host.RegisterTransport(transport,new JTokenJsonBinding());ASP.NET Core implementation This is an implementation of the RawSocket protocol using Microsoft.AspNetCore.Connections.Abstractions package, which is part of Project Bedrock. This implementation is present in the package WampSharp.</description>
     </item>
     
     <item>
@@ -33,10 +32,10 @@ IWampChannelFactory factory = new WampChannelFactory(); IWampChannel channel = f
       <description>This pages describes the currently available router side WebSockets transports for WampSharp.
 WampSharp.Fleck A Fleck based transport. It is the default transport for WampSharp (DefaultWampHost uses it). Supports .NET Framework 4.0.
 Usage:
-WampHost host = new WampHost(); host.RegisterTransport(new FleckWebSocketTransport(&amp;quot;ws://127.0.0.1:8080/ws&amp;quot;), new JTokenJsonBinding(), new JTokenMsgpackBinding()); host.Open();  Or
-WampHost host = new DefaultWampHost(&amp;quot;ws://127.0.0.1:8080/ws&amp;quot;); host.Open();  WampSharp.Vtortola A transport based on vtortola&amp;rsquo;s WebSocketListener. Supports permessage-deflate.
+WampHost host = new WampHost();host.RegisterTransport(new FleckWebSocketTransport(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;),new JTokenJsonBinding(),new JTokenMsgpackBinding());host.Open();Or
+WampHost host = new DefaultWampHost(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;);host.Open();WampSharp.Vtortola A transport based on vtortola&#39;s WebSocketListener. Supports permessage-deflate.
 Usage:
-WampHost host = new WampHost(); IWampTransport transport = new VtortolaWebSocketTransport (endpoint: new IPEndPoint(IPAddress.</description>
+WampHost host = new WampHost();IWampTransport transport =new VtortolaWebSocketTransport(endpoint: new IPEndPoint(IPAddress.</description>
     </item>
     
   </channel>

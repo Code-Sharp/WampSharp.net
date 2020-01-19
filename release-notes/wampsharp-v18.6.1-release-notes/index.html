@@ -84,63 +84,48 @@
 					<span><time datetime="2018-06-01">June 01, 2018</time></span>
 				</div>
 				<section>
-					
-
-<h2 id="new-features">New features</h2>
-
+					<h2 id="new-features">New features</h2>
 <h3 id="observeon-extension-method">ObserveOn extension method</h3>
-
 <p>From this version, the <a href="https://wampsharp.net/wamp2/client/wampchannel/#fluent-syntax">client fluent syntax api</a> supports a new <code>ObserverOn</code> method. This method allows you to specify an <a href="http://www.introtorx.com/Content/v1.0.10621.0/15_SchedulingAndThreading.html">IScheduler</a> that WAMP messages will be observed on. This for instance allows to ensure that <a href="https://wampsharp.net/wamp2/roles/callee/reflection-based-callee/">reflection based callee</a> methods or <a href="https://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/">reflection based subscriber</a> event handlers are invoked on the Dispatcher thread.</p>
-
 <p>Usage example:</p>
-
-<pre><code class="language-csharp">IWampChannel channel =
-    channelFactory.ConnectToRealm(&quot;realm1&quot;)
-        .WebSocketTransport(&quot;ws://127.0.0.1:8080/ws&quot;)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">IWampChannel channel =
+    channelFactory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
+        .WebSocketTransport(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>)
         .JsonSerialization()
         .ObserveOn(DispatcherScheduler.Current)
         .Build();
-</code></pre>
-
-<h3 id="rawsocket-ssl-support">RawSocket Ssl support</h3>
-
+</code></pre></div><h3 id="rawsocket-ssl-support">RawSocket Ssl support</h3>
 <p>From this version, RawSocket Ssl security is supported.</p>
-
 <p>The RawSocket fluent api now includes a new extension method called <code>SslConfiguration</code>, which allows you to specify the arguments sent in the <a href="https://docs.microsoft.com/en-us/dotnet/api/system.net.security.sslstream.authenticateasclientasync?view=netframework-4.7.1">AuthenticateAsClientAsync</a> method.</p>
-
 <p>Similarly, the RawSocketTransport constructor now receives as a parameter a <code>ServerSslConfiguration</code> object, which allows you to specify the arguments sent in the <a href="https://docs.microsoft.com/en-us/dotnet/api/system.net.security.sslstream.authenticateasserverasync?view=netframework-4.7.1">AuthenticateAsServerAsync</a> method.</p>
-
-<h3 id="asp-net-core-rawsocket-implementation">ASP.NET Core RawSocket implementation</h3>
-
+<h3 id="aspnet-core-rawsocket-implementation">ASP.NET Core RawSocket implementation</h3>
 <p>This version includes an implementation of the RawSocket protocol using the new <a href="https://www.nuget.org/packages/Microsoft.AspNetCore.Connections.Abstractions/">Microsoft.AspNetCore.Connections.Abstractions</a> package, part of <a href="https://github.com/aspnet/KestrelHttpServer/issues/1980">Project Bedrock</a>. This implementation is present in the package <a href="http://nuget.org/packages/WampSharp.AspNetCore.RawSocket">WampSharp.AspNetCore.RawSocket</a>.</p>
-
 <p>Usage sample:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">using</span> System.Net;
+<span style="color:#66d9ef">using</span> Microsoft.AspNetCore;
+<span style="color:#66d9ef">using</span> Microsoft.AspNetCore.Hosting;
+<span style="color:#66d9ef">using</span> WampSharp.AspNetCore.RawSocket;
+<span style="color:#66d9ef">using</span> WampSharp.Binding;
+<span style="color:#66d9ef">using</span> WampSharp.V2;
 
-<pre><code class="language-csharp">using System.Net;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using WampSharp.AspNetCore.RawSocket;
-using WampSharp.Binding;
-using WampSharp.V2;
-
-public class Program
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
 {
-    public static void Main(string[] args)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
     {
-        WampHost wampHost = new WampHost();
+        WampHost wampHost = <span style="color:#66d9ef">new</span> WampHost();
 
-        JTokenJsonBinding jsonBinding = new JTokenJsonBinding();
+        JTokenJsonBinding jsonBinding = <span style="color:#66d9ef">new</span> JTokenJsonBinding();
 
         IWebHost host =
             WebHost.CreateDefaultBuilder(args)
                    .UseKestrel(options =&gt;
                                {
-                                   options.Listen(IPAddress.Loopback, 8080,
+                                   options.Listen(IPAddress.Loopback, <span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span>,
                                                   builder =&gt;
                                                   {
-                                                      // Configure RawSocket transport
-                                                      wampHost
-                                                          .RegisterTransport(new AspNetCoreRawSocketTransport(builder),
+                                                      <span style="color:#75715e">// Configure RawSocket transport
+</span><span style="color:#75715e"></span>                                                      wampHost
+                                                          .RegisterTransport(<span style="color:#66d9ef">new</span> AspNetCoreRawSocketTransport(builder),
                                                                              jsonBinding);
                                                   });
                                })
@@ -153,53 +138,50 @@ public class Program
         host.Run();
     }
 }
-</code></pre>
+</code></pre></div><p>This allows you to listen to both RawSocket and WebSocket requests on the same port. For example, the following code listens both to WAMP RawSocket requests on port 8080 and to WAMP WebSocket requests on <code>ws://localhost:8080/ws/</code> (using the <a href="http://nuget.org/packages/WampSharp.AspNetCore.WebSockets.Server">WampSharp.AspNetCore.WebSockets.Server</a> package):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">using</span> System.Net;
+<span style="color:#66d9ef">using</span> Microsoft.AspNetCore;
+<span style="color:#66d9ef">using</span> Microsoft.AspNetCore.Builder;
+<span style="color:#66d9ef">using</span> Microsoft.AspNetCore.Hosting;
+<span style="color:#66d9ef">using</span> WampSharp.AspNetCore.RawSocket;
+<span style="color:#66d9ef">using</span> WampSharp.AspNetCore.WebSockets.Server;
+<span style="color:#66d9ef">using</span> WampSharp.Binding;
+<span style="color:#66d9ef">using</span> WampSharp.V2;
 
-<p>This allows you to listen to both RawSocket and WebSocket requests on the same port. For example, the following code listens both to WAMP RawSocket requests on port 8080 and to WAMP WebSocket requests on <code>ws://localhost:8080/ws/</code> (using the <a href="http://nuget.org/packages/WampSharp.AspNetCore.WebSockets.Server">WampSharp.AspNetCore.WebSockets.Server</a> package):</p>
-
-<pre><code class="language-csharp">using System.Net;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using WampSharp.AspNetCore.RawSocket;
-using WampSharp.AspNetCore.WebSockets.Server;
-using WampSharp.Binding;
-using WampSharp.V2;
-
-public class Program
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
 {
-    public static void Main(string[] args)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
     {
-        WampHost wampHost = new WampHost();
+        WampHost wampHost = <span style="color:#66d9ef">new</span> WampHost();
 
-        JTokenJsonBinding jsonBinding = new JTokenJsonBinding();
+        JTokenJsonBinding jsonBinding = <span style="color:#66d9ef">new</span> JTokenJsonBinding();
 
         IWebHost host =
             WebHost.CreateDefaultBuilder(args)
                    .UseKestrel(options =&gt;
                                {
-                                   options.Listen(IPAddress.Loopback, 8080,
+                                   options.Listen(IPAddress.Loopback, <span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span>,
                                                   builder =&gt;
                                                   {
-                                                      // Log all of the http bytes as they are sent and received
-                                                      builder.UseConnectionLogging();
+                                                      <span style="color:#75715e">// Log all of the http bytes as they are sent and received
+</span><span style="color:#75715e"></span>                                                      builder.UseConnectionLogging();
 
-                                                      // Configure RawSocket transport
-                                                      wampHost
-                                                          .RegisterTransport(new AspNetCoreRawSocketTransport(builder),
+                                                      <span style="color:#75715e">// Configure RawSocket transport
+</span><span style="color:#75715e"></span>                                                      wampHost
+                                                          .RegisterTransport(<span style="color:#66d9ef">new</span> AspNetCoreRawSocketTransport(builder),
                                                                              jsonBinding);
                                                   });
                                })
                    .Configure(app =&gt;
                               {
-                                  app.Map(&quot;/ws&quot;,
+                                  app.Map(<span style="color:#e6db74">&#34;/ws&#34;</span>,
                                           builder =&gt;
                                           {
                                               builder.UseWebSockets();
 
-                                              // Configure WebSockets transport
-                                              wampHost.RegisterTransport
-                                                  (new AspNetCoreWebSocketTransport(builder),
+                                              <span style="color:#75715e">// Configure WebSockets transport
+</span><span style="color:#75715e"></span>                                              wampHost.RegisterTransport
+                                                  (<span style="color:#66d9ef">new</span> AspNetCoreWebSocketTransport(builder),
                                                    jsonBinding);
                                           });
 
@@ -210,21 +192,18 @@ public class Program
         host.Run();
     }
 }
-</code></pre>
-
-<h2 id="internal-changes">Internal changes</h2>
-
+</code></pre></div><h2 id="internal-changes">Internal changes</h2>
 <ul>
 <li>WampSharp.RawSocket now uses internally <a href="https://github.com/Microsoft/Microsoft.IO.RecyclableMemoryStream">Microsoft.IO.RecyclableMemoryStream</a> instead of <a href="https://www.nuget.org/packages/System.Buffers/">System.Buffers</a>, in order to manage MemoryStream lifetimes, as the previous implementation used System.Buffers incorrectly.</li>
 <li>Optimizations for router-side pub/sub publications were made for RawSocket implementation. These also affect (minorly) the WampSharp.WebSockets based WebSockets implementations (i.e. ASP.NET, ASP.NET Core, Owin, HttpListener).</li>
 <li>A lot of auto refactoring was done to leverage C# 6.0 and C# 7.0 features. These include expression bodied properties, <code>nameof</code> operator, readonly properties, string interpolation, pattern matching, var out, etc. This should not affect the implementation in any way.</li>
 <li>Most of the dependencies were updated to latest version. As a result
-
 <ul>
 <li><a href="https://www.nuget.org/packages/WampSharp.Fleck">WampSharp.Fleck</a> and <a href="https://www.nuget.org/packages/WampSharp.Default.Router">WampSharp.Default.Router</a> are now available for .NET Standard 2.0.</li>
 <li>The <a href="https://www.nuget.org/packages/System.Reactive">System.Reactive</a> package reference was updated to v4.0.0, which now consists of a single dll, instead of 5 dlls.</li>
 <li>If you need support for a framework variant which is not supported by <a href="http://immo.landwerth.net/netstandard-versions/#">.NET Standard 2.0</a>, please specify it and explain why in <a href="https://github.com/Code-Sharp/WampSharp/issues/252">this thread</a>.</li>
-</ul></li>
+</ul>
+</li>
 </ul>
 
 				</section>
@@ -243,18 +222,16 @@ public class Program
 				<li><strong><a href="#title">WampSharp v18.6.1 release notes</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#new-features">New features</a>
-<ul>
-<li><a href="#observeon-extension-method">ObserveOn extension method</a></li>
-<li><a href="#rawsocket-ssl-support">RawSocket Ssl support</a></li>
-<li><a href="#asp-net-core-rawsocket-implementation">ASP.NET Core RawSocket implementation</a></li>
-</ul></li>
-<li><a href="#internal-changes">Internal changes</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#new-features">New features</a>
+      <ul>
+        <li><a href="#observeon-extension-method">ObserveOn extension method</a></li>
+        <li><a href="#rawsocket-ssl-support">RawSocket Ssl support</a></li>
+        <li><a href="#aspnet-core-rawsocket-implementation">ASP.NET Core RawSocket implementation</a></li>
+      </ul>
+    </li>
+    <li><a href="#internal-changes">Internal changes</a></li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -396,6 +373,9 @@ public class Program
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li>
 						<span class="active">WampSharp v18.6.1 release notes</span>
 						</li>
@@ -563,7 +543,7 @@ public class Program
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

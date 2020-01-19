@@ -84,346 +84,295 @@
 					<span><time datetime="2017-08-08">August 08, 2017</time></span>
 				</div>
 				<section>
-					
-
-<h2 id="new-features">New features</h2>
-
+					<h2 id="new-features">New features</h2>
 <h3 id="new-transports">New transports</h3>
-
 <p>A few router-side WebSockets transports have been added in this version. These include <a href="https://wampsharp.net/wamp2/router/transports/websocket/#wampsharp-httplistener">HttpListener based transport</a>, <a href="https://wampsharp.net/wamp2/router/transports/websocket/#wampsharp-aspnet-websockets-server">ASP.NET based transport</a> and <a href="https://wampsharp.net/wamp2/router/transports/websocket/#wampsharp-owin">Microsoft.Owin based transport</a>.</p>
-
-<h3 id="cancel-interrupt-support">CANCEL/INTERRUPT support</h3>
-
+<h3 id="cancelinterrupt-support">CANCEL/INTERRUPT support</h3>
 <p>CANCEL/INTERRUPT support has been added to <a href="http://crossbar.io/">Crossbar</a> <a href="https://github.com/crossbario/crossbar/pull/1111">recently</a>. From this version, WampSharp supports rpc cancellations, both on router-side and on client-side.</p>
-
-<h4 id="reflection-based-caller-callee-cancellation-support">Reflection based caller/callee cancellation support</h4>
-
+<h4 id="reflection-based-callercallee-cancellation-support">Reflection based caller/callee cancellation support</h4>
 <p>Cancellation is supported for reflection based caller and callee via the <a href="https://msdn.microsoft.com/en-us/library/system.threading.cancellationtoken(v=vs.110).aspx">CancellationToken api</a>. In order to declare a callee procedure which supports cancellation, declare an async method which receives as its last argument a CancellationToken:</p>
-
-<pre><code class="language-csharp">public class CancellableOpService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CancellableOpService</span>
 {
-    [WampProcedure(&quot;com.myapp.cancellableop&quot;)]
-    public async Task&lt;int&gt; CancellableOp(int n, CancellationToken token)
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.cancellableop&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;<span style="color:#66d9ef">int</span>&gt; CancellableOp(<span style="color:#66d9ef">int</span> n, CancellationToken token)
     {
-        for (int i = 0; i &lt; n; i++)
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; n; i++)
         {
-            if (token.IsCancellationRequested)
+            <span style="color:#66d9ef">if</span> (token.IsCancellationRequested)
             {
-                throw new WampRpcCanceledException($&quot; {i * 100.0 / n}% of the work was done&quot;);
+                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampRpcCanceledException(<span style="color:#e6db74">$&#34; {i * 100.0 / n}% of the work was done&#34;</span>);
             }
 
-            await Task.Delay(100, token);
+            <span style="color:#66d9ef">await</span> Task.Delay(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>, token);
         }
 
-        return n;
+        <span style="color:#66d9ef">return</span> n;
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p><strong>Note</strong>: This works also with progressive call results:</p>
-
-<pre><code class="language-csharp">public class LongCancellableOpService
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LongCancellableOpService</span>
 {
-    [WampProgressiveResultProcedure]
-    [WampProcedure(&quot;com.myapp.longop&quot;)]
-    public async Task&lt;int&gt; LongCancellableOp(int n, IProgress&lt;int&gt; progress, CancellationToken token)
+<span style="color:#a6e22e">    [WampProgressiveResultProcedure]</span>
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.longop&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;<span style="color:#66d9ef">int</span>&gt; LongCancellableOp(<span style="color:#66d9ef">int</span> n, IProgress&lt;<span style="color:#66d9ef">int</span>&gt; progress, CancellationToken token)
     {
-        for (int i = 0; i &lt; n; i++)
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; n; i++)
         {
-            if (token.IsCancellationRequested)
+            <span style="color:#66d9ef">if</span> (token.IsCancellationRequested)
             {
-                throw new WampRpcCanceledException($&quot; {i * 100.0 / n}% of the work was done&quot;);
+                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampRpcCanceledException(<span style="color:#e6db74">$&#34; {i * 100.0 / n}% of the work was done&#34;</span>);
             }
 
             progress.Report(i);
-            await Task.Delay(100, token);
+            <span style="color:#66d9ef">await</span> Task.Delay(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>, token);
         }
 
-        return n;
+        <span style="color:#66d9ef">return</span> n;
     }
 }
-</code></pre>
-</blockquote>
-
-<p>In order to cancel a pending rpc invocation from a WAMP caller using the callee proxy api, declare an interface containing an async method receiving a CancellationToken as its last parameter:</p>
-
-<pre><code class="language-csharp">public interface ICancellableOpService
+</code></pre></div><p>In order to cancel a pending rpc invocation from a WAMP caller using the callee proxy api, declare an interface containing an async method receiving a CancellationToken as its last parameter:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> ICancellableOpService
 {
-    [WampProcedure(&quot;com.myapp.cancellableop&quot;)]
-    Task&lt;int&gt; CancellableOp(int n, CancellationToken token);
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.cancellableop&#34;)]</span>
+    Task&lt;<span style="color:#66d9ef">int</span>&gt; CancellableOp(<span style="color:#66d9ef">int</span> n, CancellationToken token);
 }
-</code></pre>
-
-<p>Then pass a CancellationToken to the method call, this is usually done using CancellationTokenSource. Call CancellationTokenSource.Cancel in order to cancel the invocation.</p>
-
-<pre><code class="language-csharp">ICancellableOpService proxy =
+</code></pre></div><p>Then pass a CancellationToken to the method call, this is usually done using CancellationTokenSource. Call CancellationTokenSource.Cancel in order to cancel the invocation.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">ICancellableOpService proxy =
     channel.RealmProxy.Services.GetCalleeProxy&lt;ICancellableOpService&gt;();
 
-CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+CancellationTokenSource cancellationTokenSource = <span style="color:#66d9ef">new</span> CancellationTokenSource();
 
-Task&lt;int&gt; invocationTask = proxy.CancellableOp(4096, cancellationTokenSource.Token);
+Task&lt;<span style="color:#66d9ef">int</span>&gt; invocationTask = proxy.CancellableOp(<span style="color:#ae81ff">4</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">9</span><span style="color:#ae81ff">6</span>, cancellationTokenSource.Token);
 
-// Cancel the operation
-cancellationTokenSource.Cancel();
+<span style="color:#75715e">// Cancel the operation
+</span><span style="color:#75715e"></span>cancellationTokenSource.Cancel();
 
-await invocationTask.ConfigureAwait(false);
-</code></pre>
-
-<blockquote>
+<span style="color:#66d9ef">await</span> invocationTask.ConfigureAwait(<span style="color:#66d9ef">false</span>);
+</code></pre></div><blockquote>
 <p><strong>Note</strong>: This works also with progressive call results:</p>
-
-<pre><code class="language-csharp">public interface ILongCancellableOpService
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> ILongCancellableOpService
 {
-    [WampProcedure(&quot;com.myapp.cancellableop&quot;)]
-    Task&lt;int&gt; LongCancellableOp(int n, IProgress&lt;int&gt; progress, CancellationToken token);
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.cancellableop&#34;)]</span>
+    Task&lt;<span style="color:#66d9ef">int</span>&gt; LongCancellableOp(<span style="color:#66d9ef">int</span> n, IProgress&lt;<span style="color:#66d9ef">int</span>&gt; progress, CancellationToken token);
 }
-</code></pre>
-
+</code></pre></div><blockquote>
 <p>Cancellation:</p>
-
-<pre><code class="language-csharp">ILongCancellableOpService proxy =
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">ILongCancellableOpService proxy =
     channel.RealmProxy.Services.GetCalleeProxy&lt;ILongCancellableOpService&gt;();
 
-CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+CancellationTokenSource cancellationTokenSource = <span style="color:#66d9ef">new</span> CancellationTokenSource();
 
-Task&lt;int&gt; invocationTask = proxy.LongCancellableOp(4096, new MyProgress(), cancellationTokenSource.Token);
+Task&lt;<span style="color:#66d9ef">int</span>&gt; invocationTask = proxy.LongCancellableOp(<span style="color:#ae81ff">4</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">9</span><span style="color:#ae81ff">6</span>, <span style="color:#66d9ef">new</span> MyProgress(), cancellationTokenSource.Token);
 
-// Cancel the operation
-cancellationTokenSource.Cancel();
+<span style="color:#75715e">// Cancel the operation
+</span><span style="color:#75715e"></span>cancellationTokenSource.Cancel();
 
-await invocationTask.ConfigureAwait(false);
-</code></pre>
-</blockquote>
-
-<h3 id="subscriber-authid-authrole-based-black-white-listing-issue-119-https-github-com-code-sharp-wampsharp-issues-119">Subscriber authid/authrole based black/white-listing (<a href="https://github.com/Code-Sharp/WampSharp/issues/119">Issue #119</a>)</h3>
-
+<span style="color:#66d9ef">await</span> invocationTask.ConfigureAwait(<span style="color:#66d9ef">false</span>);
+</code></pre></div><h3 id="subscriber-authidauthrole-based-blackwhite-listing-issue-119httpsgithubcomcode-sharpwampsharpissues119">Subscriber authid/authrole based black/white-listing (<a href="https://github.com/Code-Sharp/WampSharp/issues/119">Issue #119</a>)</h3>
 <p>From this version, <a href="http://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#rfc.section.14.4.1.3">subscriber authid/authrole based black/white-listing</a> is supported.</p>
-
 <p>Usage example:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#75715e">// Alice
+</span><span style="color:#75715e"></span>IWampTopicProxy aliceHeartBeat =
+    aliceChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style="color:#e6db74">&#34;public.heartbeat.alice&#34;</span>);
 
-<pre><code class="language-csharp">// Alice
-IWampTopicProxy aliceHeartBeat =
-    aliceChannel.RealmProxy.TopicContainer.GetTopicByUri(&quot;public.heartbeat.alice&quot;);
+aliceHeartBeat.Publish(<span style="color:#66d9ef">new</span> PublishOptions() { ExcludeMe = <span style="color:#66d9ef">false</span>, ExcludeAuthenticationIds = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">string</span>[] { <span style="color:#e6db74">&#34;bob&#34;</span> } }, <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] { <span style="color:#e6db74">&#34;From C#&#34;</span> });
 
-aliceHeartBeat.Publish(new PublishOptions() { ExcludeMe = false, ExcludeAuthenticationIds = new string[] { &quot;bob&quot; } }, new object[] { &quot;From C#&quot; });
+<span style="color:#75715e">// Bob
+</span><span style="color:#75715e"></span>IWampTopicProxy bobHeartBeat =
+    bobChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style="color:#e6db74">&#34;public.heartbeat.bob&#34;</span>);
 
-// Bob
-IWampTopicProxy bobHeartBeat =
-    bobChannel.RealmProxy.TopicContainer.GetTopicByUri(&quot;public.heartbeat.bob&quot;);
+bobHeartBeat.Publish(<span style="color:#66d9ef">new</span> PublishOptions() { ExcludeAuthenticationRoles = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">string</span>[] { <span style="color:#e6db74">&#34;beta&#34;</span> } }, <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] { <span style="color:#e6db74">&#34;From C#&#34;</span> });
 
-bobHeartBeat.Publish(new PublishOptions() { ExcludeAuthenticationRoles = new string[] { &quot;beta&quot; } }, new object[] { &quot;From C#&quot; });
+<span style="color:#75715e">// Carol
+</span><span style="color:#75715e"></span>IWampTopicProxy carolHeartBeat =
+    carolChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style="color:#e6db74">&#34;public.heartbeat.carol&#34;</span>);
 
-// Carol
-IWampTopicProxy carolHeartBeat =
-    carolChannel.RealmProxy.TopicContainer.GetTopicByUri(&quot;public.heartbeat.carol&quot;);
+carolHeartBeat.Publish(<span style="color:#66d9ef">new</span> PublishOptions(), <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] { <span style="color:#e6db74">&#34;From C#&#34;</span> });
 
-carolHeartBeat.Publish(new PublishOptions(), new object[] { &quot;From C#&quot; });
+<span style="color:#75715e">// Dave
+</span><span style="color:#75715e"></span>IWampTopicProxy daveHeartBeat =
+    daveChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style="color:#e6db74">&#34;public.heartbeat.dave&#34;</span>);
 
-// Dave
-IWampTopicProxy daveHeartBeat =
-    daveChannel.RealmProxy.TopicContainer.GetTopicByUri(&quot;public.heartbeat.dave&quot;);
+daveHeartBeat.Publish(<span style="color:#66d9ef">new</span> PublishOptions() { ExcludeAuthenticationIds = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">string</span>[] { <span style="color:#e6db74">&#34;alice&#34;</span>, <span style="color:#e6db74">&#34;bob&#34;</span> } }, <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] { <span style="color:#e6db74">&#34;From C#&#34;</span> });
 
-daveHeartBeat.Publish(new PublishOptions() { ExcludeAuthenticationIds = new string[] { &quot;alice&quot;, &quot;bob&quot; } }, new object[] { &quot;From C#&quot; });
+<span style="color:#75715e">// Erin
+</span><span style="color:#75715e"></span>IWampTopicProxy erinHeartBeat =
+    erinChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style="color:#e6db74">&#34;public.heartbeat.erin&#34;</span>);
 
-// Erin
-IWampTopicProxy erinHeartBeat =
-    erinChannel.RealmProxy.TopicContainer.GetTopicByUri(&quot;public.heartbeat.erin&quot;);
-
-erinHeartBeat.Publish(new PublishOptions() { ExcludeMe = false, EligibleAuthenticationIds = new string[] { &quot;alice&quot;, &quot;bob&quot;, &quot;dave&quot; } }, new object[] { &quot;From C#&quot; });
-erinHeartBeat.Publish(new PublishOptions() { ExcludeMe = false, EligibleAuthenticationRoles = new string[] { &quot;beta&quot; } }, new object[] { &quot;From C#&quot; });
-</code></pre>
-
-<blockquote>
+erinHeartBeat.Publish(<span style="color:#66d9ef">new</span> PublishOptions() { ExcludeMe = <span style="color:#66d9ef">false</span>, EligibleAuthenticationIds = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">string</span>[] { <span style="color:#e6db74">&#34;alice&#34;</span>, <span style="color:#e6db74">&#34;bob&#34;</span>, <span style="color:#e6db74">&#34;dave&#34;</span> } }, <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] { <span style="color:#e6db74">&#34;From C#&#34;</span> });
+erinHeartBeat.Publish(<span style="color:#66d9ef">new</span> PublishOptions() { ExcludeMe = <span style="color:#66d9ef">false</span>, EligibleAuthenticationRoles = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">string</span>[] { <span style="color:#e6db74">&#34;beta&#34;</span> } }, <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] { <span style="color:#e6db74">&#34;From C#&#34;</span> });
+</code></pre></div><blockquote>
 <p>The sample code is based on <a href="https://github.com/crossbario/crossbar-examples/tree/db85ad1b7f517d5ab46bf239559fa9155e599817/exclude_subscribers">this Crossbar example</a>.</p>
 </blockquote>
-
 <h3 id="testament-service">Testament service</h3>
-
 <p>From this version, the <a href="http://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#rfc.section.14.4.11">Testament feature</a> is supported.</p>
-
 <p>This feature allows a client to request the router to publish some predefined events when the client disconnects.</p>
-
 <p>In order to enable it from router-side, call HostTestamentService extension method of the relevant realm (this is similiar to the <a href="https://wampsharp.net/wamp2/meta-api-service/#exposing-meta-api">Router-side meta-api usage</a>):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">DefaultWampHost host = <span style="color:#66d9ef">new</span> DefaultWampHost(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>);
 
-<pre><code class="language-csharp">DefaultWampHost host = new DefaultWampHost(&quot;ws://127.0.0.1:8080/ws&quot;);
-
-IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&quot;realm1&quot;);
+IWampHostedRealm realm = host.RealmContainer.GetRealmByName(<span style="color:#e6db74">&#34;realm1&#34;</span>);
 
 IDisposable disposable = realm.HostTestamentService();
 
-// Uncomment to unregister the Testament service. 
-// disposable.Dispose(); 
-
+<span style="color:#75715e">// Uncomment to unregister the Testament service. 
+</span><span style="color:#75715e"></span><span style="color:#75715e">// disposable.Dispose(); 
+</span><span style="color:#75715e"></span>
 host.Open();
-</code></pre>
-
-<p>In order to consume the Testament service, one can define its contract and consume it using the CalleeProxy method. Another option is to use the GetTestamentServiceProxy extension method of IWampRealmProxy which returns such a proxy:</p>
-
-<pre><code class="language-csharp">private static async Task Run()
+</code></pre></div><p>In order to consume the Testament service, one can define its contract and consume it using the CalleeProxy method. Another option is to use the GetTestamentServiceProxy extension method of IWampRealmProxy which returns such a proxy:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    WampChannelFactory channelFactory = new WampChannelFactory();
+    WampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> WampChannelFactory();
 
     IWampChannel channel =
-        channelFactory.ConnectToRealm(&quot;realm1&quot;)
-                      .WebSocketTransport(&quot;ws://127.0.0.1:8080/ws&quot;)
+        channelFactory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
+                      .WebSocketTransport(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>)
                       .JsonSerialization()
                       .Build();
 
-    long? sessionId = null;
+    <span style="color:#66d9ef">long?</span> sessionId = <span style="color:#66d9ef">null</span>;
 
     channel.RealmProxy.Monitor.ConnectionEstablished += (sender, args) =&gt; { sessionId = args.SessionId; }; 
 
-    await channel.Open().ConfigureAwait(false);
+    <span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
     IWampTestamentServiceProxy proxy = channel.RealmProxy.GetTestamentServiceProxy();
 
-    string testamentTopic = &quot;com.example.testament&quot;;
+    <span style="color:#66d9ef">string</span> testamentTopic = <span style="color:#e6db74">&#34;com.example.testament&#34;</span>;
 
-    for (int i = 0; i &lt; 5; ++i)
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; <span style="color:#ae81ff">5</span>; ++i)
     {
-        object[] testamentArgs = new object[] {&quot;this is my testament!&quot;};
+        <span style="color:#66d9ef">object</span>[] testamentArgs = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] {<span style="color:#e6db74">&#34;this is my testament!&#34;</span>};
 
-        Dictionary&lt;string, object&gt; testamentKwArgs =
-            new Dictionary&lt;string, object&gt; {{&quot;foo&quot;, i}, {&quot;bar&quot;, &quot;baz&quot;}, {&quot;sess&quot;, sessionId}};
+        Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">object</span>&gt; testamentKwArgs =
+            <span style="color:#66d9ef">new</span> Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">object</span>&gt; {{<span style="color:#e6db74">&#34;foo&#34;</span>, i}, {<span style="color:#e6db74">&#34;bar&#34;</span>, <span style="color:#e6db74">&#34;baz&#34;</span>}, {<span style="color:#e6db74">&#34;sess&#34;</span>, sessionId}};
 
-        try
+        <span style="color:#66d9ef">try</span>
         {
-            await proxy.AddTestamentAsync(testamentTopic, testamentArgs, testamentKwArgs)
-                       .ConfigureAwait(false);
+            <span style="color:#66d9ef">await</span> proxy.AddTestamentAsync(testamentTopic, testamentArgs, testamentKwArgs)
+                       .ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-            Console.WriteLine(&quot;testament added&quot;);
+            Console.WriteLine(<span style="color:#e6db74">&#34;testament added&#34;</span>);
         }
-        catch (Exception ex)
+        <span style="color:#66d9ef">catch</span> (Exception ex)
         {
-            Console.WriteLine(&quot;adding testament failed! &quot; + ex);
+            Console.WriteLine(<span style="color:#e6db74">&#34;adding testament failed! &#34;</span> + ex);
         }
     }
 
-    Console.WriteLine(@&quot;Press any key to close channel. 5 events should be published to &quot;&quot;com.example.testament&quot;&quot;&quot;);
+    Console.WriteLine(<span style="color:#e6db74">@&#34;Press any key to close channel. 5 events should be published to &#34;&#34;com.example.testament&#34;&#34;&#34;</span>);
     Console.ReadKey();
     channel.Close();
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>This sample is based on this <a href="https://github.com/crossbario/crossbar-examples/tree/240c1f015990a859683a74de40e51a9f9ab3b5f9/pubsub/testament">Crossbar example</a>.</p>
 </blockquote>
-
 <h3 id="event-retention-support">Event Retention support</h3>
-
 <p>From this version WampSharp supports <a href="https://github.com/wamp-proto/wamp-proto/blob/da34d9bd833beeb6f9cc8bc89faf8138d710aa78/rfc/text/advanced/ap_pubsub_event_retention.md">Event Retention</a>, both on router-side and on client-side. This feature allows new subscribers of a given topic to receive upon subscribe the lastest retained event published to the topic before they subscribed to it.</p>
-
 <p>A subscriber can indicate that it is interested in getting the retained event by specifying <code>GetRetained = true</code> in the SubscribeOptions argument.</p>
-
 <p>A publisher can indicate that it is interested in retaining a publication by specifying <code>Retain = true</code> in the PublisherOptions argument.</p>
-
 <p>An example for a subscription which requests getting a retained event (Using <a href="https://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/">Reflection-based Subscriber</a>):</p>
-
-<pre><code class="language-csharp">public class MySubscriber
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MySubscriber</span>
 {
-    [WampTopic(&quot;com.example.topic1&quot;)]
-    public void OnCounter(int counter)
+<span style="color:#a6e22e">    [WampTopic(&#34;com.example.topic1&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> OnCounter(<span style="color:#66d9ef">int</span> counter)
     {
         EventDetails details = WampEventContext.Current.EventDetails;
 
-        if (details.Retained == true)
+        <span style="color:#66d9ef">if</span> (details.Retained == <span style="color:#66d9ef">true</span>)
         {
-            Console.WriteLine(&quot;RETAINED event received! &quot; + counter);
+            Console.WriteLine(<span style="color:#e6db74">&#34;RETAINED event received! &#34;</span> + counter);
         }
-        else
+        <span style="color:#66d9ef">else</span>
         {
-            Console.WriteLine(&quot;regular event received &quot; + counter);
+            Console.WriteLine(<span style="color:#e6db74">&#34;regular event received &#34;</span> + counter);
         }
     }
 }
 
-private static async Task Run()
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    WampChannelFactory channelFactory = new WampChannelFactory();
+    WampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> WampChannelFactory();
 
     IWampChannel channel =
-        channelFactory.ConnectToRealm(&quot;realm1&quot;)
-                      .WebSocketTransport(&quot;ws://127.0.0.1:8080/ws&quot;)
+        channelFactory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
+                      .WebSocketTransport(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>)
                       .JsonSerialization()
                       .Build();
 
-    await channel.Open().ConfigureAwait(false);
+    <span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-    try
+    <span style="color:#66d9ef">try</span>
     {
         IAsyncDisposable disposable =
-            await channel.RealmProxy.Services.RegisterSubscriber(new MySubscriber(),
-                                                                 new SubscriberRegistrationInterceptor(
-                                                                     new SubscribeOptions()
+            <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterSubscriber(<span style="color:#66d9ef">new</span> MySubscriber(),
+                                                                 <span style="color:#66d9ef">new</span> SubscriberRegistrationInterceptor(
+                                                                     <span style="color:#66d9ef">new</span> SubscribeOptions()
                                                                      {
-                                                                         GetRetained = true
+                                                                         GetRetained = <span style="color:#66d9ef">true</span>
                                                                      }))
-                         .ConfigureAwait(false);
+                         .ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-        Console.WriteLine(&quot;subscribed successfully&quot;);
+        Console.WriteLine(<span style="color:#e6db74">&#34;subscribed successfully&#34;</span>);
     }
-    catch (Exception ex)
+    <span style="color:#66d9ef">catch</span> (Exception ex)
     {
-        Console.WriteLine(&quot;failed to subscribed: &quot; + ex);
-        throw;
+        Console.WriteLine(<span style="color:#e6db74">&#34;failed to subscribed: &#34;</span> + ex);
+        <span style="color:#66d9ef">throw</span>;
     }
 }
-</code></pre>
-
-<p>An example for a publisher which publishes retained events (Using <a href="https://wampsharp.net/wamp2/roles/publisher/reflection-based-publisher/">Reflection-based Publisher</a>):</p>
-
-<pre><code class="language-csharp">public class MyPublisher
+</code></pre></div><p>An example for a publisher which publishes retained events (Using <a href="https://wampsharp.net/wamp2/roles/publisher/reflection-based-publisher/">Reflection-based Publisher</a>):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyPublisher</span>
 {
-    public MyPublisher()
+    <span style="color:#66d9ef">public</span> MyPublisher()
     {
-        IObservable&lt;long&gt; timer =
-            Observable.Timer(TimeSpan.FromMilliseconds(0),
-                             TimeSpan.FromMilliseconds(2000));
+        IObservable&lt;<span style="color:#66d9ef">long</span>&gt; timer =
+            Observable.Timer(TimeSpan.FromMilliseconds(<span style="color:#ae81ff">0</span>),
+                             TimeSpan.FromMilliseconds(<span style="color:#ae81ff">2</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>));
 
         timer.Select((x, i) =&gt; i)
              .Subscribe(i =&gt; OnCounter(i));
     }
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [WampTopic(&#34;com.example.topic1&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">event</span> Action&lt;<span style="color:#66d9ef">int</span>&gt; Counter;
 
-    [WampTopic(&quot;com.example.topic1&quot;)]
-    public event Action&lt;int&gt; Counter;
-
-    protected virtual void OnCounter(int obj)
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> OnCounter(<span style="color:#66d9ef">int</span> obj)
     {
         Counter?.Invoke(obj);
     }
 }
 
-private static async Task Run()
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    WampChannelFactory channelFactory = new WampChannelFactory();
+    WampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> WampChannelFactory();
 
     IWampChannel channel =
-        channelFactory.ConnectToRealm(&quot;realm1&quot;)
-                      .WebSocketTransport(&quot;ws://127.0.0.1:8080/ws&quot;)
+        channelFactory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
+                      .WebSocketTransport(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>)
                       .JsonSerialization()
                       .Build();
 
-    await channel.Open().ConfigureAwait(false);
+    <span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
-    channel.RealmProxy.Services.RegisterPublisher(new MyPublisher(),
-        new PublisherRegistrationInterceptor(new PublishOptions(){Retain = true}));
+    channel.RealmProxy.Services.RegisterPublisher(<span style="color:#66d9ef">new</span> MyPublisher(),
+        <span style="color:#66d9ef">new</span> PublisherRegistrationInterceptor(<span style="color:#66d9ef">new</span> PublishOptions(){Retain = <span style="color:#66d9ef">true</span>}));
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p><strong>Note</strong>: These samples are based on this <a href="https://github.com/crossbario/crossbar-examples/tree/4d498d72ecc3d46a35f146c7c9244d5319cf7cb5/pubsub/retained">Crossbar example</a>.</p>
-
+</blockquote>
+<blockquote>
 <p><strong>Note</strong>: These samples only demonstrate the reflection-based api, but this also works with other overloads receiving SubscribeOptions/PublishOptions</p>
 </blockquote>
-
-<h2 id="internal-breaking-changes">Internal/Breaking changes</h2>
-
+<h2 id="internalbreaking-changes">Internal/Breaking changes</h2>
 <ul>
-<li>In order to support CANCEL/INTERRUPT, <code>IWampRpcOperation</code>&rsquo;s <code>Invoke</code> methods now return <code>IWampCancellableInvocation</code>. If you don&rsquo;t want to support cancellation, you can simply return <code>null</code> from these methods.</li>
+<li>In order to support CANCEL/INTERRUPT, <code>IWampRpcOperation</code>'s <code>Invoke</code> methods now return <code>IWampCancellableInvocation</code>. If you don't want to support cancellation, you can simply return <code>null</code> from these methods.</li>
 <li>The following properties of <code>InvocationDetails</code> have been removed: <code>AuthenticationRole</code>, <code>AuthenticationId</code>, <code>AuthenticationMethod</code>. Instead, the following properties are available: <code>CallerAuthenticationRole</code>, <code>CallerAuthenticationId</code>. Similarly, the following properties of <code>EventDetails</code> have been removed: <code>AuthenticationRole</code>, <code>AuthenticationId</code>, <code>AuthenticationMethod</code>. Instead, the following properties are available: <code>PublisherAuthenticationRole</code>, <code>PublisherAuthenticationId</code>.
 This has been done in order to make WampSharp compatible with the <a href="https://github.com/wamp-proto/wamp-proto/issues/57#issuecomment-234710359">recent changes</a> done in Crossbar and Autobahn variants.</li>
-<li>Publishing to a topic having no subscribers no longer throws an exception and no longer sends a publish error to the publisher if the latter has requested publication acknowledgement. This is also Crossbar&rsquo;s behavior regarding topics without subscribers. This change also resolves <a href="https://github.com/Code-Sharp/WampSharp/issues/192">Issue #192</a> implicitly.</li>
+<li>Publishing to a topic having no subscribers no longer throws an exception and no longer sends a publish error to the publisher if the latter has requested publication acknowledgement. This is also Crossbar's behavior regarding topics without subscribers. This change also resolves <a href="https://github.com/Code-Sharp/WampSharp/issues/192">Issue #192</a> implicitly.</li>
 <li><a href="https://github.com/damianh/LibLog/">LibLog</a> has been modified with some performance optimizations (see Pull Requests <a href="https://github.com/damianh/LibLog/pull/140">#140</a> <a href="https://github.com/damianh/LibLog/pull/141">#141</a>).</li>
 </ul>
 
@@ -443,23 +392,18 @@ This has been done in order to make WampSharp compatible with the <a href="https
 				<li><strong><a href="#title">WampSharp v1.2.6.41-beta release notes</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#new-features">New features</a>
-<ul>
-<li><a href="#new-transports">New transports</a></li>
-<li><a href="#cancel-interrupt-support">CANCEL/INTERRUPT support</a>
-<ul>
-<li><a href="#reflection-based-caller-callee-cancellation-support">Reflection based caller/callee cancellation support</a></li>
-</ul></li>
-<li><a href="#subscriber-authid-authrole-based-black-white-listing-issue-119-https-github-com-code-sharp-wampsharp-issues-119">Subscriber authid/authrole based black/white-listing (<a href="https://github.com/Code-Sharp/WampSharp/issues/119">Issue #119</a>)</a></li>
-<li><a href="#testament-service">Testament service</a></li>
-<li><a href="#event-retention-support">Event Retention support</a></li>
-</ul></li>
-<li><a href="#internal-breaking-changes">Internal/Breaking changes</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#new-features">New features</a>
+      <ul>
+        <li><a href="#new-transports">New transports</a></li>
+        <li><a href="#cancelinterrupt-support">CANCEL/INTERRUPT support</a></li>
+        <li><a href="#subscriber-authidauthrole-based-blackwhite-listing-issue-119httpsgithubcomcode-sharpwampsharpissues119">Subscriber authid/authrole based black/white-listing (Issue #119)</a></li>
+        <li><a href="#testament-service">Testament service</a></li>
+        <li><a href="#event-retention-support">Event Retention support</a></li>
+      </ul>
+    </li>
+    <li><a href="#internalbreaking-changes">Internal/Breaking changes</a></li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -601,6 +545,9 @@ This has been done in order to make WampSharp compatible with the <a href="https
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -768,7 +715,7 @@ This has been done in order to make WampSharp compatible with the <a href="https
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

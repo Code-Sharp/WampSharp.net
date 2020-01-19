@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Release-notes on WampSharp</title>
@@ -6,11 +6,22 @@
     <description>Recent content in Release-notes on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
-    <lastBuildDate>Fri, 01 Jun 2018 09:51:52 -0400</lastBuildDate>
+    <copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright>
+    <lastBuildDate>Sat, 18 Jan 2020 00:12:00 +0000</lastBuildDate>
     
 	<atom:link href="https://wampsharp.net/release-notes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>WampSharp v20.1.1 release notes</title>
+      <link>https://wampsharp.net/release-notes/wampsharp-v20.1.1-release-notes/</link>
+      <pubDate>Sat, 18 Jan 2020 00:12:00 +0000</pubDate>
+      
+      <guid>https://wampsharp.net/release-notes/wampsharp-v20.1.1-release-notes/</guid>
+      <description>Breaking changes Supported frameworks From this version, WampSharp targets only the following .NET variants: net461, netstandard2.0, netstandard2.1. Support for the following variants has been dropped: net40, net45, netstandard1.3, pcl, uap.
+.NET Standard 2.0/2.1 is the future for .NET libraries and every major .NET variant will implement .NET Standard. For instance, UWP implements .NET Standard 2.0.
+Removed packages  The package WampSharp.Windows is removed - UWP targets should now use WampSharp.WebSockets. The package WampSharp.</description>
+    </item>
     
     <item>
       <title>WampSharp v18.6.1 release notes</title>
@@ -20,7 +31,7 @@
       <guid>https://wampsharp.net/release-notes/wampsharp-v18.6.1-release-notes/</guid>
       <description>New features ObserveOn extension method From this version, the client fluent syntax api supports a new ObserverOn method. This method allows you to specify an IScheduler that WAMP messages will be observed on. This for instance allows to ensure that reflection based callee methods or reflection based subscriber event handlers are invoked on the Dispatcher thread.
 Usage example:
-IWampChannel channel = channelFactory.ConnectToRealm(&amp;quot;realm1&amp;quot;) .WebSocketTransport(&amp;quot;ws://127.0.0.1:8080/ws&amp;quot;) .JsonSerialization() .ObserveOn(DispatcherScheduler.Current) .Build();  RawSocket Ssl support From this version, RawSocket Ssl security is supported.</description>
+IWampChannel channel =channelFactory.ConnectToRealm(&amp;#34;realm1&amp;#34;).WebSocketTransport(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;).JsonSerialization().ObserveOn(DispatcherScheduler.Current).Build();RawSocket Ssl support From this version, RawSocket Ssl security is supported.</description>
     </item>
     
     <item>
@@ -52,7 +63,7 @@ Reflection based caller/callee cancellation support Cancellation is supported fo
       
       <guid>https://wampsharp.net/release-notes/wampsharp-v1.2.4.18-beta-release-notes/</guid>
       <description>New features .NET Standard support This verion mainly focuses on .NET Standard support. WampSharp now supports .NET Standard 1.3 which means that it is compatible with .NET Framework 4.6, NET Core, Universal Windows Platform 10 and Mono/Xamarin platforms.
-Only WAMPv2 is currenly supported (WAMPv1 hasn&amp;rsquo;t been ported yet). Both Json and MsgPack support is available. RawSocket support has also been ported.
+Only WAMPv2 is currenly supported (WAMPv1 hasn&#39;t been ported yet). Both Json and MsgPack support is available. RawSocket support has also been ported.
 Regarding WebSockets:
  Client-side support is available: it works via a new implementation of WampConnection which is based on System.</description>
     </item>
@@ -85,8 +96,8 @@ WampChannelFactory fluent syntax This version introduces new api to obtain a IWa
       <pubDate>Sat, 28 Feb 2015 10:25:07 +0900</pubDate>
       
       <guid>https://wampsharp.net/release-notes/wampsharp-v1.2.1.6-beta-release-notes/</guid>
-      <description>Api changes IAsyncDisposable A new type called IAsyncDisposable is introduced in the library. It&amp;rsquo;s similar to IDisposable, but returns a Task.
-public interface IAsyncDisposable { Task DisposeAsync(); }  Task&amp;lt;IAsyncDisposable&amp;gt; is returned from some methods:
+      <description>Api changes IAsyncDisposable A new type called IAsyncDisposable is introduced in the library. It&#39;s similar to IDisposable, but returns a Task.
+public interface IAsyncDisposable{Task DisposeAsync();}Task&amp;lt;IAsyncDisposable&amp;gt; is returned from some methods:
  IWampTopicProxy Subscribe method now returns an Task&amp;lt;IAsyncDisposable&amp;gt; instead of Task&amp;lt;IDisposable&amp;gt;, you can call DisposeAsync in order to unsubscribe from the topic. IWampRpcOperationCatalogProxy Register method now returns Task&amp;lt;IAsyncDisposable&amp;gt; instead of Task. Call DisposeAsync to Unregister the procedure from router.</description>
     </item>
     

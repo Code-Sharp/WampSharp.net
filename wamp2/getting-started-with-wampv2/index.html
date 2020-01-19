@@ -84,78 +84,52 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p>Create a new Console Application in Visual Studio.</p>
-
+					<p>Create a new Console Application in Visual Studio.</p>
 <p>Install WampSharp:</p>
-
 <p>Go to Tools -&gt; NuGet Package Manager -&gt; Package Manager Console.</p>
-
 <p>Enter in the Package Manager Console</p>
-
 <blockquote>
 <p>Install-Package WampSharp.Default -Pre</p>
 </blockquote>
-
 <p>Now WampSharp is installed on your project.</p>
-
 <h2 id="about-realms">About realms</h2>
-
 <p>WAMPv2 protocol consists of the idea of realms. A WAMP realm, can be thought as a domain, where uris are mapped to procedures/topics.</p>
-
 <p>WampSharp WAMPv2 api is based on the realm idea. In the following sections we describe how to access realms from router/client code.</p>
-
 <p>Other tutorials describe how to consume WAMP roles from realm api.</p>
-
 <h3 id="getting-started-with-a-wampv2-router">Getting started with a WAMPv2 Router</h3>
-
 <p>In order to Add WAMPv2 router capabilities to your application, create a WampHost:</p>
-
-<pre><code class="language-csharp">const string location = &quot;ws://127.0.0.1:8080/&quot;;
-using (IWampHost host = new DefaultWampHost(location))
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> location = <span style="color:#e6db74">&#34;ws://127.0.0.1:8080/&#34;</span>;
+<span style="color:#66d9ef">using</span> (IWampHost host = <span style="color:#66d9ef">new</span> DefaultWampHost(location))
 {
-    IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&quot;realm1&quot;);
+    IWampHostedRealm realm = host.RealmContainer.GetRealmByName(<span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    // Host WAMP application components
-
+    <span style="color:#75715e">// Host WAMP application components
+</span><span style="color:#75715e"></span>
     host.Open();
 
-    Console.WriteLine(&quot;Server is running on &quot; + location);
+    Console.WriteLine(<span style="color:#e6db74">&#34;Server is running on &#34;</span> + location);
     Console.ReadLine();
 }
-</code></pre>
-
-<p>A WampHost hosts your WAMP application components. It consists of IWampRealms.</p>
-
+</code></pre></div><p>A WampHost hosts your WAMP application components. It consists of IWampRealms.</p>
 <p>IWampRealm is an interface that represents a WAMPv2 realm.</p>
-
-<p>The realms are accessible from the WampHost&rsquo;s RealmContainer property.</p>
-
+<p>The realms are accessible from the WampHost's RealmContainer property.</p>
 <h3 id="getting-started-with-a-wampv2-client">Getting started with a WAMPv2 Client</h3>
+<p>In order to connect to a router's realm, create a WampChannel that connects to the realm.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> location = <span style="color:#e6db74">&#34;ws://127.0.0.1:8080/&#34;</span>;
 
-<p>In order to connect to a router&rsquo;s realm, create a WampChannel that connects to the realm.</p>
+DefaultWampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
-<pre><code class="language-csharp">const string location = &quot;ws://127.0.0.1:8080/&quot;;
-
-DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
-
-IWampChannel channel = channelFactory.CreateJsonChannel(location, &quot;realm1&quot;);
+IWampChannel channel = channelFactory.CreateJsonChannel(location, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
 IWampRealmProxy realmProxy = channel.RealmProxy;
 
-await channel.Open();
+<span style="color:#66d9ef">await</span> channel.Open();
 
-// Host WAMP application components
-
-</code></pre>
-
-<p>A WampChannel represents a session to a WAMPv2 router. It contains a property named RealmProxy which is a IWampRealmProxy, that is a proxy to the router&rsquo;s remote realm.</p>
-
+<span style="color:#75715e">// Host WAMP application components
+</span><span style="color:#75715e"></span>
+</code></pre></div><p>A WampChannel represents a session to a WAMPv2 router. It contains a property named RealmProxy which is a IWampRealmProxy, that is a proxy to the router's remote realm.</p>
 <h2 id="more-tutorials">More tutorials</h2>
-
 <p>See the following tutorials for getting started with a WAMPv2 role:</p>
-
 <ul>
 <li><a href="https://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/">Getting started with Callee</a></li>
 <li><a href="https://wampsharp.net/wamp2/roles/caller/getting-started-with-caller/">Getting started with Caller</a></li>
@@ -179,17 +153,15 @@ await channel.Open();
 				<li><strong><a href="#title">Getting started with WAMPv2</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#about-realms">About realms</a>
-<ul>
-<li><a href="#getting-started-with-a-wampv2-router">Getting started with a WAMPv2 Router</a></li>
-<li><a href="#getting-started-with-a-wampv2-client">Getting started with a WAMPv2 Client</a></li>
-</ul></li>
-<li><a href="#more-tutorials">More tutorials</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#about-realms">About realms</a>
+      <ul>
+        <li><a href="#getting-started-with-a-wampv2-router">Getting started with a WAMPv2 Router</a></li>
+        <li><a href="#getting-started-with-a-wampv2-client">Getting started with a WAMPv2 Client</a></li>
+      </ul>
+    </li>
+    <li><a href="#more-tutorials">More tutorials</a></li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -332,6 +304,9 @@ await channel.Open();
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -498,7 +473,7 @@ await channel.Open();
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

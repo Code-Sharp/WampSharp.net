@@ -84,33 +84,20 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p>WampSharp contains a Pub/Sub mechanism.</p>
-
+					<p>WampSharp contains a Pub/Sub mechanism.</p>
 <h2 id="declaring-topics">Declaring topics</h2>
-
 <p>All WampSharp server-side topics are contained in a WampTopicContainer. This is a property of the DefaultWampHost (called TopicContainer).</p>
-
 <p>There are two types of topics:</p>
-
 <ul>
 <li>Temporary topics - created automatically when a subscriber subscribes to them, deleted when no one is subscribed.</li>
 <li>Persistent topics - created once by the application, never deleted.</li>
 </ul>
-
 <p>In order to subscribe to new created topics, the WampTopicContainer has a TopicCreated event. It also has a TopicRemoved event that allows to subscribe to removed topics.</p>
-
 <p>In order to create a persistent topic, call CreateTopicByUri, and pass true for the persistent parameter.</p>
-
 <h2 id="about-topics">About topics</h2>
-
 <p>Topics are rx Subjects, that means that they are both observable and observers. That means you can both subscribe to them and send them messages.</p>
-
 <p>In order to subscribe to a topic, Use reactive extensions subscribe extension method. This will allow you to be notified about events published to topic.</p>
-
 <p>In order to send messages to a topic, use OnNext method which sends an object to all topic subscribers.</p>
-
 <p>A topic also contains events for notifying when a new subscriber subscribes to a topic and when it leaves.</p>
 
 				</section>
@@ -129,13 +116,10 @@
 				<li><strong><a href="#title">Server PubSub hosting (WAMPv1)</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#declaring-topics">Declaring topics</a></li>
-<li><a href="#about-topics">About topics</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#declaring-topics">Declaring topics</a></li>
+    <li><a href="#about-topics">About topics</a></li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -277,6 +261,9 @@
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -444,7 +431,7 @@
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

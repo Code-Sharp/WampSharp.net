@@ -84,65 +84,54 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p>WampSharp implements WAMP meta-api (i.e. <a href="https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_session_meta_api.md">session meta api</a>, <a href="https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_rpc_registration_meta_api.md">registration meta api</a> and <a href="https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_pubsub_subscription_meta_api.md">subscription meta api</a>). It is possible both to consume WAMP meta-api from a WampSharp client, and to expose it from a WampSharp router.</p>
-
+					<p>WampSharp implements WAMP meta-api (i.e. <a href="https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_session_meta_api.md">session meta api</a>, <a href="https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_rpc_registration_meta_api.md">registration meta api</a> and <a href="https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_pubsub_subscription_meta_api.md">subscription meta api</a>). It is possible both to consume WAMP meta-api from a WampSharp client, and to expose it from a WampSharp router.</p>
 <h2 id="exposing-meta-api">Exposing meta-api</h2>
-
 <p>In order to expose meta-api, you can call an extension method of IWampHostedRealm, named &ldquo;HostMetaApiService&rdquo;. This method returns an IDisposable which you can dispose in order to unregister the meta-api service.</p>
-
 <blockquote>
-<p>Note: it is important to call HostMetaApiService before hosting any other components (callees/subscribers), since otherwise the meta-api service isn&rsquo;t be able to track components registered before it.</p>
+<p>Note: it is important to call HostMetaApiService before hosting any other components (callees/subscribers), since otherwise the meta-api service isn't be able to track components registered before it.</p>
 </blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">DefaultWampHost host = <span style="color:#66d9ef">new</span> DefaultWampHost(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>);
 
-<pre><code class="language-csharp">DefaultWampHost host = new DefaultWampHost(&quot;ws://127.0.0.1:8080/ws&quot;);
-
-IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&quot;realm1&quot;);
+IWampHostedRealm realm = host.RealmContainer.GetRealmByName(<span style="color:#e6db74">&#34;realm1&#34;</span>);
 
 IDisposable disposable = realm.HostMetaApiService();
 
 host.Open();
-</code></pre>
-
-<h2 id="consuming-meta-api">Consuming meta-api</h2>
-
+</code></pre></div><h2 id="consuming-meta-api">Consuming meta-api</h2>
 <p>In order to consume meta-api, you can use declare the WAMP meta-api contracts yourself and consume it with plain WampSharp client-side code. In order to save that amount of work, a client-side api is provided which allows you to consume the meta-api without having to write any contracts yourself. This is api is available via an extension method of IWampRealmProxy which is named &ldquo;GetMetaApiServiceProxy&rdquo;.</p>
-
-<pre><code class="language-csharp">private static async Task Run()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    WampChannelFactory channelFactory = new WampChannelFactory();
+    WampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> WampChannelFactory();
 
     IWampChannel channel =
-        channelFactory.ConnectToRealm(&quot;realm1&quot;)
-                      .WebSocketTransport(&quot;ws://127.0.0.1:8080/ws&quot;)
+        channelFactory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
+                      .WebSocketTransport(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>)
                       .JsonSerialization()
                       .Build();
 
-    await channel.Open().ConfigureAwait(false);
+    <span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
     WampMetaApiServiceProxy proxy = channel.RealmProxy.GetMetaApiServiceProxy();
 
-    long sessionCount = await proxy.CountSessionsAsync();
+    <span style="color:#66d9ef">long</span> sessionCount = <span style="color:#66d9ef">await</span> proxy.CountSessionsAsync();
 
     IAsyncDisposable onCreateDisposable =
-        await proxy.SubscribeTo.Subscription.OnCreate(
+        <span style="color:#66d9ef">await</span> proxy.SubscribeTo.Subscription.OnCreate(
             (id, details) =&gt;
             {
-                Console.WriteLine($&quot;Subscription with id {id} created, topic uri {details.Uri}&quot;);
+                Console.WriteLine(<span style="color:#e6db74">$&#34;Subscription with id {id} created, topic uri {details.Uri}&#34;</span>);
             })
-            .ConfigureAwait(false);
+            .ConfigureAwait(<span style="color:#66d9ef">false</span>);
 
     IAsyncDisposable onJoinDisposable =
-        await proxy.SubscribeTo.Session.OnJoin(
+        <span style="color:#66d9ef">await</span> proxy.SubscribeTo.Session.OnJoin(
             details =&gt;
             {
-                Console.WriteLine($&quot;Session with id {details.Session} joined&quot;);
+                Console.WriteLine(<span style="color:#e6db74">$&#34;Session with id {details.Session} joined&#34;</span>);
             })
-            .ConfigureAwait(false);
+            .ConfigureAwait(<span style="color:#66d9ef">false</span>);
 }
-</code></pre>
-
+</code></pre></div>
 				</section>
 			</article>
 		</main>
@@ -159,13 +148,10 @@ host.Open();
 				<li><strong><a href="#title">Meta-api descriptor service</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#exposing-meta-api">Exposing meta-api</a></li>
-<li><a href="#consuming-meta-api">Consuming meta-api</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#exposing-meta-api">Exposing meta-api</a></li>
+    <li><a href="#consuming-meta-api">Consuming meta-api</a></li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -308,6 +294,9 @@ host.Open();
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -475,7 +464,7 @@ host.Open();
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

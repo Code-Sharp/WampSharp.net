@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Wampcra on WampSharp</title>
+    <title>wampcra on WampSharp</title>
     <link>https://wampsharp.net/tags/wampcra/</link>
-    <description>Recent content in Wampcra on WampSharp</description>
+    <description>Recent content in wampcra on WampSharp</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</copyright>
+    <copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright>
     <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
     
 	<atom:link href="https://wampsharp.net/tags/wampcra/index.xml" rel="self" type="application/rss+xml" />
@@ -19,7 +19,7 @@
       
       <guid>https://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</guid>
       <description>WAMP-CRA client side authentication is supported. In order to use it, instantiate a new instance of WampCraAuthenticator and pass it to the channel factory.
-Example public async Task Run() { DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory(); IWampClientAuthenticator authenticator; if (false) { authenticator = new WampCraClientAuthenticator(authenticationId: &amp;quot;joe&amp;quot;, secret: &amp;quot;secret2&amp;quot;); } else { authenticator = new WampCraClientAuthenticator(authenticationId: &amp;quot;peter&amp;quot;, secret: &amp;quot;secret1&amp;quot;, salt: &amp;quot;salt123&amp;quot;, iterations: 100, keyLen: 16); } IWampChannel channel = channelFactory.CreateJsonChannel(&amp;quot;ws://127.0.0.1:8080/ws&amp;quot;, &amp;quot;realm1&amp;quot;, authenticator); channel.</description>
+Example public async Task Run(){DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();IWampClientAuthenticator authenticator;if (false){authenticator = new WampCraClientAuthenticator(authenticationId: &amp;#34;joe&amp;#34;, secret: &amp;#34;secret2&amp;#34;);}else{authenticator =new WampCraClientAuthenticator(authenticationId: &amp;#34;peter&amp;#34;, secret: &amp;#34;secret1&amp;#34;, salt: &amp;#34;salt123&amp;#34;,iterations: 100, keyLen: 16);}IWampChannel channel =channelFactory.CreateJsonChannel(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;,&amp;#34;realm1&amp;#34;,authenticator);channel.</description>
     </item>
     
     <item>

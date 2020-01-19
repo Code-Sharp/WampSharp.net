@@ -84,651 +84,548 @@
 					<span><time datetime="2015-02-28">February 28, 2015</time></span>
 				</div>
 				<section>
-					
-
-<h2 id="api-changes">Api changes</h2>
-
+					<h2 id="api-changes">Api changes</h2>
 <h3 id="iasyncdisposable">IAsyncDisposable</h3>
-
-<p>A new type called IAsyncDisposable is introduced in the library. It&rsquo;s similar to IDisposable, but returns a Task.</p>
-
-<pre><code class="language-csharp">public interface IAsyncDisposable
+<p>A new type called IAsyncDisposable is introduced in the library. It's similar to IDisposable, but returns a Task.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IAsyncDisposable
 {
     Task DisposeAsync();
 }
-</code></pre>
-
-<p>Task&lt;IAsyncDisposable&gt; is returned from some methods:</p>
-
+</code></pre></div><p>Task&lt;IAsyncDisposable&gt; is returned from some methods:</p>
 <ul>
 <li>IWampTopicProxy Subscribe method now returns an Task&lt;IAsyncDisposable&gt; instead of Task&lt;IDisposable&gt;, you can call DisposeAsync in order to unsubscribe from the topic.</li>
 <li>IWampRpcOperationCatalogProxy Register method now returns Task&lt;IAsyncDisposable&gt; instead of Task. Call DisposeAsync to Unregister the procedure from router.</li>
 <li>IWampRpcOperationCatalogProxy Unregister method has been removed. Use the IAsyncDisposable returned from Register instead.</li>
 <li>IWampRealmServiceProvider Register method now returns a Task&lt;IAsyncDisposable&gt;, call DisposeAsync in order to unregister the callee.</li>
 </ul>
-
-<p>The IAsyncDisposable mentioned above&rsquo;s Task completes when the router sends a UNSUBSCRIBED/UNREGISTERED message corresponding to the sent request.</p>
-
+<p>The IAsyncDisposable mentioned above's Task completes when the router sends a UNSUBSCRIBED/UNREGISTERED message corresponding to the sent request.</p>
 <h3 id="other-changes">Other changes</h3>
-
 <ul>
 <li>SubscriptionRemoveEventArgs renamed to WampSubscriptionRemoveEventArgs.</li>
 <li>WampConnectionBrokenException moved to namespace WampSharp.V2.Core.Contracts.</li>
 </ul>
-
 <h2 id="new-features">New features</h2>
-
-<h3 id="vtortola-websocketlistener-support">vtortola.WebSocketListener support</h3>
-
+<h3 id="vtortolawebsocketlistener-support">vtortola.WebSocketListener support</h3>
 <p>This version has support for <a href="http://www.github.com/vtortola/WebSocketListener">vtortola.WebSocketListener</a>. In order to use it, install the WampSharp.Vtortola package. Then create a WampHost and register the VtortolaWebSocketTransport:</p>
-
-<pre><code class="language-csharp">WampHost host = new WampHost();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">WampHost host = <span style="color:#66d9ef">new</span> WampHost();
 
 IWampTransport transport =
-    new VtortolaWebSocketTransport
-        (endpoint: new IPEndPoint(IPAddress.Parse(&quot;127.0.0.1&quot;), 8080),
-            perMessageDeflate: true);
+    <span style="color:#66d9ef">new</span> VtortolaWebSocketTransport
+        (endpoint: <span style="color:#66d9ef">new</span> IPEndPoint(IPAddress.Parse(<span style="color:#e6db74">&#34;127.0.0.1&#34;</span>), <span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span>),
+            perMessageDeflate: <span style="color:#66d9ef">true</span>);
 
 host.RegisterTransport(transport,
-    new JTokenJsonBinding(),
-    new JTokenMsgpackBinding());
+    <span style="color:#66d9ef">new</span> JTokenJsonBinding(),
+    <span style="color:#66d9ef">new</span> JTokenMsgpackBinding());
 
 host.Open();
-</code></pre>
-
-<p>This listener supports <a href="http://tools.ietf.org/html/draft-ietf-hybi-permessage-compression-17#section-8">per message deflate</a>. To enable it, pass perMessageDeflate = true, in the transport&rsquo;s ctor.</p>
-
+</code></pre></div><p>This listener supports <a href="http://tools.ietf.org/html/draft-ietf-hybi-permessage-compression-17#section-8">per message deflate</a>. To enable it, pass perMessageDeflate = true, in the transport's ctor.</p>
 <h3 id="rawsocket-transport-support">RawSocket transport support</h3>
-
 <p>This version has router-side only support for <a href="https://github.com/wamp-proto/wamp-proto/blob/BEFORE_REPLACE_SPEC_WITH_RFC/spec/advanced.md#rawsocket-transport">RawSocket transport</a>. In order to use it, install the WampSharp.RawSocket package. Then create a WampHost and register the RawSocketTransport.
 Example:</p>
-
-<pre><code class="language-csharp">WampHost host = new WampHost();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">WampHost host = <span style="color:#66d9ef">new</span> WampHost();
 
 IWampTransport transport =
-    new RawSocketTransport(&quot;127.0.0.1&quot;, 8080);
+    <span style="color:#66d9ef">new</span> RawSocketTransport(<span style="color:#e6db74">&#34;127.0.0.1&#34;</span>, <span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span>);
 
 host.RegisterTransport(transport,
-    new JTokenMsgpackBinding());
+    <span style="color:#66d9ef">new</span> JTokenMsgpackBinding());
 
 host.Open();
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: There are a few issues currently with the SuperSocket dependency. After Installing WampSharp.RawSocketTransport, add manually a reference of SuperSocket.SocketEngine.dll (located in $(SolutionDir)\packages\SuperSocket\SuperSocket.SocketEngine.dll) to your project.</p>
-
+</blockquote>
+<blockquote>
 <p>Note: The current implemented version of RawSocket protocol is the original version (before revision). This is the version also implemented by AutobahnPython/AutobahnCpp clients.</p>
 </blockquote>
-
 <h3 id="progressive-calls">Progressive calls</h3>
-
 <p>From this version, progressive calls are supported.
-In order to use progressive calls as a Caller, declare in your callee service a [WampProcedure] method having a [WampProgressiveCall] attribute and a IProgress&lt;T&gt; as the last parameter.
-&gt; Note that the method return type should be Task&lt;T&gt; where this is the same T as in the IProgress&lt;T&gt; of the last parameter.</p>
-
+In order to use progressive calls as a Caller, declare in your callee service a [WampProcedure] method having a [WampProgressiveCall] attribute and a IProgress&lt;T&gt; as the last parameter.</p>
+<blockquote>
+<p>Note that the method return type should be Task&lt;T&gt; where this is the same T as in the IProgress&lt;T&gt; of the last parameter.</p>
+</blockquote>
 <p>Example:</p>
-
-<pre><code class="language-csharp">public interface ILongOpService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> ILongOpService
 {
-    [WampProcedure(&quot;com.myapp.longop&quot;)]
-    [WampProgressiveResultProcedure]
-    Task&lt;int&gt; LongOp(int n, IProgress&lt;int&gt; progress);
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.longop&#34;)]</span>
+<span style="color:#a6e22e">    [WampProgressiveResultProcedure]</span>
+    Task&lt;<span style="color:#66d9ef">int</span>&gt; LongOp(<span style="color:#66d9ef">int</span> n, IProgress&lt;<span style="color:#66d9ef">int</span>&gt; progress);
 }
-</code></pre>
-
-<p>Then obtain the proxy and call it:</p>
-
-<pre><code class="language-csharp">public async Task Run()
+</code></pre></div><p>Then obtain the proxy and call it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
-    IWampChannel channel = factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+    IWampChannel channel = factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+    <span style="color:#66d9ef">await</span> channel.Open();
 
     ILongOpService proxy = channel.RealmProxy.Services.GetCalleeProxy&lt;ILongOpService&gt;();
 
-    Progress&lt;int&gt; progress =
-        new Progress&lt;int&gt;(i =&gt; Console.WriteLine(&quot;Got progress &quot; + i));
+    Progress&lt;<span style="color:#66d9ef">int</span>&gt; progress =
+        <span style="color:#66d9ef">new</span> Progress&lt;<span style="color:#66d9ef">int</span>&gt;(i =&gt; Console.WriteLine(<span style="color:#e6db74">&#34;Got progress &#34;</span> + i));
 
-    int result = await proxy.LongOp(10, progress);
+    <span style="color:#66d9ef">int</span> result = <span style="color:#66d9ef">await</span> proxy.LongOp(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span>, progress);
 
-    Console.WriteLine(&quot;Got result &quot; + result);
+    Console.WriteLine(<span style="color:#e6db74">&#34;Got result &#34;</span> + result);
 }
-</code></pre>
-
-<p>In order to use progressive calls as a Callee, create a service with that implements an interface with the same kind of signature. In order to report progress, call the progress Report method. Example:</p>
-
-<pre><code class="language-csharp">public class LongOpService : ILongOpService
+</code></pre></div><p>In order to use progressive calls as a Callee, create a service with that implements an interface with the same kind of signature. In order to report progress, call the progress Report method. Example:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LongOpService</span> : ILongOpService
 {
-    public async Task&lt;int&gt; LongOp(int n, IProgress&lt;int&gt; progress)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;<span style="color:#66d9ef">int</span>&gt; LongOp(<span style="color:#66d9ef">int</span> n, IProgress&lt;<span style="color:#66d9ef">int</span>&gt; progress)
     {
-        for (int i = 0; i &lt; n; i++)
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; n; i++)
         {
             progress.Report(i);
-            await Task.Delay(100);
+            <span style="color:#66d9ef">await</span> Task.Delay(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>);
         }
 
-        return n;
+        <span style="color:#66d9ef">return</span> n;
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: you can put the attributes on the method itself instead of implementing an interface, i.e:</p>
-
-<pre><code class="language-csharp"> public class LongOpService
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"> <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LongOpService</span>
 {
-    [WampProcedure(&quot;com.myapp.longop&quot;)]
-    [WampProgressiveResultProcedure]
-    public async Task&lt;int&gt; LongOp(int n, IProgress&lt;int&gt; progress)
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.longop&#34;)]</span>
+<span style="color:#a6e22e">    [WampProgressiveResultProcedure]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;<span style="color:#66d9ef">int</span>&gt; LongOp(<span style="color:#66d9ef">int</span> n, IProgress&lt;<span style="color:#66d9ef">int</span>&gt; progress)
     {
-        // ...
-    }
+	    <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>    }
  }
-</code></pre>
-
+</code></pre></div><blockquote>
 <p>Then register it to the realm regularly:</p>
-
-<pre><code class="language-csharp">public async Task Run()
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
-    IWampChannel channel = factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+    IWampChannel channel = factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+    <span style="color:#66d9ef">await</span> channel.Open();
 
-    ILongOpService service = new LongOpService();
+    ILongOpService service = <span style="color:#66d9ef">new</span> LongOpService();
 
     IAsyncDisposable disposable =
-        await channel.RealmProxy.Services.RegisterCallee(service);
+        <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterCallee(service);
 
-    Console.WriteLine(&quot;Registered LongOpService&quot;);
+    Console.WriteLine(<span style="color:#e6db74">&#34;Registered LongOpService&#34;</span>);
 }
-</code></pre>
-
+</code></pre></div><blockquote>
 <p>Note:  The samples are based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/progress">this</a> AutobahnJS sample</p>
 </blockquote>
-
 <h3 id="caller-identification">Caller identification</h3>
-
 <p>From this version, it is possible to get/supply caller identification details. According to WAMP2 specification, a Callee can request to get caller identification details (by specifying disclose_caller = true on registration), and a Caller can request to disclose its identification (by specifying disclose_me = true on call request).</p>
-
 <p>Specifying these is now possible on callee registration and when obtaining callee proxy:</p>
-
 <p>Callee registration example:</p>
-
-<pre><code class="language-csharp">public async Task Run()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
-        factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+        factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+    <span style="color:#66d9ef">await</span> channel.Open();
 
-    SquareService service = new SquareService();
+    SquareService service = <span style="color:#66d9ef">new</span> SquareService();
 
-    var registerOptions =
-        new RegisterOptions
+    <span style="color:#66d9ef">var</span> registerOptions =
+        <span style="color:#66d9ef">new</span> RegisterOptions
         {
-            DiscloseCaller = true
+            DiscloseCaller = <span style="color:#66d9ef">true</span>
         };
 
     IAsyncDisposable disposable =
-        await channel.RealmProxy.Services.RegisterCallee(service,
-            new CalleeRegistrationInterceptor(registerOptions));
+        <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterCallee(service,
+            <span style="color:#66d9ef">new</span> CalleeRegistrationInterceptor(registerOptions));
 }
-</code></pre>
-
-<p>Callee proxy sample:</p>
-
-<pre><code class="language-csharp">public async Task Run()
+</code></pre></div><p>Callee proxy sample:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
-        factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+        factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+    <span style="color:#66d9ef">await</span> channel.Open();
 
-    var callOptions = new CallOptions()
+    <span style="color:#66d9ef">var</span> callOptions = <span style="color:#66d9ef">new</span> CallOptions()
     {
-        DiscloseMe = true
+        DiscloseMe = <span style="color:#66d9ef">true</span>
     };
 
     ISquareService proxy =
         channel.RealmProxy.Services.GetCalleeProxy&lt;ISquareService&gt;
-        (new CachedCalleeProxyInterceptor(new CalleeProxyInterceptor(callOptions)));
+        (<span style="color:#66d9ef">new</span> CachedCalleeProxyInterceptor(<span style="color:#66d9ef">new</span> CalleeProxyInterceptor(callOptions)));
 
-    await proxy.Square(-2);
-    await proxy.Square(0);
-    await proxy.Square(2);
+    <span style="color:#66d9ef">await</span> proxy.Square(-<span style="color:#ae81ff">2</span>);
+    <span style="color:#66d9ef">await</span> proxy.Square(<span style="color:#ae81ff">0</span>);
+    <span style="color:#66d9ef">await</span> proxy.Square(<span style="color:#ae81ff">2</span>);
 }
 
-</code></pre>
-
-<p>In order to obtain these details as a Callee (using reflection api), access WampInvocationContext.Current.</p>
-
+</code></pre></div><p>In order to obtain these details as a Callee (using reflection api), access WampInvocationContext.Current.</p>
 <p>Sample:</p>
-
-<pre><code class="language-csharp">public class SquareService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SquareService</span>
 {
-    [WampProcedure(&quot;com.myapp.square&quot;)]
-    public int Square(int n)
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.square&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Square(<span style="color:#66d9ef">int</span> n)
     {
         InvocationDetails details =
             WampInvocationContext.Current.InvocationDetails;
 
-        Console.WriteLine(&quot;Someone is calling me: &quot; + details.Caller);
+        Console.WriteLine(<span style="color:#e6db74">&#34;Someone is calling me: &#34;</span> + details.Caller);
 
-        return n*n;
+        <span style="color:#66d9ef">return</span> n*n;
     }
 }
 
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: The samples are based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/options">this</a> AutobahnJS sample</p>
 </blockquote>
-
 <h3 id="wampinvocationcontext">WampInvocationContext</h3>
-
 <p>WampInvocationContext allows you to get the invocation details provided with the current invocation. It currently contains the caller identification (if present) and whether the caller requested a progressive call.
 Example:</p>
-
-<pre><code class="language-csharp">public class LongOpService : ILongOpService
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LongOpService</span> : ILongOpService
 {
-    public async Task&lt;int&gt; LongOp(int n, IProgress&lt;int&gt; progress)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;<span style="color:#66d9ef">int</span>&gt; LongOp(<span style="color:#66d9ef">int</span> n, IProgress&lt;<span style="color:#66d9ef">int</span>&gt; progress)
     {
         InvocationDetails details =
             WampInvocationContext.Current.InvocationDetails;
 
-        for (int i = 0; i &lt; n; i++)
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; n; i++)
         {
-            if (details.ReceiveProgress == true)
+            <span style="color:#66d9ef">if</span> (details.ReceiveProgress == <span style="color:#66d9ef">true</span>)
             {
                 progress.Report(i);                    
             }
 
-            await Task.Delay(100);
+            <span style="color:#66d9ef">await</span> Task.Delay(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>);
         }
 
-        return n;
+        <span style="color:#66d9ef">return</span> n;
     }
 }
-</code></pre>
-
-<h3 id="attribute-based-pub-sub">Attribute based pub/sub</h3>
-
+</code></pre></div><h3 id="attribute-based-pubsub">Attribute based pub/sub</h3>
 <p>Allows to use WAMPv2 pub/sub features in a similar fashion as reflection rpc.</p>
-
 <p>In order to use it from a publisher, create a class containing an event decorated with a [WampTopic] attribute. Then register an instance of the class using the RegisterPublisher method of IWampRealmServiceProvider. The arguments published to the event will be treated as the arguments keywords of the publication.</p>
-
 <p>Example: Publisher class:</p>
-
-<pre><code class="language-csharp">public class MyClass
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyClass</span>
 {
-    [JsonProperty(&quot;counter&quot;)]
-    public int Counter { get; set; }
-
-    [JsonProperty(&quot;foo&quot;)]
-    public int[] Foo { get; set; }
+<span style="color:#a6e22e">    [JsonProperty(&#34;counter&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Counter { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [JsonProperty(&#34;foo&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span>[] Foo { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
 }
 
-public delegate void MyPublicationDelegate(int number1, int number2, string c, MyClass d);
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">void</span> MyPublicationDelegate(<span style="color:#66d9ef">int</span> number1, <span style="color:#66d9ef">int</span> number2, <span style="color:#66d9ef">string</span> c, MyClass d);
 
-public interface IMyPublisher
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IMyPublisher
 {
-    [WampTopic(&quot;com.myapp.heartbeat&quot;)]
-    event Action Heartbeat;
-
-    [WampTopic(&quot;com.myapp.topic2&quot;)]
-    event MyPublicationDelegate MyEvent;
+<span style="color:#a6e22e">    [WampTopic(&#34;com.myapp.heartbeat&#34;)]</span>
+    <span style="color:#66d9ef">event</span> Action Heartbeat;
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [WampTopic(&#34;com.myapp.topic2&#34;)]</span>
+    <span style="color:#66d9ef">event</span> MyPublicationDelegate MyEvent;
 }
 
-public class MyPublisher : IMyPublisher
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyPublisher</span> : IMyPublisher
 {
-    private readonly Random mRandom = new Random();
-    private IDisposable mSubscription;
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> Random mRandom = <span style="color:#66d9ef">new</span> Random();
+    <span style="color:#66d9ef">private</span> IDisposable mSubscription;
 
-    public MyPublisher()
+    <span style="color:#66d9ef">public</span> MyPublisher()
     {
-        mSubscription = Observable.Timer(TimeSpan.FromSeconds(0),
-            TimeSpan.FromSeconds(1)).Select((x, i) =&gt; i)
+        mSubscription = Observable.Timer(TimeSpan.FromSeconds(<span style="color:#ae81ff">0</span>),
+            TimeSpan.FromSeconds(<span style="color:#ae81ff">1</span>)).Select((x, i) =&gt; i)
             .Subscribe(x =&gt; OnTimer(x));
     }
 
-    private void OnTimer(int value)
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> OnTimer(<span style="color:#66d9ef">int</span> <span style="color:#66d9ef">value</span>)
     {
         RaiseHeartbeat();
 
-        RaiseMyEvent(mRandom.Next(0, 100),
-            23,
-            &quot;Hello&quot;,
-            new MyClass()
+        RaiseMyEvent(mRandom.Next(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>),
+            <span style="color:#ae81ff">2</span><span style="color:#ae81ff">3</span>,
+            <span style="color:#e6db74">&#34;Hello&#34;</span>,
+            <span style="color:#66d9ef">new</span> MyClass()
             {
-                Counter = value,
-                Foo = new int[] {1, 2, 3}
+                Counter = <span style="color:#66d9ef">value</span>,
+                Foo = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[] {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>}
             });
     }
 
-    private void RaiseHeartbeat()
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> RaiseHeartbeat()
     {
         Action handler = Heartbeat;
 
-        if (handler != null)
+        <span style="color:#66d9ef">if</span> (handler != <span style="color:#66d9ef">null</span>)
         {
             handler();
         }
     }
 
-    private void RaiseMyEvent(int number1, int number2, string c, MyClass d)
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> RaiseMyEvent(<span style="color:#66d9ef">int</span> number1, <span style="color:#66d9ef">int</span> number2, <span style="color:#66d9ef">string</span> c, MyClass d)
     {
         MyPublicationDelegate handler = MyEvent;
 
-        if (handler != null)
+        <span style="color:#66d9ef">if</span> (handler != <span style="color:#66d9ef">null</span>)
         {
             handler(number1, number2, c, d);
         }
     }
 
-    public event Action Heartbeat;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">event</span> Action Heartbeat;
 
-    public event MyPublicationDelegate MyEvent;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">event</span> MyPublicationDelegate MyEvent;
 }
-</code></pre>
-
-<p>Publisher registration:</p>
-
-<pre><code class="language-csharp">public static async Task Run()
+</code></pre></div><p>Publisher registration:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
-        factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+        factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+    <span style="color:#66d9ef">await</span> channel.Open();
 
     IDisposable publisherDisposable =
-        channel.RealmProxy.Services.RegisterPublisher(new MyPublisher());
+        channel.RealmProxy.Services.RegisterPublisher(<span style="color:#66d9ef">new</span> MyPublisher());
 
-    // call publisherDisposable.Dispose(); to unsubscribe from the event.
-}
-</code></pre>
-
-<blockquote>
+    <span style="color:#75715e">// call publisherDisposable.Dispose(); to unsubscribe from the event.
+</span><span style="color:#75715e"></span>}
+</code></pre></div><blockquote>
 <p>Note: if the delegate used is of any Action&lt;&gt; type, the publication will send the parameters as the positional arguments of the publication, otherwise it will use the parameters as the keyword arguments of the publication (with the delegate parameters&rsquo; names as the keys).</p>
 </blockquote>
-
 <p>In order to use the feature from a subscriber, create a class with a method having a [WampTopic] attribute, Then call RegisterSubscriber of IWampRealmServiceProvider.</p>
-
 <p>Example:</p>
-
-<pre><code class="language-csharp">public class MyClass
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyClass</span>
 {
-    [JsonProperty(&quot;counter&quot;)]
-    public int Counter { get; set; }
+<span style="color:#a6e22e">    [JsonProperty(&#34;counter&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Counter { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [JsonProperty(&#34;foo&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span>[] Foo { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
 
-    [JsonProperty(&quot;foo&quot;)]
-    public int[] Foo { get; set; }
-
-    public override string ToString()
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> ToString()
     {
-        return string.Format(&quot;counter: {0}, foo: [{1}]&quot;,
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">string</span>.Format(<span style="color:#e6db74">&#34;counter: {0}, foo: [{1}]&#34;</span>,
             Counter,
-            string.Join(&quot;, &quot;, Foo));
+            <span style="color:#66d9ef">string</span>.Join(<span style="color:#e6db74">&#34;, &#34;</span>, Foo));
     }
 }
 
-public interface IMySubscriber
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IMySubscriber
 {
-    [WampTopic(&quot;com.myapp.heartbeat&quot;)]
-    void OnHeartbeat();
-
-    [WampTopic(&quot;com.myapp.topic2&quot;)]
-    void OnTopic2(int number1, int number2, string c, MyClass d);
+<span style="color:#a6e22e">    [WampTopic(&#34;com.myapp.heartbeat&#34;)]</span>
+    <span style="color:#66d9ef">void</span> OnHeartbeat();
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">    [WampTopic(&#34;com.myapp.topic2&#34;)]</span>
+    <span style="color:#66d9ef">void</span> OnTopic2(<span style="color:#66d9ef">int</span> number1, <span style="color:#66d9ef">int</span> number2, <span style="color:#66d9ef">string</span> c, MyClass d);
 }
 
-public class MySubscriber : IMySubscriber
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MySubscriber</span> : IMySubscriber
 {
-    public void OnHeartbeat()
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> OnHeartbeat()
     {
-        long publicationId = WampEventContext.Current.PublicationId;
-        Console.WriteLine(&quot;Got heartbeat (publication ID &quot; + publicationId + &quot;)&quot;);
+        <span style="color:#66d9ef">long</span> publicationId = WampEventContext.Current.PublicationId;
+        Console.WriteLine(<span style="color:#e6db74">&#34;Got heartbeat (publication ID &#34;</span> + publicationId + <span style="color:#e6db74">&#34;)&#34;</span>);
     }
 
-    public void OnTopic2(int number1, int number2, string c, MyClass d)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> OnTopic2(<span style="color:#66d9ef">int</span> number1, <span style="color:#66d9ef">int</span> number2, <span style="color:#66d9ef">string</span> c, MyClass d)
     {
-        Console.WriteLine(&quot;Got event: number1:{0}, number2:{1}, c:{2}, d:{3}&quot;,
+        Console.WriteLine(<span style="color:#e6db74">&#34;Got event: number1:{0}, number2:{1}, c:{2}, d:{3}&#34;</span>,
             number1, number2, c, d);
     }
 }
-</code></pre>
-
-<p>Subscriber registration:</p>
-
-<pre><code class="language-csharp">public static async Task Run()
+</code></pre></div><p>Subscriber registration:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
-        factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+        factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+    <span style="color:#66d9ef">await</span> channel.Open();
 
     Task&lt;IAsyncDisposable&gt; subscriptionTask =
-        channel.RealmProxy.Services.RegisterSubscriber(new MySubscriber());
+        channel.RealmProxy.Services.RegisterSubscriber(<span style="color:#66d9ef">new</span> MySubscriber());
 
-    IAsyncDisposable asyncDisposable = await subscriptionTask;
+    IAsyncDisposable asyncDisposable = <span style="color:#66d9ef">await</span> subscriptionTask;
 
-    // call await asyncDisposable.DisposeAsync(); to unsubscribe from the topic.
-}
+    <span style="color:#75715e">// call await asyncDisposable.DisposeAsync(); to unsubscribe from the topic.
+</span><span style="color:#75715e"></span>}
 
-</code></pre>
-
-<blockquote>
-<p>Note:  The samples are based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/complex">this</a> AutobahnJS sample, but are a bit different (WampSharp doesn&rsquo;t support publishing both positional arguments and keyword arguments with this feature)</p>
+</code></pre></div><blockquote>
+<p>Note:  The samples are based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/complex">this</a> AutobahnJS sample, but are a bit different (WampSharp doesn't support publishing both positional arguments and keyword arguments with this feature)</p>
 </blockquote>
-
 <h3 id="wampeventcontext">WampEventContext</h3>
-
 <p>As illustrated in last sample, you can use in pub/sub based subscribers WampEventContext.Current in order to get details about the current received event:</p>
-
-<pre><code class="language-csharp">public class MySubscriber
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MySubscriber</span>
 {
-    [WampTopic(&quot;com.myapp.topic1&quot;)]
-    public void OnTopic1(int counter)
+<span style="color:#a6e22e">    [WampTopic(&#34;com.myapp.topic1&#34;)]</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> OnTopic1(<span style="color:#66d9ef">int</span> counter)
     {
         WampEventContext context = WampEventContext.Current;
 
-        Console.WriteLine(&quot;Got event, publication ID {0}, publisher {1}: {2}&quot;,
+        Console.WriteLine(<span style="color:#e6db74">&#34;Got event, publication ID {0}, publisher {1}: {2}&#34;</span>,
             context.PublicationId,
             context.EventDetails.Publisher,
             counter);
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/options">this</a> AutobahnJS sample.</p>
 </blockquote>
-
 <h3 id="registration-customization">Registration customization</h3>
-
 <p>The RegisterCallee, GetCalleeProxy, RegisterSubscriber and RegisterPublisher methods of IWampRealmServiceProvider now all have overloads that receive an &ldquo;interceptor&rdquo; instance. The &ldquo;interceptors&rdquo; allow customizing the request being performed.</p>
-
 <p>For instance, assume you want to call procedures of a contract that its procedures uris are known only on runtime.  This is possible implementing a ICalleeProxyInterceptor:</p>
-
-<pre><code class="language-csharp">public class MyCalleeProxyInterceptor : CalleeProxyInterceptor
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCalleeProxyInterceptor</span> : CalleeProxyInterceptor
 {
-    private readonly int mCalleeIndex;
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> <span style="color:#66d9ef">int</span> mCalleeIndex;
 
-    public MyCalleeProxyInterceptor(int calleeIndex) :
-        base(new CallOptions())
+    <span style="color:#66d9ef">public</span> MyCalleeProxyInterceptor(<span style="color:#66d9ef">int</span> calleeIndex) :
+        <span style="color:#66d9ef">base</span>(<span style="color:#66d9ef">new</span> CallOptions())
     {
         mCalleeIndex = calleeIndex;
     }
 
-    public override string GetProcedureUri(MethodInfo method)
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> GetProcedureUri(MethodInfo method)
     {
-        string format = base.GetProcedureUri(method);
-        string result = string.Format(format, mCalleeIndex);
-        return result;
+        <span style="color:#66d9ef">string</span> format = <span style="color:#66d9ef">base</span>.GetProcedureUri(method);
+        <span style="color:#66d9ef">string</span> result = <span style="color:#66d9ef">string</span>.Format(format, mCalleeIndex);
+        <span style="color:#66d9ef">return</span> result;
     }
 }
 
-</code></pre>
-
-<p>This interceptor modifies the procedure uri of the procedure to call. For example, we can declare an interface with a method with this signature:</p>
-
-<pre><code class="language-csharp">public interface ISquareService
+</code></pre></div><p>This interceptor modifies the procedure uri of the procedure to call. For example, we can declare an interface with a method with this signature:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> ISquareService
 {
-    [WampProcedure(&quot;com.myapp.square.{0}&quot;)]
-    Task&lt;int&gt; Square(int number);
+<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.square.{0}&#34;)]</span>
+    Task&lt;<span style="color:#66d9ef">int</span>&gt; Square(<span style="color:#66d9ef">int</span> number);
 }
-</code></pre>
-
-<p>And then specify the index in runtime:</p>
-
-<pre><code class="language-csharp">public static async Task Run()
+</code></pre></div><p>And then specify the index in runtime:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
-        factory.CreateJsonChannel(&quot;ws://localhost:8080/ws&quot;, &quot;realm1&quot;);
+        factory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://localhost:8080/ws&#34;</span>, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-    await channel.Open();
+    <span style="color:#66d9ef">await</span> channel.Open();
 
-    int index = GetRuntimeIndex();
+    <span style="color:#66d9ef">int</span> index = GetRuntimeIndex();
 
     ISquareService proxy =
         channel.RealmProxy.Services.GetCalleeProxy&lt;ISquareService&gt;
-        (new CachedCalleeProxyInterceptor(
-            new MyCalleeProxyInterceptor(index)));
+        (<span style="color:#66d9ef">new</span> CachedCalleeProxyInterceptor(
+            <span style="color:#66d9ef">new</span> MyCalleeProxyInterceptor(index)));
 
-    int nine = await proxy.Square(3); // Calls (&quot;com.myapp.square.&quot; + index)
-}
+    <span style="color:#66d9ef">int</span> nine = <span style="color:#66d9ef">await</span> proxy.Square(<span style="color:#ae81ff">3</span>); <span style="color:#75715e">// Calls (&#34;com.myapp.square.&#34; + index)
+</span><span style="color:#75715e"></span>}
 
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note: we wrap our interceptor with the CachedCalleeProxyInterceptor in order to cache the results of our interceptor, in order to avoid calculating them each call.</p>
 </blockquote>
-
 <p>Other interceptors work similarly.
 In addition, the interceptors allow modifying the options sent to each request.</p>
-
 <blockquote>
-<p>Note: these interceptors are still &ldquo;static&rdquo;, i.e: they don&rsquo;t allow returning a value that depends on the publication/call parameters.</p>
+<p>Note: these interceptors are still &ldquo;static&rdquo;, i.e: they don't allow returning a value that depends on the publication/call parameters.</p>
 </blockquote>
-
 <h3 id="authentication">Authentication</h3>
-
 <p>Client-side authentication is now supported. In order to use client authentication, you need to implement an interface named IWampClientAuthenticator. Then, pass it to CreateChannel/CreateJsonChannel/CreateMsgpackChannel overloads of DefaultChannelFactory.
 In IWampClientAuthenticator we supply the supported authentication methods and the authenticationid, these are passed in the HELLO message to the router (as details.authmethods, details.authid). We also implement Authenticate method, which sends an AUTHENTICATE message to the router upon CHALLENGE.</p>
-
 <p>Example:</p>
-
-<pre><code class="language-csharp">public class TicketAuthenticator : IWampClientAuthenticator
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TicketAuthenticator</span> : IWampClientAuthenticator
 {
-    private static readonly string[] mAuthenticationMethods = { &quot;ticket&quot; };
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">readonly</span> <span style="color:#66d9ef">string</span>[] mAuthenticationMethods = { <span style="color:#e6db74">&#34;ticket&#34;</span> };
 
-    private readonly IDictionary&lt;string, string&gt; mTickets =
-        new Dictionary&lt;string, string&gt;()
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> IDictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>&gt; mTickets =
+        <span style="color:#66d9ef">new</span> Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>&gt;()
         {
-            {&quot;peter&quot;, &quot;magic_secret_1&quot;},
-            {&quot;joe&quot;, &quot;magic_secret_2&quot;}
+            {<span style="color:#e6db74">&#34;peter&#34;</span>, <span style="color:#e6db74">&#34;magic_secret_1&#34;</span>},
+            {<span style="color:#e6db74">&#34;joe&#34;</span>, <span style="color:#e6db74">&#34;magic_secret_2&#34;</span>}
         };
 
-    private const string User = &quot;peter&quot;;
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> User = <span style="color:#e6db74">&#34;peter&#34;</span>;
 
-    public AuthenticationResponse Authenticate(string authmethod, ChallengeDetails extra)
+    <span style="color:#66d9ef">public</span> AuthenticationResponse Authenticate(<span style="color:#66d9ef">string</span> authmethod, ChallengeDetails extra)
     {
-        if (authmethod == &quot;ticket&quot;)
+        <span style="color:#66d9ef">if</span> (authmethod == <span style="color:#e6db74">&#34;ticket&#34;</span>)
         {
-            Console.WriteLine(&quot;authenticating via '&quot; + authmethod + &quot;'&quot;);
+            Console.WriteLine(<span style="color:#e6db74">&#34;authenticating via &#39;&#34;</span> + authmethod + <span style="color:#e6db74">&#34;&#39;&#34;</span>);
 
             AuthenticationResponse result =
-                new AuthenticationResponse {Signature = mTickets[User]};
+                <span style="color:#66d9ef">new</span> AuthenticationResponse {Signature = mTickets[User]};
 
-            return result;
+            <span style="color:#66d9ef">return</span> result;
         }
-        else
+        <span style="color:#66d9ef">else</span>
         {
-            throw new WampAuthenticationException(&quot;don't know how to authenticate using '&quot; + authmethod + &quot;'&quot;);
-        }
-    }
-
-    public string[] AuthenticationMethods
-    {
-        get
-        {
-            return mAuthenticationMethods;
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampAuthenticationException(<span style="color:#e6db74">&#34;don&#39;t know how to authenticate using &#39;&#34;</span> + authmethod + <span style="color:#e6db74">&#34;&#39;&#34;</span>);
         }
     }
 
-    public string AuthenticationId
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span>[] AuthenticationMethods
     {
-        get
+        <span style="color:#66d9ef">get</span>
         {
-            return User;
+            <span style="color:#66d9ef">return</span> mAuthenticationMethods;
+        }
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> AuthenticationId
+    {
+        <span style="color:#66d9ef">get</span>
+        {
+            <span style="color:#66d9ef">return</span> User;
         }
     }
 }
-</code></pre>
-
-<p>Then we pass an instance of our authenticator to the ChannelFactory:</p>
-
-<pre><code class="language-csharp">public async Task Run()
+</code></pre></div><p>Then we pass an instance of our authenticator to the ChannelFactory:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task Run()
 {
-    DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
-    IWampClientAuthenticator authenticator = new TicketAuthenticator();
+    IWampClientAuthenticator authenticator = <span style="color:#66d9ef">new</span> TicketAuthenticator();
 
     IWampChannel channel =
-        channelFactory.CreateJsonChannel(&quot;ws://127.0.0.1:8080/ws&quot;,
-            &quot;realm1&quot;,
+        channelFactory.CreateJsonChannel(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>,
+            <span style="color:#e6db74">&#34;realm1&#34;</span>,
             authenticator);
 
     IWampRealmProxy realmProxy = channel.RealmProxy;
 
-    await channel.Open();
+    <span style="color:#66d9ef">await</span> channel.Open();
 
-    // Call a rpc for example
-    ITimeService proxy = realmProxy.Services.GetCalleeProxy&lt;ITimeService&gt;();
+    <span style="color:#75715e">// Call a rpc for example
+</span><span style="color:#75715e"></span>    ITimeService proxy = realmProxy.Services.GetCalleeProxy&lt;ITimeService&gt;();
 
-    try
+    <span style="color:#66d9ef">try</span>
     {
-        string now = await proxy.Now();
-        Console.WriteLine(&quot;call result {0}&quot;, now);
+        <span style="color:#66d9ef">string</span> now = <span style="color:#66d9ef">await</span> proxy.Now();
+        Console.WriteLine(<span style="color:#e6db74">&#34;call result {0}&#34;</span>, now);
     }
-    catch (Exception e)
+    <span style="color:#66d9ef">catch</span> (Exception e)
     {
-        Console.WriteLine(&quot;call error {0}&quot;, e);
+        Console.WriteLine(<span style="color:#e6db74">&#34;call error {0}&#34;</span>, e);
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre></div><blockquote>
 <p>Note:  The sample is based on <a href="https://github.com/crossbario/crossbar-examples/tree/master/authentication/ticket">this</a> AutobahnJS sample</p>
 </blockquote>
-
 <h2 id="internal-changes">Internal Changes</h2>
-
 <h3 id="router-iwamprealmserviceprovider">Router IWampRealmServiceProvider</h3>
-
-<p>From this version, WampHost&rsquo;s Realms&rsquo; Service property is implemented differently - it is implemented as a WAMP client with in-memory transport. That means that the WampHost communicates with the IWampRealmServiceProvider using &ldquo;serialization&rdquo;, which adds a bit overhead. There are a couple of reasons for this change:</p>
-
+<p>From this version, WampHost's Realms&rsquo; Service property is implemented differently - it is implemented as a WAMP client with in-memory transport. That means that the WampHost communicates with the IWampRealmServiceProvider using &ldquo;serialization&rdquo;, which adds a bit overhead. There are a couple of reasons for this change:</p>
 <ul>
 <li>This allows me to reuse code, instead of maintaining two different implementations of IWampRealmServiceProvider - one for the router and one for the client.</li>
 <li>It makes the router hosted components first class citizens - each realm internal client has now a session id (available via IHostedRealm.SessionId).</li>
 <li>It makes the code more consistent - whether if it runs in the router or as a client.</li>
 <li>WAMPv2 <a href="https://github.com/wamp-proto/wamp-proto/tree/BEFORE_REPLACE_SPEC_WITH_RFC/spec/basic.md#application-code">discourages</a> routers to run application code.</li>
 </ul>
-
 <h3 id="fleck-transport">Fleck transport</h3>
-
 <p>From this version, Fleck 0.12.0.40 is used. This version of Fleck has feedback for message send to clients. WampSharp uses this feedback and assures that messages are sent serially per client - i.e:  a message will only be sent after the previous one has been received by the client. This should avoid some race conditions and should implement <a href="https://github.com/wamp-proto/wamp-proto/tree/BEFORE_REPLACE_SPEC_WITH_RFC/spec/basic.md#ordering-guarantees">ordering-guarantees</a> better.</p>
 
 				</section>
@@ -747,33 +644,33 @@ In IWampClientAuthenticator we supply the supported authentication methods and t
 				<li><strong><a href="#title">WampSharp v1.2.1.6-beta release notes</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#api-changes">Api changes</a>
-<ul>
-<li><a href="#iasyncdisposable">IAsyncDisposable</a></li>
-<li><a href="#other-changes">Other changes</a></li>
-</ul></li>
-<li><a href="#new-features">New features</a>
-<ul>
-<li><a href="#vtortola-websocketlistener-support">vtortola.WebSocketListener support</a></li>
-<li><a href="#rawsocket-transport-support">RawSocket transport support</a></li>
-<li><a href="#progressive-calls">Progressive calls</a></li>
-<li><a href="#caller-identification">Caller identification</a></li>
-<li><a href="#wampinvocationcontext">WampInvocationContext</a></li>
-<li><a href="#attribute-based-pub-sub">Attribute based pub/sub</a></li>
-<li><a href="#wampeventcontext">WampEventContext</a></li>
-<li><a href="#registration-customization">Registration customization</a></li>
-<li><a href="#authentication">Authentication</a></li>
-</ul></li>
-<li><a href="#internal-changes">Internal Changes</a>
-<ul>
-<li><a href="#router-iwamprealmserviceprovider">Router IWampRealmServiceProvider</a></li>
-<li><a href="#fleck-transport">Fleck transport</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#api-changes">Api changes</a>
+      <ul>
+        <li><a href="#iasyncdisposable">IAsyncDisposable</a></li>
+        <li><a href="#other-changes">Other changes</a></li>
+      </ul>
+    </li>
+    <li><a href="#new-features">New features</a>
+      <ul>
+        <li><a href="#vtortolawebsocketlistener-support">vtortola.WebSocketListener support</a></li>
+        <li><a href="#rawsocket-transport-support">RawSocket transport support</a></li>
+        <li><a href="#progressive-calls">Progressive calls</a></li>
+        <li><a href="#caller-identification">Caller identification</a></li>
+        <li><a href="#wampinvocationcontext">WampInvocationContext</a></li>
+        <li><a href="#attribute-based-pubsub">Attribute based pub/sub</a></li>
+        <li><a href="#wampeventcontext">WampEventContext</a></li>
+        <li><a href="#registration-customization">Registration customization</a></li>
+        <li><a href="#authentication">Authentication</a></li>
+      </ul>
+    </li>
+    <li><a href="#internal-changes">Internal Changes</a>
+      <ul>
+        <li><a href="#router-iwamprealmserviceprovider">Router IWampRealmServiceProvider</a></li>
+        <li><a href="#fleck-transport">Fleck transport</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -915,6 +812,9 @@ In IWampClientAuthenticator we supply the supported authentication methods and t
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -1082,7 +982,7 @@ In IWampClientAuthenticator we supply the supported authentication methods and t
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

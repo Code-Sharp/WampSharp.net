@@ -84,166 +84,151 @@
 					<span><time datetime="2017-07-30">July 30, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p>Before you start, see <a href="https://wampsharp.net/wamp2/getting-started-with-wampv2/">Getting started with WAMPv2</a> and create a WampChannel/WampHost your caller will use.</p>
-
+					<p>Before you start, see <a href="https://wampsharp.net/wamp2/getting-started-with-wampv2/">Getting started with WAMPv2</a> and create a WampChannel/WampHost your caller will use.</p>
 <h2 id="about-caller-role">About Caller role</h2>
-
 <p>WAMPv2 defines a Caller role, that is a role that can call a remote procedure call registered by a <a href="https://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/">Callee</a> (using the CALL messages). The caller can receive a response with a result or an error from the router  (using the RESULT/ERROR message).</p>
-
 <h3 id="callee-proxy">Callee proxy</h3>
-
 <p>The Callee proxy is the easiest way to call rpc methods of a WAMP router.</p>
-
 <p>In order to use it, create an interface having methods decorated with [WampProcedure] attribute.
-Then create a proxy to a callee using the GetCalleeProxy method of the Services property<br />
+Then create a proxy to a callee using the GetCalleeProxy method of the Services property<br>
 of the IWampRealm/IWampRealmProxy instance.</p>
-
 <h4 id="client-sample">Client sample</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">using</span> System;
+<span style="color:#66d9ef">using</span> WampSharp.V2;
+<span style="color:#66d9ef">using</span> WampSharp.V2.Rpc;
 
-<pre><code class="language-csharp">using System;
-using WampSharp.V2;
-using WampSharp.V2.Rpc;
-
-namespace MyNamespace
+<span style="color:#66d9ef">namespace</span> MyNamespace
 {
-    public interface IArgumentsService
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IArgumentsService
     {
-        [WampProcedure(&quot;com.arguments.ping&quot;)]
-        void Ping();
-
-        [WampProcedure(&quot;com.arguments.add2&quot;)]
-        int Add2(int a, int b);
-
-        [WampProcedure(&quot;com.arguments.stars&quot;)]
-        string Stars(string nick = &quot;somebody&quot;, int stars = 0);
-
-        [WampProcedure(&quot;com.arguments.orders&quot;)]
-        string[] Orders(string product, int limit = 5);
+<span style="color:#a6e22e">        [WampProcedure(&#34;com.arguments.ping&#34;)]</span>
+        <span style="color:#66d9ef">void</span> Ping();
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">        [WampProcedure(&#34;com.arguments.add2&#34;)]</span>
+        <span style="color:#66d9ef">int</span> Add2(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> b);
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">        [WampProcedure(&#34;com.arguments.stars&#34;)]</span>
+        <span style="color:#66d9ef">string</span> Stars(<span style="color:#66d9ef">string</span> nick = <span style="color:#e6db74">&#34;somebody&#34;</span>, <span style="color:#66d9ef">int</span> stars = <span style="color:#ae81ff">0</span>);
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">        [WampProcedure(&#34;com.arguments.orders&#34;)]</span>
+        <span style="color:#66d9ef">string</span>[] Orders(<span style="color:#66d9ef">string</span> product, <span style="color:#66d9ef">int</span> limit = <span style="color:#ae81ff">5</span>);
     }
 
-    internal class Program
+    <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
     {
-        public static void Main(string[] args)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
         {
             DefaultWampChannelFactory factory =
-                new DefaultWampChannelFactory();
+                <span style="color:#66d9ef">new</span> DefaultWampChannelFactory();
 
-            const string serverAddress = &quot;ws://127.0.0.1:8080/ws&quot;;
+            <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
             IWampChannel channel =
-                factory.CreateJsonChannel(serverAddress, &quot;realm1&quot;);
+                factory.CreateJsonChannel(serverAddress, <span style="color:#e6db74">&#34;realm1&#34;</span>);
 
-            channel.Open().Wait(5000);
+            channel.Open().Wait(<span style="color:#ae81ff">5</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>);
 
             IArgumentsService proxy =
                 channel.RealmProxy.Services.GetCalleeProxy&lt;IArgumentsService&gt;();
 
             proxy.Ping();
-            Console.WriteLine(&quot;Pinged!&quot;);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Pinged!&#34;</span>);
 
-            int result = proxy.Add2(2, 3);
-            Console.WriteLine(&quot;Add2: {0}&quot;, result);
+            <span style="color:#66d9ef">int</span> result = proxy.Add2(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Add2: {0}&#34;</span>, result);
 
-            var starred = proxy.Stars();
-            Console.WriteLine(&quot;Starred 1: {0}&quot;, starred);
+            <span style="color:#66d9ef">var</span> starred = proxy.Stars();
+            Console.WriteLine(<span style="color:#e6db74">&#34;Starred 1: {0}&#34;</span>, starred);
 
-            starred = proxy.Stars(nick: &quot;Homer&quot;);
-            Console.WriteLine(&quot;Starred 2: {0}&quot;, starred);
+            starred = proxy.Stars(nick: <span style="color:#e6db74">&#34;Homer&#34;</span>);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Starred 2: {0}&#34;</span>, starred);
 
-            starred = proxy.Stars(stars: 5);
-            Console.WriteLine(&quot;Starred 3: {0}&quot;, starred);
+            starred = proxy.Stars(stars: <span style="color:#ae81ff">5</span>);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Starred 3: {0}&#34;</span>, starred);
 
-            starred = proxy.Stars(nick: &quot;Homer&quot;, stars: 5);
-            Console.WriteLine(&quot;Starred 4: {0}&quot;, starred);
+            starred = proxy.Stars(nick: <span style="color:#e6db74">&#34;Homer&#34;</span>, stars: <span style="color:#ae81ff">5</span>);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Starred 4: {0}&#34;</span>, starred);
 
-            string[] orders = proxy.Orders(&quot;coffee&quot;);
-            Console.WriteLine(&quot;Orders 1: {0}&quot;, string.Join(&quot;, &quot;, orders));
+            <span style="color:#66d9ef">string</span>[] orders = proxy.Orders(<span style="color:#e6db74">&#34;coffee&#34;</span>);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Orders 1: {0}&#34;</span>, <span style="color:#66d9ef">string</span>.Join(<span style="color:#e6db74">&#34;, &#34;</span>, orders));
 
-            orders = proxy.Orders(&quot;coffee&quot;, limit: 10);
-            Console.WriteLine(&quot;Orders 2: {0}&quot;, string.Join(&quot;, &quot;, orders));
+            orders = proxy.Orders(<span style="color:#e6db74">&#34;coffee&#34;</span>, limit: <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span>);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Orders 2: {0}&#34;</span>, <span style="color:#66d9ef">string</span>.Join(<span style="color:#e6db74">&#34;, &#34;</span>, orders));
 
             Console.ReadLine();
         }
     }
 }
-</code></pre>
+</code></pre></div><h4 id="router-sample">Router sample</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">using</span> System;
+<span style="color:#66d9ef">using</span> WampSharp.V2;
+<span style="color:#66d9ef">using</span> WampSharp.V2.Realm;
+<span style="color:#66d9ef">using</span> WampSharp.V2.Rpc;
 
-<h4 id="router-sample">Router sample</h4>
-
-<pre><code class="language-csharp">using System;
-using WampSharp.V2;
-using WampSharp.V2.Realm;
-using WampSharp.V2.Rpc;
-
-namespace MyNamespace
+<span style="color:#66d9ef">namespace</span> MyNamespace
 {
-    public interface IArgumentsService
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> IArgumentsService
     {
-        [WampProcedure(&quot;com.arguments.ping&quot;)]
-        void Ping();
-
-        [WampProcedure(&quot;com.arguments.add2&quot;)]
-        int Add2(int a, int b);
-
-        [WampProcedure(&quot;com.arguments.stars&quot;)]
-        string Stars(string nick = &quot;somebody&quot;, int stars = 0);
-
-        [WampProcedure(&quot;com.arguments.orders&quot;)]
-        string[] Orders(string product, int limit = 5);
+<span style="color:#a6e22e">        [WampProcedure(&#34;com.arguments.ping&#34;)]</span>
+        <span style="color:#66d9ef">void</span> Ping();
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">        [WampProcedure(&#34;com.arguments.add2&#34;)]</span>
+        <span style="color:#66d9ef">int</span> Add2(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> b);
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">        [WampProcedure(&#34;com.arguments.stars&#34;)]</span>
+        <span style="color:#66d9ef">string</span> Stars(<span style="color:#66d9ef">string</span> nick = <span style="color:#e6db74">&#34;somebody&#34;</span>, <span style="color:#66d9ef">int</span> stars = <span style="color:#ae81ff">0</span>);
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">        [WampProcedure(&#34;com.arguments.orders&#34;)]</span>
+        <span style="color:#66d9ef">string</span>[] Orders(<span style="color:#66d9ef">string</span> product, <span style="color:#66d9ef">int</span> limit = <span style="color:#ae81ff">5</span>);
     }
 
-    internal class Program
+    <span style="color:#66d9ef">internal</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
     {
-        public static void Main(string[] args)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
         {
-            const string serverAddress = &quot;ws://127.0.0.1:8080/ws&quot;;
+            <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">string</span> serverAddress = <span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
-            DefaultWampHost host = new DefaultWampHost(serverAddress);
+            DefaultWampHost host = <span style="color:#66d9ef">new</span> DefaultWampHost(serverAddress);
 
             host.Open();
 
-            Console.WriteLine(&quot;Press enter when a client finishes registering methods&quot;);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Press enter when a client finishes registering methods&#34;</span>);
             Console.ReadLine();
 
-            IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&quot;realm1&quot;);
+            IWampHostedRealm realm = host.RealmContainer.GetRealmByName(<span style="color:#e6db74">&#34;realm1&#34;</span>);
 
             IArgumentsService proxy =
                 realm.Services.GetCalleeProxy&lt;IArgumentsService&gt;();
 
             proxy.Ping();
-            Console.WriteLine(&quot;Pinged!&quot;);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Pinged!&#34;</span>);
 
-            int result = proxy.Add2(2, 3);
-            Console.WriteLine(&quot;Add2: {0}&quot;, result);
+            <span style="color:#66d9ef">int</span> result = proxy.Add2(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Add2: {0}&#34;</span>, result);
 
-            var starred = proxy.Stars();
-            Console.WriteLine(&quot;Starred 1: {0}&quot;, starred);
+            <span style="color:#66d9ef">var</span> starred = proxy.Stars();
+            Console.WriteLine(<span style="color:#e6db74">&#34;Starred 1: {0}&#34;</span>, starred);
 
-            starred = proxy.Stars(nick: &quot;Homer&quot;);
-            Console.WriteLine(&quot;Starred 2: {0}&quot;, starred);
+            starred = proxy.Stars(nick: <span style="color:#e6db74">&#34;Homer&#34;</span>);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Starred 2: {0}&#34;</span>, starred);
 
-            starred = proxy.Stars(stars: 5);
-            Console.WriteLine(&quot;Starred 3: {0}&quot;, starred);
+            starred = proxy.Stars(stars: <span style="color:#ae81ff">5</span>);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Starred 3: {0}&#34;</span>, starred);
 
-            starred = proxy.Stars(nick: &quot;Homer&quot;, stars: 5);
-            Console.WriteLine(&quot;Starred 4: {0}&quot;, starred);
+            starred = proxy.Stars(nick: <span style="color:#e6db74">&#34;Homer&#34;</span>, stars: <span style="color:#ae81ff">5</span>);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Starred 4: {0}&#34;</span>, starred);
 
-            string[] orders = proxy.Orders(&quot;coffee&quot;);
-            Console.WriteLine(&quot;Orders 1: {0}&quot;, string.Join(&quot;, &quot;, orders));
+            <span style="color:#66d9ef">string</span>[] orders = proxy.Orders(<span style="color:#e6db74">&#34;coffee&#34;</span>);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Orders 1: {0}&#34;</span>, <span style="color:#66d9ef">string</span>.Join(<span style="color:#e6db74">&#34;, &#34;</span>, orders));
 
-            orders = proxy.Orders(&quot;coffee&quot;, limit: 10);
-            Console.WriteLine(&quot;Orders 2: {0}&quot;, string.Join(&quot;, &quot;, orders));
+            orders = proxy.Orders(<span style="color:#e6db74">&#34;coffee&#34;</span>, limit: <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span>);
+            Console.WriteLine(<span style="color:#e6db74">&#34;Orders 2: {0}&#34;</span>, <span style="color:#66d9ef">string</span>.Join(<span style="color:#e6db74">&#34;, &#34;</span>, orders));
 
             Console.ReadLine();
         }
     }
 }
-</code></pre>
-
-<h3 id="see-also">See also</h3>
-
+</code></pre></div><h3 id="see-also">See also</h3>
 <ul>
 <li><a href="https://wampsharp.net/wamp2/roles/caller/reflection-based-caller/">Reflection based Caller</a></li>
 <li><a href="https://wampsharp.net/wamp2/roles/caller/raw-caller/">Raw Caller</a></li>
@@ -265,20 +250,14 @@ namespace MyNamespace
 				<li><strong><a href="#title">Getting started with Caller</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#about-caller-role">About Caller role</a>
-<ul>
-<li><a href="#callee-proxy">Callee proxy</a>
-<ul>
-<li><a href="#client-sample">Client sample</a></li>
-<li><a href="#router-sample">Router sample</a></li>
-</ul></li>
-<li><a href="#see-also">See also</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#about-caller-role">About Caller role</a>
+      <ul>
+        <li><a href="#callee-proxy">Callee proxy</a></li>
+        <li><a href="#see-also">See also</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -422,6 +401,9 @@ namespace MyNamespace
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -588,7 +570,7 @@ namespace MyNamespace
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 

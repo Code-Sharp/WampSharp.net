@@ -84,54 +84,137 @@
 					<span><time datetime="2017-08-01">August 01, 2017</time></span>
 				</div>
 				<section>
-					
-
-<p>WampSharp supports the <a href="https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_transport_rawsocket.md">RawSocket transport</a>.
+					<p>WampSharp supports the <a href="https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_transport_rawsocket.md">RawSocket transport</a>.
 It is available through the <a href="https://www.nuget.org/packages/WampSharp.RawSocket">WampSharp.RawSocket</a> NuGet package.</p>
-
 <h3 id="router-side-usage">Router-side usage</h3>
-
-<pre><code class="language-csharp">IWampHost host = new WampHost();
+<h3 id="tcplistener-implementation">TcpListener implementation</h3>
+<p>This is a standalone implementation which uses <a href="https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.tcplistener"><code>TcpListener</code></a>. In order to use it, install the <a href="https://www.nuget.org/packages/WampSharp.RawSocket">WampSharp.RawSocket</a> NuGet package. Usage example:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">IWampHost host = <span style="color:#66d9ef">new</span> WampHost();
 
 RawSocketTransport transport =
-    new RawSocketTransport(TcpListener.Create(8080));
+    <span style="color:#66d9ef">new</span> RawSocketTransport(TcpListener.Create(<span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span>));
 
 host.RegisterTransport(transport,
-                       new JTokenJsonBinding());
+                       <span style="color:#66d9ef">new</span> JTokenJsonBinding());
 
-</code></pre>
+</code></pre></div><h3 id="aspnet-core-implementation">ASP.NET Core implementation</h3>
+<p>This is an implementation of the RawSocket protocol using <a href="https://www.nuget.org/packages/Microsoft.AspNetCore.Connections.Abstractions/">Microsoft.AspNetCore.Connections.Abstractions</a> package, which is part of <a href="https://github.com/aspnet/KestrelHttpServer/issues/1980">Project Bedrock</a>. This implementation is present in the package <a href="http://nuget.org/packages/WampSharp.AspNetCore.RawSocket">WampSharp.AspNetCore.RawSocket</a>.</p>
+<p>Usage sample:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">using</span> System.Net;
+<span style="color:#66d9ef">using</span> Microsoft.AspNetCore;
+<span style="color:#66d9ef">using</span> Microsoft.AspNetCore.Hosting;
+<span style="color:#66d9ef">using</span> WampSharp.AspNetCore.RawSocket;
+<span style="color:#66d9ef">using</span> WampSharp.Binding;
+<span style="color:#66d9ef">using</span> WampSharp.V2;
 
-<h3 id="client-side-usage">Client-side usage</h3>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
+    {
+        WampHost wampHost = <span style="color:#66d9ef">new</span> WampHost();
 
+        JTokenJsonBinding jsonBinding = <span style="color:#66d9ef">new</span> JTokenJsonBinding();
+
+        IWebHost host =
+            WebHost.CreateDefaultBuilder(args)
+                   .UseKestrel(options =&gt;
+                               {
+                                   options.Listen(IPAddress.Loopback, <span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span>,
+                                                  builder =&gt;
+                                                  {
+                                                      <span style="color:#75715e">// Configure RawSocket transport
+</span><span style="color:#75715e"></span>                                                      wampHost
+                                                          .RegisterTransport(<span style="color:#66d9ef">new</span> AspNetCoreRawSocketTransport(builder),
+                                                                             jsonBinding);
+                                                  });
+                               })
+                   .Configure(app =&gt;
+                              {
+                                  wampHost.Open();
+                              })
+                   .Build();
+
+        host.Run();
+    }
+}
+</code></pre></div><p>This allows you to listen to both RawSocket and WebSocket requests on the same port. For example, the following code listens both to WAMP RawSocket requests on port 8080 and to WAMP WebSocket requests on <code>ws://localhost:8080/ws/</code> (using the <a href="http://nuget.org/packages/WampSharp.AspNetCore.WebSockets.Server">WampSharp.AspNetCore.WebSockets.Server</a> package):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">using</span> System.Net;
+<span style="color:#66d9ef">using</span> Microsoft.AspNetCore;
+<span style="color:#66d9ef">using</span> Microsoft.AspNetCore.Builder;
+<span style="color:#66d9ef">using</span> Microsoft.AspNetCore.Hosting;
+<span style="color:#66d9ef">using</span> WampSharp.AspNetCore.RawSocket;
+<span style="color:#66d9ef">using</span> WampSharp.AspNetCore.WebSockets.Server;
+<span style="color:#66d9ef">using</span> WampSharp.Binding;
+<span style="color:#66d9ef">using</span> WampSharp.V2;
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
+    {
+        WampHost wampHost = <span style="color:#66d9ef">new</span> WampHost();
+
+        JTokenJsonBinding jsonBinding = <span style="color:#66d9ef">new</span> JTokenJsonBinding();
+
+        IWebHost host =
+            WebHost.CreateDefaultBuilder(args)
+                   .UseKestrel(options =&gt;
+                               {
+                                   options.Listen(IPAddress.Loopback, <span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span>,
+                                                  builder =&gt;
+                                                  {
+                                                      <span style="color:#75715e">// Log all of the http bytes as they are sent and received
+</span><span style="color:#75715e"></span>                                                      builder.UseConnectionLogging();
+
+                                                      <span style="color:#75715e">// Configure RawSocket transport
+</span><span style="color:#75715e"></span>                                                      wampHost
+                                                          .RegisterTransport(<span style="color:#66d9ef">new</span> AspNetCoreRawSocketTransport(builder),
+                                                                             jsonBinding);
+                                                  });
+                               })
+                   .Configure(app =&gt;
+                              {
+                                  app.Map(<span style="color:#e6db74">&#34;/ws&#34;</span>,
+                                          builder =&gt;
+                                          {
+                                              builder.UseWebSockets();
+
+                                              <span style="color:#75715e">// Configure WebSockets transport
+</span><span style="color:#75715e"></span>                                              wampHost.RegisterTransport
+                                                  (<span style="color:#66d9ef">new</span> AspNetCoreWebSocketTransport(builder),
+                                                   jsonBinding);
+                                          });
+
+                                  wampHost.Open();
+                              })
+                   .Build();
+
+        host.Run();
+    }
+}
+</code></pre></div><h3 id="client-side-usage">Client-side usage</h3>
 <p>In order to obtain a RawSocket IWampChannel, you can use the fluent syntax api:</p>
-
-<pre><code class="language-csharp">IWampChannelFactory factory = new WampChannelFactory();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">IWampChannelFactory factory = <span style="color:#66d9ef">new</span> WampChannelFactory();
 
 IWampChannel channel =
-    factory.ConnectToRealm(&quot;realm1&quot;)
-           .RawSocketTransport(&quot;127.0.0.1&quot;, 8080)
+    factory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
+           .RawSocketTransport(<span style="color:#e6db74">&#34;127.0.0.1&#34;</span>, <span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span>)
            .MsgpackSerialization()
            .Build();
 
-</code></pre>
-
-<p>This fluent-api allows some RawSocket customization features:</p>
-
-<pre><code class="language-csharp">IWampChannelFactory factory = new WampChannelFactory();
+</code></pre></div><p>This fluent-api allows some RawSocket customization features:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">IWampChannelFactory factory = <span style="color:#66d9ef">new</span> WampChannelFactory();
 
 IWampChannel channel =
-    factory.ConnectToRealm(&quot;realm1&quot;)
-           .RawSocketTransport(&quot;127.0.0.1&quot;, 8080)
-           .ConnectFrom(new IPEndPoint(IPAddress.Loopback, 1345))
-           // Chooses the port to connect from
-           .AutoPing(TimeSpan.FromSeconds(45))
-           // Enables auto-ping
-           .MsgpackSerialization()
+    factory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
+           .RawSocketTransport(<span style="color:#e6db74">&#34;127.0.0.1&#34;</span>, <span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">8</span><span style="color:#ae81ff">0</span>)
+           .ConnectFrom(<span style="color:#66d9ef">new</span> IPEndPoint(IPAddress.Loopback, <span style="color:#ae81ff">1</span><span style="color:#ae81ff">3</span><span style="color:#ae81ff">4</span><span style="color:#ae81ff">5</span>))
+           <span style="color:#75715e">// Chooses the port to connect from
+</span><span style="color:#75715e"></span>           .AutoPing(TimeSpan.FromSeconds(<span style="color:#ae81ff">4</span><span style="color:#ae81ff">5</span>))
+           <span style="color:#75715e">// Enables auto-ping
+</span><span style="color:#75715e"></span>           .MsgpackSerialization()
            .Build();
-</code></pre>
-
-<blockquote>
-<p>Note: currently <a href="https://crossbar.io">crossbar</a> and Autobahn variants <a href="https://github.com/crossbario/crossbar/issues/381">don&rsquo;t implement RawSocket&rsquo;s ping/pongs</a>. Therefore, auto-ping is disabled by default. You can enable it manually, both for router-side transport (by passing to the RawSocketTransport constructor an non-null auto-ping interval) and for client-side transport (as in the sample).</p>
+</code></pre></div><blockquote>
+<p>Note: currently <a href="https://crossbar.io">crossbar</a> and Autobahn variants <a href="https://github.com/crossbario/crossbar/issues/381">don't implement RawSocket's ping/pongs</a>. Therefore, auto-ping is disabled by default. You can enable it manually, both for router-side transport (by passing to the RawSocketTransport constructor an non-null auto-ping interval) and for client-side transport (as in the sample).</p>
 </blockquote>
 
 				</section>
@@ -150,16 +233,16 @@ IWampChannel channel =
 				<li><strong><a href="#title">RawSocket transport</a></strong></li>
 			</ul>
 			<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#router-side-usage">Router-side usage</a></li>
-<li><a href="#client-side-usage">Client-side usage</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#router-side-usage">Router-side usage</a></li>
+        <li><a href="#tcplistener-implementation">TcpListener implementation</a></li>
+        <li><a href="#aspnet-core-implementation">ASP.NET Core implementation</a></li>
+        <li><a href="#client-side-usage">Client-side usage</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 		</div>
 	</div>
@@ -302,6 +385,9 @@ IWampChannel channel =
 					<span class="doc-list-category">Release-Notes</span>
 				</a>
 				<ul>
+					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
+					</li>
+				
 					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
 					</li>
 				
@@ -469,7 +555,7 @@ IWampChannel channel =
 
 <footer class="doc-footer">
 	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2018, Elad Zelingher; All rights reserved.</p>
+	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
 	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
 </footer>
 
