@@ -1,6 +1,6 @@
 ---
 title: "_index"
-date: 2017-07-30T00:16:09+03:00
+date: 2020-01-18T00:12:00+00:00
 draft: false
 ---
 
@@ -105,6 +105,7 @@ The following [Advanced profile features](https://wamp-proto.org/static/rfc/draf
 
 ## Release Notes
 
+* [WampSharp v20.1.1 release notes]({{<ref "Release-notes/WampSharp-v20.1.1-release-notes.md">}})
 * [WampSharp v18.6.1 release notes]({{<ref "Release-notes/WampSharp-v18.6.1-release-notes.md">}})
 * [WampSharp v1.2.6.41-beta release notes]({{<ref "Release-notes/WampSharp-v1.2.6.41-beta-release-notes.md">}})
 * [WampSharp v1.2.5.21-beta release notes]({{<ref "Release-notes/WampSharp-v1.2.5.21-beta-release-notes.md">}})

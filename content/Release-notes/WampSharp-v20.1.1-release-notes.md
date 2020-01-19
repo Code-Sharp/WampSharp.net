@@ -1,6 +1,6 @@
 ---
 title: "WampSharp v20.1.1 release notes"
-date: 2019-12-28T11:38:22+02:00
+date: 2020-01-18T00:12:00+00:00
 categories: ["release notes"]
 ---
 
