@@ -289,7 +289,7 @@ Console.WriteLine(<span style="color:#e6db74">&#34;Orders 2: {0}&#34;</span>, <s
 </code></pre></div><blockquote>
 <p>Note:  The sample is based on <a href="https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/progress">this</a> AutobahnJS sample</p>
 </blockquote>
-<h3 id="cancelation-support">Cancelation support</h3>
+<h3 id="cancellation-support">Cancellation support</h3>
 <p>Cancellation is supported via the <a href="https://msdn.microsoft.com/en-us/library/system.threading.cancellationtoken(v=vs.110).aspx">CancellationToken api</a>. In order to cancel a pending rpc invocation from a WAMP caller using the callee proxy api, declare an interface containing an async method, receiving a CancellationToken as its last parameter:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> ICancellableOpService
 {
@@ -468,7 +468,7 @@ proxy.AddComplex(<span style="color:#ae81ff">2</span>, <span style="color:#ae81f
         <li><a href="#tuples-support">Tuples support</a></li>
         <li><a href="#exception-support">Exception support</a></li>
         <li><a href="#progressive-call-results">Progressive call results</a></li>
-        <li><a href="#cancelation-support">Cancelation support</a></li>
+        <li><a href="#cancellation-support">Cancellation support</a></li>
         <li><a href="#outref-parameters">out/ref parameters</a></li>
         <li><a href="#multi-valued-results">Multi-valued results</a></li>
       </ul>
