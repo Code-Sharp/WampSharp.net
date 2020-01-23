@@ -250,7 +250,7 @@ public async Task Run()
 
 >Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/progress) AutobahnJS sample
 
-### Cancelation support
+### Cancellation support
 
 Cancellation is supported via the [CancellationToken api](https://msdn.microsoft.com/en-us/library/system.threading.cancellationtoken(v=vs.110).aspx). In order to cancel a pending rpc invocation from a WAMP caller using the callee proxy api, declare an interface containing an async method, receiving a CancellationToken as its last parameter:
 

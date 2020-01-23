@@ -47,23 +47,23 @@ This site contains documentation for the [WampSharp project](http://github.com/C
 
 ### Advanced profile features
 
-The following [Advanced profile features](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#advanced-profile-1) are supported
+The following [Advanced profile features](https://wamp-proto.org/_static/gen/wamp_latest.html#advanced-profile-0) are supported
 
-* [Progressive call results](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#progressive-call-results): [caller tutorial]({{<ref "WAMP2/Roles/Caller/Reflection-based-Caller.md">}}#progressive-call-results), [callee tutorial]({{<ref "WAMP2/Roles/Callee/Reflection-based-Callee.md">}}#progressive-call-results)
-* [Cancelation](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#call-canceling): [caller tutorial]({{<ref "WAMP2/Roles/Caller/Reflection-based-Caller.md">}}#cancellation), [callee tutorial]({{<ref "WAMP2/Roles/Callee/Reflection-based-Callee.md">}}#cancellation)
-* [Caller identification](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#caller-identification): [caller tutorial]({{<ref "WAMP2/Roles/Caller/Reflection-based-Caller.md">}}#caller-identification), [callee tutorial]({{<ref "WAMP2/Roles/Callee/Reflection-based-Callee.md">}})
-* [Session meta api](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#session-meta-api), [Registration meta api](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#registration-meta-api), [Subscription meta api](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#subscription-meta-api) - see [here]({{<ref "WAMP2/Meta-api-service.md">}})
-* [Testament](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#testament) - see [here]({{<ref "WAMP2/Testament-service.md">}}).
-* [Shared registrations](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#rfc.section.14.3.9), see also [here](http://crossbar.io/docs/Shared-Registrations/)  - see [callee tutorial]({{<ref "WAMP2/Roles/Callee/Reflection-based-Callee.md">}}#shared-registrations)
-* [Subscriber black and whitelisting](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#subscriber-black-and-whitelisting)
-* [Publisher exclusion](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#publisher-exclusion)
-* [Publisher identification](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#publisher-identification)
-* [Pattern-based subscriptions](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#pattern-based-subscriptions) - see also [here](http://crossbar.io/docs/Pattern-Based-Subscriptions/) - see [subscriber tutorial]({{<ref "WAMP2/Roles/Subscriber/Reflection-based-Subscriber.md">}}#pattern-based-subscriptions)
-* [Pattern-based registrations](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#patternbased-registrations) - see also [here](http://crossbar.io/docs/Pattern-Based-Registrations/) - see [callee tutorial]({{<ref "WAMP2/Roles/Callee/Reflection-based-Callee.md">}}#pattern-based-registrations)
+* [Progressive call results](https://wamp-proto.org/_static/gen/wamp_latest.html#progressive-call-results): [caller tutorial]({{<ref "WAMP2/Roles/Caller/Reflection-based-Caller.md">}}#progressive-call-results), [callee tutorial]({{<ref "WAMP2/Roles/Callee/Reflection-based-Callee.md">}}#progressive-call-results)
+* [Cancelation](https://wamp-proto.org/_static/gen/wamp_latest.html#call-canceling): [caller tutorial]({{<ref "WAMP2/Roles/Caller/Reflection-based-Caller.md">}}#cancellation-support), [callee tutorial]({{<ref "WAMP2/Roles/Callee/Reflection-based-Callee.md">}}#cancellation-support)
+* [Caller identification](https://wamp-proto.org/_static/gen/wamp_latest.html#caller-identification): [caller tutorial]({{<ref "WAMP2/Roles/Caller/Reflection-based-Caller.md">}}#caller-identification), [callee tutorial]({{<ref "WAMP2/Roles/Callee/Reflection-based-Callee.md">}})
+* [Session meta api](https://wamp-proto.org/_static/gen/wamp_latest.html#session-meta-api), [Registration meta api](https://wamp-proto.org/_static/gen/wamp_latest.html#registration-meta-api), [Subscription meta api](https://wamp-proto.org/_static/gen/wamp_latest.html#subscription-meta-api) - see [here]({{<ref "WAMP2/Meta-api-service.md">}})
+* [Testament](https://wamp-proto.org/_static/gen/wamp_latest.html#testament) - see [here]({{<ref "WAMP2/Testament-service.md">}}).
+* [Shared registrations](https://wamp-proto.org/_static/gen/wamp_latest.html#shared-registration), see also [here](http://crossbar.io/docs/Shared-Registrations/)  - see [callee tutorial]({{<ref "WAMP2/Roles/Callee/Reflection-based-Callee.md">}}#shared-registrations)
+* [Subscriber black and whitelisting](https://wamp-proto.org/_static/gen/wamp_latest.html#subscriber-black-and-whitelisting)
+* [Publisher exclusion](https://wamp-proto.org/_static/gen/wamp_latest.html#publisher-exclusion)
+* [Publisher identification](https://wamp-proto.org/_static/gen/wamp_latest.html#publisher-identification)
+* [Pattern-based subscriptions](https://wamp-proto.org/_static/gen/wamp_latest.html#pattern-based-subscriptions) - see also [here](http://crossbar.io/docs/Pattern-Based-Subscriptions/) - see [subscriber tutorial]({{<ref "WAMP2/Roles/Subscriber/Reflection-based-Subscriber.md">}}#pattern-based-subscriptions)
+* [Pattern-based registrations](https://wamp-proto.org/_static/gen/wamp_latest.html#pattern-based-registrations) - see also [here](http://crossbar.io/docs/Pattern-Based-Registrations/) - see [callee tutorial]({{<ref "WAMP2/Roles/Callee/Reflection-based-Callee.md">}}#pattern-based-registrations)
 * [Event retention](https://github.com/wamp-proto/wamp-proto/blob/master/rfc/text/advanced/ap_pubsub_event_retention.md)
-* [RawSocket transport](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#rawsocket) - see [here]({{<ref "WAMP2/Router/Transports/RawSocket.md">}})
-* [Authentication](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#authentication) - see [Router side authentication]({{<ref "WAMP2/Router/Router-side-authentication.md">}}), [Client side authentication]({{<ref "WAMP2/Client/Client-side-authentication.md">}}).
-* [WAMP-CRA](https://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#wampcra) - see [WAMP-CRA router side authentication]({{<ref "WAMP2/Router/WAMP-CRA-router-side-authentication.md">}}), [WAMP-CRA client side authentication]({{<ref "WAMP2/Client/WAMP-CRA-client-side-authentication.md">}})
+* [RawSocket transport](https://wamp-proto.org/_static/gen/wamp_latest.html#rawsocket) - see [here]({{<ref "WAMP2/Router/Transports/RawSocket.md">}})
+* [Authentication](https://wamp-proto.org/_static/gen/wamp_latest.html#authentication) - see [Router side authentication]({{<ref "WAMP2/Router/Router-side-authentication.md">}}), [Client side authentication]({{<ref "WAMP2/Client/Client-side-authentication.md">}}).
+* [WAMP-CRA](https://wamp-proto.org/_static/gen/wamp_latest.html#challenge-response-authentication) - see [WAMP-CRA router side authentication]({{<ref "WAMP2/Router/WAMP-CRA-router-side-authentication.md">}}), [WAMP-CRA client side authentication]({{<ref "WAMP2/Client/WAMP-CRA-client-side-authentication.md">}})
 
 ### Router
 
@@ -74,14 +74,13 @@ The following [Advanced profile features](https://wamp-proto.org/static/rfc/draf
   * [Cookie based router side authentication]({{<ref "WAMP2/Router/Cookie-based-router-side-authentication.md">}})
 * Transports
   * [WebSockets]({{<ref "WAMP2/Router/Transports/WebSocket.md">}})
-      * [Fleck]({{<ref "WAMP2/Router/Transports/WebSocket.md">}}#wampsharp-fleck)
-      * [Vtortola]({{<ref "WAMP2/Router/Transports/WebSocket.md">}}#wampsharp-vtortola)
-      * [Http Listener]({{<ref "WAMP2/Router/Transports/WebSocket.md">}}#wampsharp-httplistener)
-      * [ASP.NET Core]({{<ref "WAMP2/Router/Transports/WebSocket.md">}}#wampsharp-aspnetcore-websockets-server)
-      * [ASP.NET]({{<ref "WAMP2/Router/Transports/WebSocket.md">}}#wampsharp-aspnet-websockets-server)
-      * [Microsoft.Owin]({{<ref "WAMP2/Router/Transports/WebSocket.md">}}#wampsharp-owin)
+      * [Fleck]({{<ref "WAMP2/Router/Transports/WebSocket.md">}}#wampsharpfleck)
+      * [Vtortola]({{<ref "WAMP2/Router/Transports/WebSocket.md">}}#wampsharpvtortola)
+      * [Http Listener]({{<ref "WAMP2/Router/Transports/WebSocket.md">}}#wampsharphttplistener)
+      * [ASP.NET Core]({{<ref "WAMP2/Router/Transports/WebSocket.md">}}#wampsharpaspnetcorewebsocketsserver)
+      * [ASP.NET]({{<ref "WAMP2/Router/Transports/WebSocket.md">}}#wampsharpaspnetwebsocketsserver)
+      * [Microsoft.Owin]({{<ref "WAMP2/Router/Transports/WebSocket.md">}}#wampsharpowin)
   * [RawSocket]({{<ref "WAMP2/Router/Transports/RawSocket.md">}}#router-side-usage)
-  * [SignalR](https://github.com/Code-Sharp/AutobahnJS.SignalR)
 
 ### Client
 
