@@ -1,7 +1,7 @@
 <!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel=alternate href=/index.xml type=application/rss+xml title=WampSharp><link rel=icon href=https://wampsharp.net/favicon.ico><title>Rx-based Subscriber - WampSharp</title><link rel=stylesheet href=https://wampsharp.net/css/highlight/github.css><link rel=stylesheet href=https://wampsharp.net/css/bootstrap.min.css><link rel=stylesheet href=https://wampsharp.net/css/bootstrap-theme.min.css><link rel=stylesheet href=https://wampsharp.net/css/theme.css><link rel=stylesheet href=https://wampsharp.net/css/bootie-docs.css><link rel=stylesheet href=https://wampsharp.net/css/site.css></head><body role=document><nav class="navbar navbar-inverse navbar-fixed-top"><div class=container><div class=navbar-header><button type=button class="navbar-toggle collapsed" data-toggle=collapse data-target=#navbar aria-expanded=false aria-controls=navbar>
 <span class=sr-only>Toggle navigation</span>
 <span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span></button>
-<a class=navbar-brand href=https://wampsharp.net/>WampSharp</a></div><div id=navbar class="navbar-collapse collapse"><ul class="nav navbar-nav"><li><a href=https://wampsharp.net/>Home</a></li><li class=dropdown><a href=# class=dropdown-toggle data-toggle=dropdown role=button aria-expanded=false>Categories<span class=caret></span></a><ul class=dropdown-menu role=menu><li><a href=https://wampsharp.net/categories/authentication>Authentication</a></li><li><a href=https://wampsharp.net/categories/callee>Callee</a></li><li><a href=https://wampsharp.net/categories/caller>Caller</a></li><li><a href=https://wampsharp.net/categories/client>Client</a></li><li><a href=https://wampsharp.net/categories/getting-started>Getting-Started</a></li><li><a href=https://wampsharp.net/categories/publisher>Publisher</a></li><li><a href=https://wampsharp.net/categories/release-notes>Release-Notes</a></li><li><a href=https://wampsharp.net/categories/roadmap>Roadmap</a></li><li><a href=https://wampsharp.net/categories/router>Router</a></li><li><a href=https://wampsharp.net/categories/subscriber>Subscriber</a></li><li><a href=https://wampsharp.net/categories/wamp1>Wamp1</a></li></ul></li></ul></div></div></nav><div class=container><div class=row><div class="col-sm-8 doc-main"><main role=main><article><a id=title></a><h1 class=doc-entry-title>Rx-based Subscriber</h1><div class=doc-entry-meta><span><time datetime=2017-07-30>July 30, 2017</time></span></div><section><p><strong>Rx-based Subscriber</strong> allows you to subscribe to events of a topic of a WAMP router realm, using <a href=http://reactivex.io/>Reactive Extensions</a> Observable api.</p><h2 id=basic-usage>Basic usage</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task RunAsync()
+<a class=navbar-brand href=https://wampsharp.net/>WampSharp</a></div><div id=navbar class="navbar-collapse collapse"><ul class="nav navbar-nav"><li><a href=https://wampsharp.net/>Home</a></li><li class=dropdown><a href=# class=dropdown-toggle data-toggle=dropdown role=button aria-expanded=false>Categories<span class=caret></span></a><ul class=dropdown-menu role=menu><li><a href=https://wampsharp.net/categories/authentication>Authentication</a></li><li><a href=https://wampsharp.net/categories/callee>Callee</a></li><li><a href=https://wampsharp.net/categories/caller>Caller</a></li><li><a href=https://wampsharp.net/categories/client>Client</a></li><li><a href=https://wampsharp.net/categories/getting-started>Getting-Started</a></li><li><a href=https://wampsharp.net/categories/publisher>Publisher</a></li><li><a href=https://wampsharp.net/categories/release-notes>Release-Notes</a></li><li><a href=https://wampsharp.net/categories/roadmap>Roadmap</a></li><li><a href=https://wampsharp.net/categories/router>Router</a></li><li><a href=https://wampsharp.net/categories/subscriber>Subscriber</a></li><li><a href=https://wampsharp.net/categories/wamp1>Wamp1</a></li></ul></li></ul></div></div></nav><div class=container><div class=row><div class="col-sm-8 doc-main"><main role=main><article><a id=title></a><h1 class=doc-entry-title>Rx-based Subscriber</h1><div class=doc-entry-meta><span><time datetime=2017-07-30>July 30, 2017</time></span></div><section><p><strong>Rx-based Subscriber</strong> allows you to subscribe to events of a topic of a WAMP router realm, using <a href=http://reactivex.io/>Reactive Extensions</a> Observable api.</p><h2 id=basic-usage>Basic usage</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     DefaultWampChannelFactory factory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
@@ -17,42 +17,54 @@
     IDisposable subscription =
         realmProxy.Services.GetSubject&lt;<span style=color:#66d9ef>int</span>&gt;(<span style=color:#e6db74>&#34;com.myapp.topic1&#34;</span>)
                   .Subscribe(x =&gt;
-                  {
-                      Console.WriteLine(<span style=color:#e6db74>&#34;Got Event: &#34;</span> + x);
-                  });
+                             {
+                                 Console.WriteLine(<span style=color:#e6db74>$&#34;Got Event: {x}&#34;</span>);
+                             });
 
-    <span style=color:#75715e>// Call subscription.Dispose(); to unsubscribe.
-</span><span style=color:#75715e></span>}
-</code></pre></div><h2 id=getsubject-overloads>GetSubject overloads</h2><p>GetSubject allows you to subscribe to a topic of a WAMP realm, given the type of the received events.</p><p>If a generic type is specified, only the first argument in the Arguments parameter of the EVENT message is deserialized.</p><p>To handle other parameters of the EVENT message, one can use the IWampEventValueTupleConverter or IWampSubject overloads. These are described in the following sections.</p><h3 id=tuples-support>Tuples support</h3><p>The interface IWampEventValueTupleConverter is responsible for converting a IWampSerializedEvent instance to a specified tuple and a specified tuple instance to a IWampEvent.</p><p>Luckily enough, in order to implement this interface, it suffices to derive from WampEventValueTupleConverter&lt;> and specify the desired tuple type. Nothing else needs to be done.</p><p>(This might seem a bit odd, but that&rsquo;s the best way I&rsquo;m aware of for preserving ValueTuple element names after compilation)</p><p>Then, just pass an instance of your IWampEventValueTupleConverter to the overload of IWampRealmServiceProvider&rsquo;s GetSubject method, which receives the topic&rsquo;s uri and an instance of IWampEventValueTupleConverter, in order to receive a ISubject&lt;> instance of your desired tuple type.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>async</span> Task Run()
+    <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the Console.ReadLine() line.
+</span><span style=color:#75715e></span>    <span style=color:#66d9ef>await</span> Task.Yield();
+
+    Console.WriteLine(<span style=color:#e6db74>&#34;Press enter to unsubscribe&#34;</span>);
+
+    Console.ReadLine();
+    
+    subscription.Dispose();
+}
+</code></pre></div><h2 id=getsubject-overloads>GetSubject overloads</h2><p>GetSubject allows you to subscribe to a topic of a WAMP realm, given the type of the received events.</p><p>If a generic type is specified, only the first argument in the Arguments parameter of the EVENT message is deserialized.</p><p>To handle other parameters of the EVENT message, one can use the IWampEventValueTupleConverter or IWampSubject overloads. These are described in the following sections.</p><h3 id=tuples-support>Tuples support</h3><p>The interface IWampEventValueTupleConverter is responsible for converting a IWampSerializedEvent instance to a specified tuple and a specified tuple instance to a IWampEvent.</p><p>Luckily enough, in order to implement this interface, it suffices to derive from WampEventValueTupleConverter&lt;> and specify the desired tuple type. Nothing else needs to be done.</p><p>(This might seem a bit odd, but that&rsquo;s the best way I&rsquo;m aware of for preserving ValueTuple element names after compilation)</p><p>Then, just pass an instance of your IWampEventValueTupleConverter to the overload of IWampRealmServiceProvider&rsquo;s GetSubject method, which receives the topic&rsquo;s uri and an instance of IWampEventValueTupleConverter, in order to receive a ISubject&lt;> instance of your desired tuple type.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
-	DefaultWampChannelFactory factory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
-	IWampChannel channel =
-		factory.CreateJsonChannel(<span style=color:#e6db74>&#34;ws://localhost:8080/ws&#34;</span>, <span style=color:#e6db74>&#34;realm1&#34;</span>);
+    IWampChannel channel =
+        factory.CreateJsonChannel(<span style=color:#e6db74>&#34;ws://localhost:8080/ws&#34;</span>, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-	<span style=color:#66d9ef>await</span> channel.Open();
+    <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
-	ISubject&lt;(<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>int</span>)&gt; topic1Subject =
-		channel.RealmProxy.Services.GetSubject
-				(<span style=color:#e6db74>&#34;com.myapp.topic1&#34;</span>,
-				<span style=color:#66d9ef>new</span> MyPositionalTupleEventConverter());
+    ISubject&lt;(<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>int</span>)&gt; topic1Subject =
+        channel.RealmProxy.Services.GetSubject
+            (<span style=color:#e6db74>&#34;com.myapp.topic1&#34;</span>,
+             <span style=color:#66d9ef>new</span> MyPositionalTupleEventConverter());
 
-	topic1Subject.Subscribe(<span style=color:#66d9ef>value</span> =&gt;
-	{
-		(<span style=color:#66d9ef>int</span> number1, <span style=color:#66d9ef>int</span> number2) = <span style=color:#66d9ef>value</span>;
-		Console.WriteLine(<span style=color:#e6db74>$&#34;&gt;com.myapp.topic1: Got event: number1:{number1}, number2:{number2}&#34;</span>);
-	});
+    topic1Subject.Subscribe(<span style=color:#66d9ef>value</span> =&gt;
+                            {
+                                (<span style=color:#66d9ef>int</span> number1, <span style=color:#66d9ef>int</span> number2) = <span style=color:#66d9ef>value</span>;
+                                Console.WriteLine(<span style=color:#e6db74>$&#34;&gt;com.myapp.topic1: Got event: number1:{number1}, number2:{number2}&#34;</span>);
+                            });
 
-	ISubject&lt;(<span style=color:#66d9ef>int</span> number1, <span style=color:#66d9ef>int</span> number2, <span style=color:#66d9ef>string</span> c, ComplexContract d)&gt; topic2Subject =
-		channel.RealmProxy.Services.GetSubject
-				(<span style=color:#e6db74>&#34;com.myapp.topic2&#34;</span>,
-				<span style=color:#66d9ef>new</span> MyKeywordTupleEventConverter());
+    ISubject&lt;(<span style=color:#66d9ef>int</span> number1, <span style=color:#66d9ef>int</span> number2, <span style=color:#66d9ef>string</span> c, ComplexContract d)&gt; topic2Subject =
+        channel.RealmProxy.Services.GetSubject
+            (<span style=color:#e6db74>&#34;com.myapp.topic2&#34;</span>,
+             <span style=color:#66d9ef>new</span> MyKeywordTupleEventConverter());
 
-	topic2Subject.Subscribe(<span style=color:#66d9ef>value</span> =&gt;
-	{
-		(<span style=color:#66d9ef>int</span> number1, <span style=color:#66d9ef>int</span> number2, <span style=color:#66d9ef>string</span> c, ComplexContract d) = <span style=color:#66d9ef>value</span>;
-		Console.WriteLine(<span style=color:#e6db74>$&#34;&gt;com.myapp.topic2: Got event: number1:{number1}, number2:{number2}, c:{c}, d:{d}&#34;</span>);
-	});
+    topic2Subject.Subscribe(<span style=color:#66d9ef>value</span> =&gt;
+                            {
+                                (<span style=color:#66d9ef>int</span> number1, <span style=color:#66d9ef>int</span> number2, <span style=color:#66d9ef>string</span> c, ComplexContract d) = <span style=color:#66d9ef>value</span>;
+                                Console.WriteLine(<span style=color:#e6db74>$&#34;&gt;com.myapp.topic2: Got event: number1:{number1}, number2:{number2}, c:{c}, d:{d}&#34;</span>);
+                            });
+
+    <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+</span><span style=color:#75715e></span>    <span style=color:#66d9ef>await</span> Task.Yield();
+
+    Console.ReadLine();
 }
 
 <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>MyPositionalTupleEventConverter</span> : WampEventValueTupleConverter&lt;(<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>int</span>)&gt;
@@ -74,8 +86,8 @@
     <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>string</span> ToString()
     {
         <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>string</span>.Format(<span style=color:#e6db74>&#34;counter: {0}, foo: [{1}]&#34;</span>,
-            Counter,
-            <span style=color:#66d9ef>string</span>.Join(<span style=color:#e6db74>&#34;, &#34;</span>, Foo));
+                             Counter,
+                             <span style=color:#66d9ef>string</span>.Join(<span style=color:#e6db74>&#34;, &#34;</span>, Foo));
     }
 }
 </code></pre></div><p>This code can consume events published by the following Javascript code:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>counter</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
@@ -90,14 +102,7 @@
 
     <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>&#34;events published&#34;</span>);
 }, <span style=color:#ae81ff>1000</span>);
-</code></pre></div><blockquote><p>This example is based on <a href=https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/complex>this</a> AutobahnJS sample.</p></blockquote><h3 id=iwampsubject>IWampSubject</h3><p>Specifying no generic type to the GetSubject method will a return a IWampSubject, that is a IObservable of a IWampSerializedEvent. IWampSerializedEvent is an interface representing an incoming WAMP EVENT message. It has properties of type ISerializedValue that can be deserialized.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Main(<span style=color:#66d9ef>string</span>[] args)
-{
-    IDisposable disposable = RunAsync().Result;
-    Console.ReadLine();
-    disposable.Dispose();
-}
-
-<span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task&lt;IDisposable&gt; RunAsync()
+</code></pre></div><blockquote><p>This example is based on <a href=https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/complex>this</a> AutobahnJS sample.</p></blockquote><h3 id=iwampsubject>IWampSubject</h3><p>Specifying no generic type to the GetSubject method will a return a IWampSubject, that is a IObservable of a IWampSerializedEvent. IWampSerializedEvent is an interface representing an incoming WAMP EVENT message. It has properties of type ISerializedValue that can be deserialized.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main(<span style=color:#66d9ef>string</span>[] args)
 {
     DefaultWampChannelFactory factory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
@@ -113,17 +118,23 @@
     IWampSubject topic =
         realmProxy.Services.GetSubject(<span style=color:#e6db74>&#34;com.myapp.topic2&#34;</span>);
 
-    IDisposable disposable =
-        topic.Subscribe(OnTopic2);
+    IDisposable disposable = topic.Subscribe(OnTopic2);
 
-    <span style=color:#66d9ef>return</span> disposable;
+    <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+</span><span style=color:#75715e></span>    <span style=color:#66d9ef>await</span> Task.Yield();
+
+    Console.WriteLine(<span style=color:#e6db74>&#34;Press enter to unsubscribe&#34;</span>);
+
+    Console.ReadLine();
+
+    disposable.Dispose();
 }
 
 <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> OnTopic2(IWampSerializedEvent serializedEvent)
 {
     <span style=color:#66d9ef>int</span>[] arguments =
         serializedEvent.Arguments.Select(argument =&gt; argument.Deserialize&lt;<span style=color:#66d9ef>int</span>&gt;())
-         .ToArray();
+                       .ToArray();
 
     <span style=color:#66d9ef>string</span> c =
         serializedEvent.ArgumentsKeywords[<span style=color:#e6db74>&#34;c&#34;</span>].Deserialize&lt;<span style=color:#66d9ef>string</span>&gt;();
@@ -136,10 +147,10 @@
         {
             arguments,
             argumentsKeywords = <span style=color:#66d9ef>new</span>
-            {
-                c,
-                d
-            }
+                                {
+                                    c,
+                                    d
+                                }
         };
 
     Console.WriteLine(<span style=color:#e6db74>&#34;Got event: args: [{0}], kwargs: {{ {1} }}&#34;</span>,

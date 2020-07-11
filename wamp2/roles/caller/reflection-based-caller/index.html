@@ -7,7 +7,7 @@
     <span style=color:#66d9ef>int</span> Add2(<span style=color:#66d9ef>int</span> a, <span style=color:#66d9ef>int</span> b);
 }
 
-<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Run()
+<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     DefaultWampChannelFactory factory =
         <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
@@ -17,28 +17,19 @@
     IWampChannel channel =
         factory.CreateJsonChannel(serverAddress, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-    channel.Open().Wait(<span style=color:#ae81ff>5000</span>);
+    <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
+
+    <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following synchronous proxy.Add2(2,3) call.
+</span><span style=color:#75715e></span>    <span style=color:#66d9ef>await</span> Task.Yield();
 
     IArgumentsService proxy =
         channel.RealmProxy.Services.GetCalleeProxy&lt;IArgumentsService&gt;();
 
     <span style=color:#66d9ef>int</span> five = proxy.Add2(<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>);
 }
-</code></pre></div><h2 id=supported-features>Supported features</h2><p>The following features are supported:</p><h3 id=async-method-support>Async method support</h3><p>A method returning a Task&lt;> can be awaited. Example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> IArgumentsService
+</code></pre></div><h2 id=supported-features>Supported features</h2><p>The following features are supported:</p><h3 id=async-method-support>Async method support</h3><p>A method returning a Task&lt;> can be awaited. Example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> IArgumentsServiceProxy
 {
 <span style=color:#a6e22e>    [WampProcedure(&#34;com.arguments.ping&#34;)]</span>
-    <span style=color:#66d9ef>void</span> Ping();
-<span style=color:#a6e22e>
-</span><span style=color:#a6e22e>    [WampProcedure(&#34;com.arguments.add2&#34;)]</span>
-    <span style=color:#66d9ef>int</span> Add2(<span style=color:#66d9ef>int</span> a, <span style=color:#66d9ef>int</span> b);
-<span style=color:#a6e22e>
-</span><span style=color:#a6e22e>    [WampProcedure(&#34;com.arguments.stars&#34;)]</span>
-    <span style=color:#66d9ef>string</span> Stars(<span style=color:#66d9ef>string</span> nick = <span style=color:#e6db74>&#34;somebody&#34;</span>, <span style=color:#66d9ef>int</span> stars = <span style=color:#ae81ff>0</span>);
-<span style=color:#a6e22e>
-</span><span style=color:#a6e22e>    [WampProcedure(&#34;com.arguments.orders&#34;)]</span>
-    <span style=color:#66d9ef>string</span>[] Orders(<span style=color:#66d9ef>string</span> product, <span style=color:#66d9ef>int</span> limit = <span style=color:#ae81ff>5</span>);
-<span style=color:#a6e22e>
-</span><span style=color:#a6e22e>    [WampProcedure(&#34;com.arguments.ping&#34;)]</span>
     Task PingAsync();
 <span style=color:#a6e22e>
 </span><span style=color:#a6e22e>    [WampProcedure(&#34;com.arguments.add2&#34;)]</span>
@@ -50,29 +41,44 @@
 </span><span style=color:#a6e22e>    [WampProcedure(&#34;com.arguments.orders&#34;)]</span>
     Task&lt;<span style=color:#66d9ef>string</span>[]&gt; OrdersAsync(<span style=color:#66d9ef>string</span> product, <span style=color:#66d9ef>int</span> limit = <span style=color:#ae81ff>5</span>);
 }
-</code></pre></div><p>Call example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp>proxy.Ping();
-Console.WriteLine(<span style=color:#e6db74>&#34;Pinged!&#34;</span>);
+</code></pre></div><p>Call example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
+{
+    DefaultWampChannelFactory factory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
-<span style=color:#66d9ef>int</span> result = <span style=color:#66d9ef>await</span> proxy.Add2Async(<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>);
-Console.WriteLine(<span style=color:#e6db74>&#34;Add2: {0}&#34;</span>, result);
+    <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> serverAddress = <span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
-<span style=color:#66d9ef>var</span> starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync();
-Console.WriteLine(<span style=color:#e6db74>&#34;Starred 1: {0}&#34;</span>, starred);
+    IWampChannel channel =
+        factory.CreateJsonChannel(serverAddress, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync(nick: <span style=color:#e6db74>&#34;Homer&#34;</span>);
-Console.WriteLine(<span style=color:#e6db74>&#34;Starred 2: {0}&#34;</span>, starred);
+    <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
-starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync(stars: <span style=color:#ae81ff>5</span>);
-Console.WriteLine(<span style=color:#e6db74>&#34;Starred 3: {0}&#34;</span>, starred);
+    IArgumentsServiceProxy proxy =
+        channel.RealmProxy.Services.GetCalleeProxy&lt;IArgumentsServiceProxy&gt;();
 
-starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync(nick: <span style=color:#e6db74>&#34;Homer&#34;</span>, stars: <span style=color:#ae81ff>5</span>);
-Console.WriteLine(<span style=color:#e6db74>&#34;Starred 4: {0}&#34;</span>, starred);
+    <span style=color:#66d9ef>await</span> proxy.PingAsync().ConfigureAwait(<span style=color:#66d9ef>false</span>);
+    Console.WriteLine(<span style=color:#e6db74>&#34;Pinged!&#34;</span>);
 
-<span style=color:#66d9ef>string</span>[] orders = <span style=color:#66d9ef>await</span> proxy.OrdersAsync(<span style=color:#e6db74>&#34;coffee&#34;</span>);
-Console.WriteLine(<span style=color:#e6db74>&#34;Orders 1: {0}&#34;</span>, <span style=color:#66d9ef>string</span>.Join(<span style=color:#e6db74>&#34;, &#34;</span>, orders));
+    <span style=color:#66d9ef>int</span> result = <span style=color:#66d9ef>await</span> proxy.Add2Async(<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+    Console.WriteLine(<span style=color:#e6db74>&#34;Add2: {0}&#34;</span>, result);
 
-orders = <span style=color:#66d9ef>await</span> proxy.OrdersAsync(<span style=color:#e6db74>&#34;coffee&#34;</span>, limit: <span style=color:#ae81ff>10</span>);
-Console.WriteLine(<span style=color:#e6db74>&#34;Orders 2: {0}&#34;</span>, <span style=color:#66d9ef>string</span>.Join(<span style=color:#e6db74>&#34;, &#34;</span>, orders));
+    <span style=color:#66d9ef>var</span> starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync().ConfigureAwait(<span style=color:#66d9ef>false</span>);
+    Console.WriteLine(<span style=color:#e6db74>$&#34;Starred 1: {starred}&#34;</span>);
+
+    starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync(nick: <span style=color:#e6db74>&#34;Homer&#34;</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+    Console.WriteLine(<span style=color:#e6db74>$&#34;Starred 2: {starred}&#34;</span>);
+
+    starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync(stars: <span style=color:#ae81ff>5</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+    Console.WriteLine(<span style=color:#e6db74>$&#34;Starred 3: {starred}&#34;</span>);
+
+    starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync(nick: <span style=color:#e6db74>&#34;Homer&#34;</span>, stars: <span style=color:#ae81ff>5</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+    Console.WriteLine(<span style=color:#e6db74>$&#34;Starred 4: {starred}&#34;</span>);
+
+    <span style=color:#66d9ef>string</span>[] orders = <span style=color:#66d9ef>await</span> proxy.OrdersAsync(<span style=color:#e6db74>&#34;coffee&#34;</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+    Console.WriteLine(<span style=color:#e6db74>$&#34;Orders 1: {string.Join(&#34;</span>, <span style=color:#e6db74>&#34;, orders)}&#34;</span>);
+
+    orders = <span style=color:#66d9ef>await</span> proxy.OrdersAsync(<span style=color:#e6db74>&#34;coffee&#34;</span>, limit: <span style=color:#ae81ff>10</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+    Console.WriteLine(<span style=color:#e6db74>$&#34;Orders 2: {string.Join(&#34;</span>, <span style=color:#e6db74>&#34;, orders)}&#34;</span>);
+}
 </code></pre></div><blockquote><p>Note: The sample is based on <a href=https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/arguments>this</a> AutobahnJS sample</p></blockquote><h3 id=tuples-support>Tuples support</h3><p>Reflection-based callers support C# 7.0 tuple return values. You can simply declare a method returning a C# 7.0 tuple in your callee proxy interface. The tuple will be deserialized either from the arguments keywords or from the arguments array of the RESULT message, depending on whether the returned tuple has named elements or positional elements. (tuples having elements which are partially named are not supported)</p><p>For example, declare the following callee proxy interface:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> IComplexResultServiceProxy
 {
 <span style=color:#a6e22e>	[WampProcedure(&#34;com.myapp.add_complex&#34;)]</span>
@@ -87,25 +93,25 @@ Console.WriteLine(<span style=color:#e6db74>&#34;Orders 2: {0}&#34;</span>, <spa
 </span><span style=color:#a6e22e>    [WampProcedure(&#34;com.myapp.split_name&#34;)]</span>
     (<span style=color:#66d9ef>string</span>, <span style=color:#66d9ef>string</span>) SplitName(<span style=color:#66d9ef>string</span> fullname);
 }
-</code></pre></div><p>And then obtain a callee proxy and simply call its methods:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>async</span> Task Run()
+</code></pre></div><p>And then obtain a callee proxy and simply call its methods:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     DefaultWampChannelFactory factory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
         factory.CreateJsonChannel(<span style=color:#e6db74>&#34;ws://localhost:8080/ws&#34;</span>, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-    <span style=color:#66d9ef>await</span> channel.Open();
+    <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     IComplexResultServiceProxy proxy =
         channel.RealmProxy.Services.GetCalleeProxy&lt;IComplexResultServiceProxy&gt;();
 
-    (<span style=color:#66d9ef>string</span> forename, <span style=color:#66d9ef>string</span> surname) = <span style=color:#66d9ef>await</span> proxy.SplitNameAsync(<span style=color:#e6db74>&#34;Homer Simpson&#34;</span>);
+    (<span style=color:#66d9ef>string</span> forename, <span style=color:#66d9ef>string</span> surname) = <span style=color:#66d9ef>await</span> proxy.SplitNameAsync(<span style=color:#e6db74>&#34;Homer Simpson&#34;</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
     <span style=color:#75715e>// Synchronous version: 
 </span><span style=color:#75715e></span>    <span style=color:#75715e>// (string forename, string surname) = proxy.SplitName(&#34;Homer Simpson&#34;);
 </span><span style=color:#75715e></span>
     Console.WriteLine(<span style=color:#e6db74>$&#34;Forename: {forename}, Surname: {surname}&#34;</span>);
 
-    (<span style=color:#66d9ef>int</span> c, <span style=color:#66d9ef>int</span> ci) = <span style=color:#66d9ef>await</span> proxy.AddComplexAsync(<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>4</span>, <span style=color:#ae81ff>5</span>);
+    (<span style=color:#66d9ef>int</span> c, <span style=color:#66d9ef>int</span> ci) = <span style=color:#66d9ef>await</span> proxy.AddComplexAsync(<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>4</span>, <span style=color:#ae81ff>5</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
     <span style=color:#75715e>// Synchronous version: 
 </span><span style=color:#75715e></span>    <span style=color:#75715e>// (int c, int ci) = proxy.AddComplex(2, 3, 4, 5);
 </span><span style=color:#75715e></span>
@@ -154,20 +160,20 @@ Console.WriteLine(<span style=color:#e6db74>&#34;Orders 2: {0}&#34;</span>, <spa
 <span style=color:#a6e22e>    [WampProgressiveResultProcedure]</span>
     Task&lt;<span style=color:#66d9ef>int</span>&gt; LongOp(<span style=color:#66d9ef>int</span> n, IProgress&lt;<span style=color:#66d9ef>int</span>&gt; progress);
 }
-</code></pre></div><p>Then obtain the proxy and call it:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>async</span> Task Run()
+</code></pre></div><p>Then obtain the proxy and call it:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     DefaultWampChannelFactory factory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
     IWampChannel channel = factory.CreateJsonChannel(<span style=color:#e6db74>&#34;ws://localhost:8080/ws&#34;</span>, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-    <span style=color:#66d9ef>await</span> channel.Open();
+    <span style=color:#66d9ef>await</span> channel.Open()ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     ILongOpService proxy = channel.RealmProxy.Services.GetCalleeProxy&lt;ILongOpService&gt;();
 
     Progress&lt;<span style=color:#66d9ef>int</span>&gt; progress =
         <span style=color:#66d9ef>new</span> Progress&lt;<span style=color:#66d9ef>int</span>&gt;(i =&gt; Console.WriteLine(<span style=color:#e6db74>&#34;Got progress &#34;</span> + i));
 
-    <span style=color:#66d9ef>int</span> result = <span style=color:#66d9ef>await</span> proxy.LongOp(<span style=color:#ae81ff>10</span>, progress);
+    <span style=color:#66d9ef>int</span> result = <span style=color:#66d9ef>await</span> proxy.LongOp(<span style=color:#ae81ff>10</span>, progress).ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     Console.WriteLine(<span style=color:#e6db74>&#34;Got result &#34;</span> + result);
 }
@@ -215,9 +221,9 @@ proxy.AddComplex(<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3
 {
 <span style=color:#a6e22e>    [WampProcedure(&#34;com.myapp.split_name&#34;)]</span>
 <span style=color:#a6e22e>    [return: WampResult(CollectionResultTreatment.Multivalued)]</span>
-    <span style=color:#66d9ef>string</span>[] SplitName(<span style=color:#66d9ef>string</span> fullname);
+    Task&lt;<span style=color:#66d9ef>string</span>[]&gt; SplitNameAsync(<span style=color:#66d9ef>string</span> fullname);
 }
-</code></pre></div><p>Call example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>string</span>[] splitted = proxy.SplitName(<span style=color:#e6db74>&#34;Homer Simpson&#34;</span>);
+</code></pre></div><p>Call example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>string</span>[] splitted = proxy.SplitNameAsync(<span style=color:#e6db74>&#34;Homer Simpson&#34;</span>);
 </code></pre></div><blockquote><p>Note: The sample is based on <a href=https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex>this</a> AutobahnJS sample</p></blockquote><h2 id=call-customization>Call customization</h2><p>The GetCalleeProxy method of IWampRealmServiceProvider now has an overload that receives an &ldquo;interceptor&rdquo; instance. The &ldquo;interceptor&rdquo; allows customizing the call being performed.</p><p>For instance, assume you want to call procedures of a contract that its procedures uris are known only on runtime. This is possible implementing a ICalleeProxyInterceptor:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>MyCalleeProxyInterceptor</span> : CalleeProxyInterceptor
 {
     <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>int</span> mCalleeIndex;
@@ -241,14 +247,14 @@ proxy.AddComplex(<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3
 <span style=color:#a6e22e>    [WampProcedure(&#34;com.myapp.square.{0}&#34;)]</span>
     Task&lt;<span style=color:#66d9ef>int</span>&gt; Square(<span style=color:#66d9ef>int</span> number);
 }
-</code></pre></div><p>And then specify the index in runtime:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Run()
+</code></pre></div><p>And then specify the index in runtime:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     DefaultWampChannelFactory factory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
         factory.CreateJsonChannel(<span style=color:#e6db74>&#34;ws://localhost:8080/ws&#34;</span>, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-    <span style=color:#66d9ef>await</span> channel.Open();
+    <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     <span style=color:#66d9ef>int</span> index = GetRuntimeIndex();
 
@@ -257,16 +263,16 @@ proxy.AddComplex(<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3
         (<span style=color:#66d9ef>new</span> CachedCalleeProxyInterceptor(
             <span style=color:#66d9ef>new</span> MyCalleeProxyInterceptor(index)));
 
-    <span style=color:#66d9ef>int</span> nine = <span style=color:#66d9ef>await</span> proxy.Square(<span style=color:#ae81ff>3</span>); <span style=color:#75715e>// Calls (&#34;com.myapp.square.&#34; + index)
+    <span style=color:#66d9ef>int</span> nine = <span style=color:#66d9ef>await</span> proxy.Square(<span style=color:#ae81ff>3</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>); <span style=color:#75715e>// Calls (&#34;com.myapp.square.&#34; + index)
 </span><span style=color:#75715e></span>}
-</code></pre></div><blockquote><p>Note: we wrap our interceptor with the CachedCalleeProxyInterceptor in order to cache the results of our interceptor, in order to avoid calculating them each call.</p></blockquote><p>In addition, the interceptor allows to modify the options sent to each call. The following sections demonstrates modifications that can be used to leverage WAMP advanced profile features.</p><blockquote><p>Note: these interceptors are still &ldquo;static&rdquo;, i.e: they don&rsquo;t allow returning a value that depends on the call parameters.</p></blockquote><h3 id=caller-identification>Caller identification</h3><p>Callee proxy sample:</p><p>According to WAMP2 specification, a Caller can request to disclose its identification (by specifying disclose_me = true on call request).</p><p>Specifying this is possible when obtaining callee proxy.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>async</span> Task Run()
+</code></pre></div><blockquote><p>Note: we wrap our interceptor with the CachedCalleeProxyInterceptor in order to cache the results of our interceptor, in order to avoid calculating them each call.</p></blockquote><p>In addition, the interceptor allows to modify the options sent to each call. The following sections demonstrates modifications that can be used to leverage WAMP advanced profile features.</p><blockquote><p>Note: these interceptors are still &ldquo;static&rdquo;, i.e: they don&rsquo;t allow returning a value that depends on the call parameters.</p></blockquote><h3 id=caller-identification>Caller identification</h3><p>Callee proxy sample:</p><p>According to WAMP2 specification, a Caller can request to disclose its identification (by specifying disclose_me = true on call request).</p><p>Specifying this is possible when obtaining callee proxy.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     DefaultWampChannelFactory factory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
         factory.CreateJsonChannel(<span style=color:#e6db74>&#34;ws://localhost:8080/ws&#34;</span>, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-    <span style=color:#66d9ef>await</span> channel.Open();
+    <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     <span style=color:#66d9ef>var</span> callOptions = <span style=color:#66d9ef>new</span> CallOptions()
     {
@@ -277,9 +283,9 @@ proxy.AddComplex(<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3
         channel.RealmProxy.Services.GetCalleeProxy&lt;ISquareService&gt;
         (<span style=color:#66d9ef>new</span> CachedCalleeProxyInterceptor(<span style=color:#66d9ef>new</span> CalleeProxyInterceptor(callOptions)));
 
-    <span style=color:#66d9ef>await</span> proxy.Square(-<span style=color:#ae81ff>2</span>);
-    <span style=color:#66d9ef>await</span> proxy.Square(<span style=color:#ae81ff>0</span>);
-    <span style=color:#66d9ef>await</span> proxy.Square(<span style=color:#ae81ff>2</span>);
+    <span style=color:#66d9ef>await</span> proxy.Square(-<span style=color:#ae81ff>2</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+    <span style=color:#66d9ef>await</span> proxy.Square(<span style=color:#ae81ff>0</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+    <span style=color:#66d9ef>await</span> proxy.Square(<span style=color:#ae81ff>2</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
 }
 </code></pre></div><blockquote><p>Note: The sample is based on <a href=https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/options>this</a> AutobahnJS sample</p></blockquote></section></article></main></div><div class="col-sm-3 col-sm-offset-1 doc-sidebar"><div id=sidebar><div class=sidebar-module><div class=sidebar-toc><h4 class=sidebar-heading>Table of Contents</h4><ul><li><strong><a href=#title>Reflection-based Caller</a></strong></li></ul><nav id=TableOfContents><ul><li><a href=#basic-usage>Basic usage</a></li><li><a href=#supported-features>Supported features</a><ul><li><a href=#async-method-support>Async method support</a></li><li><a href=#tuples-support>Tuples support</a></li><li><a href=#exception-support>Exception support</a></li><li><a href=#progressive-call-results>Progressive call results</a></li><li><a href=#cancellation-support>Cancellation support</a></li><li><a href=#outref-parameters>out/ref parameters</a></li><li><a href=#multi-valued-results>Multi-valued results</a></li></ul></li><li><a href=#call-customization>Call customization</a><ul><li><a href=#caller-identification>Caller identification</a></li></ul></li></ul></nav></div></div><div class=sidebar-module><h4 class=sidebar-heading>Pages in Categories</h4><ul class=sidebar-category-list><li><a href=https://wampsharp.net/categories/authentication><span class=doc-list-category>Authentication</span></a><ul><li><a href=/wamp2/client/client-side-authentication/>Client-side authentication</a></li><li><a href=/wamp2/router/cookie-based-router-side-authentication/>Cookie based router-side authentication</a></li><li><a href=/wamp2/router/router-side-authentication/>Router-side authentication</a></li><li><a href=/wamp2/client/wamp-cra-client-side-authentication/>WAMP-CRA client side authentication</a></li><li><a href=/wamp2/router/wamp-cra-router-side-authentication/>WAMP-CRA router-side authentication</a></li></ul></li><li><a href=https://wampsharp.net/categories/callee><span class=doc-list-category>Callee</span></a><ul><li><a href=/wamp2/roles/callee/getting-started-with-callee/>Getting started with Callee</a></li><li><a href=/wamp2/roles/callee/raw-callee/>Raw Callee</a></li><li><a href=/wamp2/roles/callee/reflection-based-callee/>Reflection-based Callee</a></li></ul></li><li><a href=https://wampsharp.net/categories/caller><span class=doc-list-category>Caller</span></a><ul><li><a href=/wamp2/roles/caller/getting-started-with-caller/>Getting started with Caller</a></li><li><a href=/wamp2/roles/caller/raw-caller/>Raw Caller</a></li><li><span class=active>Reflection-based Caller</span></li></ul></li><li><a href=https://wampsharp.net/categories/client><span class=doc-list-category>Client</span></a><ul><li><a href=/wamp2/router/transports/rawsocket/>RawSocket transport</a></li><li><a href=/wamp2/client/client-side-authentication/>Client-side authentication</a></li><li><a href=/wamp2/meta-api-service/>Meta-api descriptor service</a></li><li><a href=/wamp2/testament-service/>Testament service</a></li><li><a href=/wamp2/client/wamp-cra-client-side-authentication/>WAMP-CRA client side authentication</a></li><li><a href=/wamp2/client/wampchannel/>WampChannel</a></li><li><a href=/wamp2/client/wampchannelreconnector/>WampChannelReconnector</a></li></ul></li><li><a href=https://wampsharp.net/categories/getting-started><span class=doc-list-category>Getting-Started</span></a><ul><li><a href=/wamp2/roles/callee/getting-started-with-callee/>Getting started with Callee</a></li><li><a href=/wamp2/roles/caller/getting-started-with-caller/>Getting started with Caller</a></li><li><a href=/wamp2/roles/publisher/getting-started-with-publisher/>Getting started with Publisher</a></li><li><a href=/wamp2/roles/subscriber/getting-started-with-subscriber/>Getting started with Subscriber</a></li><li><a href=/wamp2/getting-started-with-wampv2/>Getting started with WAMPv2</a></li></ul></li><li><a href=https://wampsharp.net/categories/publisher><span class=doc-list-category>Publisher</span></a><ul><li><a href=/wamp2/roles/publisher/getting-started-with-publisher/>Getting started with Publisher</a></li><li><a href=/wamp2/roles/publisher/raw-publisher/>Raw Publisher</a></li><li><a href=/wamp2/roles/publisher/reflection-based-publisher/>Reflection-based Publisher</a></li><li><a href=/wamp2/roles/publisher/rx-based-publisher/>Rx-based Publisher</a></li></ul></li><li><a href=https://wampsharp.net/categories/release-notes><span class=doc-list-category>Release-Notes</span></a><ul><li><a href=/release-notes/wampsharp-v20.1.1-release-notes/>WampSharp v20.1.1 release notes</a></li><li><a href=/release-notes/wampsharp-v18.6.1-release-notes/>WampSharp v18.6.1 release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.6.41-beta-release-notes/>WampSharp v1.2.6.41-beta release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.5.21-beta-release-notes/>WampSharp v1.2.5.21-beta release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.4.18-beta-release-notes/>WampSharp v1.2.4.18-beta release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.3.12-beta-release-notes/>WampSharp v1.2.3.12-beta release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.2.8-beta-release-notes/>WampSharp v1.2.2.8-beta release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.1.6-beta-release-notes/>WampSharp v1.2.1.6-beta release notes</a></li></ul></li><li><a href=https://wampsharp.net/categories/roadmap><span class=doc-list-category>Roadmap</span></a><ul><li><a href=/roadmap/>Roadmap</a></li></ul></li><li><a href=https://wampsharp.net/categories/router><span class=doc-list-category>Router</span></a><ul><li><a href=/wamp2/router/transports/rawsocket/>RawSocket transport</a></li><li><a href=/wamp2/router/transports/websocket/>WebSocket transports</a></li><li><a href=/wamp2/router/cookie-based-router-side-authentication/>Cookie based router-side authentication</a></li><li><a href=/wamp2/meta-api-service/>Meta-api descriptor service</a></li><li><a href=/wamp2/router/router-side-authentication/>Router-side authentication</a></li><li><a href=/wamp2/testament-service/>Testament service</a></li><li><a href=/wamp2/router/wamp-cra-router-side-authentication/>WAMP-CRA router-side authentication</a></li><li><a href=/wamp2/router/wamphost/>WampHost</a></li></ul></li><li><a href=https://wampsharp.net/categories/subscriber><span class=doc-list-category>Subscriber</span></a><ul><li><a href=/wamp2/roles/subscriber/getting-started-with-subscriber/>Getting started with Subscriber</a></li><li><a href=/wamp2/roles/subscriber/raw-subscriber/>Raw Subscriber</a></li><li><a href=/wamp2/roles/subscriber/reflection-based-subscriber/>Reflection-based Subscriber</a></li><li><a href=/wamp2/roles/subscriber/rx-based-subscriber/>Rx-based Subscriber</a></li></ul></li><li><a href=https://wampsharp.net/categories/wamp1><span class=doc-list-category>Wamp1</span></a><ul><li><a href=/wamp1/getting-started-with-wampv1/>Getting started with WAMPv1</a></li><li><a href=/wamp1/getting-started-with-wampv1-client/>Getting started with WAMPv1 client</a></li><li><a href=/wamp1/notes-for-wampv1-users/>Notes for WAMP1 users</a></li><li><a href=/wamp1/server-pubsub-hosting-wampv1/>Server PubSub hosting (WAMPv1)</a></li><li><a href=/wamp1/server-rpc-hosting-wampv1/>Server RPC hosting (WAMPv1)</a></li></ul></li></ul></div><div class=sidebar-module><h4 class=sidebar-heading>Tags</h4><div class=tag-box><a class=tag-item href=https://wampsharp.net/tags/authentication>authentication</a>
 <a class=tag-item href=https://wampsharp.net/tags/callee>callee</a>

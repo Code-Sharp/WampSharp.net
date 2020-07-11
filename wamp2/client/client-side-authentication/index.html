@@ -48,7 +48,7 @@ In IWampClientAuthenticator we supply the supported authentication methods and t
         }
     }
 }
-</code></pre></div><p>Then we pass an instance of our authenticator to the ChannelFactory:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>async</span> Task Run()
+</code></pre></div><p>Then we pass an instance of our authenticator to the ChannelFactory:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     DefaultWampChannelFactory channelFactory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
@@ -61,14 +61,14 @@ In IWampClientAuthenticator we supply the supported authentication methods and t
 
     IWampRealmProxy realmProxy = channel.RealmProxy;
 
-    <span style=color:#66d9ef>await</span> channel.Open();
+    <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     <span style=color:#75715e>// Call a rpc for example
 </span><span style=color:#75715e></span>    ITimeService proxy = realmProxy.Services.GetCalleeProxy&lt;ITimeService&gt;();
 
     <span style=color:#66d9ef>try</span>
     {
-        <span style=color:#66d9ef>string</span> now = <span style=color:#66d9ef>await</span> proxy.Now();
+        <span style=color:#66d9ef>string</span> now = <span style=color:#66d9ef>await</span> proxy.Now().ConfigureAwait(<span style=color:#66d9ef>false</span>);
         Console.WriteLine(<span style=color:#e6db74>&#34;call result {0}&#34;</span>, now);
     }
     <span style=color:#66d9ef>catch</span> (Exception e)

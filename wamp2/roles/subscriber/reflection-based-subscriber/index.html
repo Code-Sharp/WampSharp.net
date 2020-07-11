@@ -11,9 +11,7 @@
 
     <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>string</span> ToString()
     {
-        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>string</span>.Format(<span style=color:#e6db74>&#34;counter: {0}, foo: [{1}]&#34;</span>,
-            Counter,
-            <span style=color:#66d9ef>string</span>.Join(<span style=color:#e6db74>&#34;, &#34;</span>, Foo));
+        <span style=color:#66d9ef>return</span> <span style=color:#e6db74>$&#34;counter: {Counter}, foo: [{string.Join(&#34;</span>, <span style=color:#e6db74>&#34;, Foo)}]&#34;</span>;
     }
 }
 
@@ -31,33 +29,40 @@
     <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> OnHeartbeat()
     {
         <span style=color:#66d9ef>long</span> publicationId = WampEventContext.Current.PublicationId;
-        Console.WriteLine(<span style=color:#e6db74>&#34;Got heartbeat (publication ID &#34;</span> + publicationId + <span style=color:#e6db74>&#34;)&#34;</span>);
+        Console.WriteLine(<span style=color:#e6db74>$&#34;Got heartbeat (publication ID {publicationId})&#34;</span>);
     }
 
     <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> OnTopic2(<span style=color:#66d9ef>int</span> number1, <span style=color:#66d9ef>int</span> number2, <span style=color:#66d9ef>string</span> c, MyClass d)
     {
-        Console.WriteLine(<span style=color:#e6db74>&#34;Got event: number1:{0}, number2:{1}, c:{2}, d:{3}&#34;</span>,
-            number1, number2, c, d);
+        Console.WriteLine(<span style=color:#e6db74>$&#34;Got event: number1:{number1}, number2:{number2}, c:{c}, d:{d}&#34;</span>);
     }
 }
 
-<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Run()
+<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     DefaultWampChannelFactory factory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
         factory.CreateJsonChannel(<span style=color:#e6db74>&#34;ws://localhost:8080/ws&#34;</span>, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-    <span style=color:#66d9ef>await</span> channel.Open();
+    <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     Task&lt;IAsyncDisposable&gt; subscriptionTask =
         channel.RealmProxy.Services.RegisterSubscriber(<span style=color:#66d9ef>new</span> MySubscriber());
 
-    IAsyncDisposable asyncDisposable = <span style=color:#66d9ef>await</span> subscriptionTask;
+    IAsyncDisposable asyncDisposable = <span style=color:#66d9ef>await</span> subscriptionTask.ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
-    <span style=color:#75715e>// call await asyncDisposable.DisposeAsync(); to unsubscribe from the topic.
-</span><span style=color:#75715e></span>}
+    <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+</span><span style=color:#75715e></span>    <span style=color:#66d9ef>await</span> Task.Yield();
 
+    Console.WriteLine(<span style=color:#e6db74>&#34;Press enter to unsubscribe&#34;</span>);
+
+    Console.ReadLine();
+
+    <span style=color:#66d9ef>await</span> asyncDisposable.DisposeAsync().ConfigureAwait(<span style=color:#66d9ef>false</span>);
+
+    Console.WriteLine(<span style=color:#e6db74>&#34;Unsubscribed!&#34;</span>);
+}
 </code></pre></div><blockquote><p>Note: This sample is based on <a href=https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/complex>this</a> AutobahnJS sample</p></blockquote><h2 id=supported-features>Supported features</h2><h3 id=wampeventcontext>WampEventContext</h3><p>You can use WampEventContext.Current in order to get details about the current received event:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>MySubscriber</span>
 {
 <span style=color:#a6e22e>    [WampTopic(&#34;com.myapp.topic1&#34;)]</span>
@@ -71,34 +76,39 @@
             counter);
     }
 }
-</code></pre></div><blockquote><p>Note: The sample is based on <a href=https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/options>this</a> AutobahnJS sample.</p></blockquote><h3 id=subscription-customization>Subscription customization</h3><p>The RegisterSubscriber method of IWampRealmServiceProvider has an overload that receives an &ldquo;interceptor&rdquo; instance. The &ldquo;interceptor&rdquo; allow customizing the subscription being performed.</p><p>This allows customizing the subscribe options and the topic uri sent upon SUBSCRIBE message.</p><p>The following sections discuss subscribe options modifications that can be used in order to leverage WAMP advanced profile features.</p><h3 id=pattern-based-subscriptions>Pattern based subscriptions</h3><p><a href=http://crossbar.io/docs/Pattern-Based-Subscriptions/>Pattern based subscriptions</a>, for both router side and client side.</p><p>In order to use it, pass SubscribeOptions with Match = &ldquo;exact&rdquo;/&ldquo;prefix&rdquo;/&ldquo;wildcard&rdquo; depending on your criteria (these are also available in a static class called WampMatchPattern):</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>async</span> Task Run()
+</code></pre></div><blockquote><p>Note: The sample is based on <a href=https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/options>this</a> AutobahnJS sample.</p></blockquote><h3 id=subscription-customization>Subscription customization</h3><p>The RegisterSubscriber method of IWampRealmServiceProvider has an overload that receives an &ldquo;interceptor&rdquo; instance. The &ldquo;interceptor&rdquo; allow customizing the subscription being performed.</p><p>This allows customizing the subscribe options and the topic uri sent upon SUBSCRIBE message.</p><p>The following sections discuss subscribe options modifications that can be used in order to leverage WAMP advanced profile features.</p><h3 id=pattern-based-subscriptions>Pattern based subscriptions</h3><p><a href=http://crossbar.io/docs/Pattern-Based-Subscriptions/>Pattern based subscriptions</a>, for both router side and client side.</p><p>In order to use it, pass SubscribeOptions with Match = &ldquo;exact&rdquo;/&ldquo;prefix&rdquo;/&ldquo;wildcard&rdquo; depending on your criteria (these are also available in a static class called WampMatchPattern):</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     DefaultWampChannelFactory channelFactory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
         channelFactory.CreateJsonChannel(<span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>,
-            <span style=color:#e6db74>&#34;realm1&#34;</span>);
+                                         <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
     <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     <span style=color:#66d9ef>await</span> channel.RealmProxy.Services.RegisterSubscriber(<span style=color:#66d9ef>new</span> Subscriber1())
-        .ConfigureAwait(<span style=color:#66d9ef>false</span>);
+                 .ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     <span style=color:#66d9ef>await</span> channel.RealmProxy.Services.RegisterSubscriber
-        (<span style=color:#66d9ef>new</span> Subscriber2(),
-         <span style=color:#66d9ef>new</span> SubscriberRegistrationInterceptor(<span style=color:#66d9ef>new</span> SubscribeOptions
-         {
-             Match = WampMatchPattern.Prefix
-         }))
-         .ConfigureAwait(<span style=color:#66d9ef>false</span>);
+                     (<span style=color:#66d9ef>new</span> Subscriber2(),
+                      <span style=color:#66d9ef>new</span> SubscriberRegistrationInterceptor(<span style=color:#66d9ef>new</span> SubscribeOptions
+                                                            {
+                                                                Match = WampMatchPattern.Prefix
+                                                            }))
+                 .ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     <span style=color:#66d9ef>await</span> channel.RealmProxy.Services.RegisterSubscriber
-        (<span style=color:#66d9ef>new</span> Subscriber3(),
-         <span style=color:#66d9ef>new</span> SubscriberRegistrationInterceptor(<span style=color:#66d9ef>new</span> SubscribeOptions
-         {
-             Match = WampMatchPattern.Wildcard
-         }))
-         .ConfigureAwait(<span style=color:#66d9ef>false</span>);
+                     (<span style=color:#66d9ef>new</span> Subscriber3(),
+                      <span style=color:#66d9ef>new</span> SubscriberRegistrationInterceptor(<span style=color:#66d9ef>new</span> SubscribeOptions
+                                                            {
+                                                                Match = WampMatchPattern.Wildcard
+                                                            }))
+                 .ConfigureAwait(<span style=color:#66d9ef>false</span>);
+
+    <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the Console.ReadLine() line.
+</span><span style=color:#75715e></span>    <span style=color:#66d9ef>await</span> Task.Yield();
+
+    Console.ReadLine();
 }
 
 <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Subscriber1</span>
@@ -106,8 +116,7 @@
 <span style=color:#a6e22e>    [WampTopic(&#34;com.example.topic1&#34;)]</span>
     <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Handler1(<span style=color:#66d9ef>string</span> message)
     {
-        Console.WriteLine(<span style=color:#e6db74>&#34;handler1: msg = &#39;{0}&#39;, topic = &#39;{1}&#39;&#34;</span>, message,
-                          WampEventContext.Current.EventDetails.Topic);
+        Console.WriteLine(<span style=color:#e6db74>$&#34;handler1: msg = &#39;{message}&#39;, topic = &#39;{WampEventContext.Current.EventDetails.Topic}&#39;&#34;</span>);
     }
 }
 
@@ -116,8 +125,7 @@
 <span style=color:#a6e22e>    [WampTopic(&#34;com.example&#34;)]</span>
     <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Handler2(<span style=color:#66d9ef>string</span> message)
     {
-        Console.WriteLine(<span style=color:#e6db74>&#34;handler2: msg = &#39;{0}&#39;, topic = &#39;{1}&#39;&#34;</span>, message,
-                          WampEventContext.Current.EventDetails.Topic);
+        Console.WriteLine(<span style=color:#e6db74>$&#34;handler2: msg = &#39;{message}&#39;, topic = &#39;{WampEventContext.Current.EventDetails.Topic}&#39;&#34;</span>);
     }             
 }
 
@@ -126,8 +134,7 @@
 <span style=color:#a6e22e>    [WampTopic(&#34;com..topic1&#34;)]</span>
     <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Handler3(<span style=color:#66d9ef>string</span> message)
     {
-        Console.WriteLine(<span style=color:#e6db74>&#34;handler3: msg = &#39;{0}&#39;, topic = &#39;{1}&#39;&#34;</span>, message,
-                          WampEventContext.Current.EventDetails.Topic);
+        Console.WriteLine(<span style=color:#e6db74>$&#34;handler3: msg = &#39;{message}&#39;, topic = &#39;{WampEventContext.Current.EventDetails.Topic}&#39;&#34;</span>);
     }             
 }
 </code></pre></div><blockquote><p>Note: this sample is based on <a href=https://github.com/crossbario/crossbarexamples/tree/master/patternsubs>this</a> Autobahn sample</p></blockquote></section></article></main></div><div class="col-sm-3 col-sm-offset-1 doc-sidebar"><div id=sidebar><div class=sidebar-module><div class=sidebar-toc><h4 class=sidebar-heading>Table of Contents</h4><ul><li><strong><a href=#title>Reflection-based Subscriber</a></strong></li></ul><nav id=TableOfContents><ul><li><a href=#basic-usage>Basic usage</a></li><li><a href=#supported-features>Supported features</a><ul><li><a href=#wampeventcontext>WampEventContext</a></li><li><a href=#subscription-customization>Subscription customization</a></li><li><a href=#pattern-based-subscriptions>Pattern based subscriptions</a></li></ul></li></ul></nav></div></div><div class=sidebar-module><h4 class=sidebar-heading>Pages in Categories</h4><ul class=sidebar-category-list><li><a href=https://wampsharp.net/categories/authentication><span class=doc-list-category>Authentication</span></a><ul><li><a href=/wamp2/client/client-side-authentication/>Client-side authentication</a></li><li><a href=/wamp2/router/cookie-based-router-side-authentication/>Cookie based router-side authentication</a></li><li><a href=/wamp2/router/router-side-authentication/>Router-side authentication</a></li><li><a href=/wamp2/client/wamp-cra-client-side-authentication/>WAMP-CRA client side authentication</a></li><li><a href=/wamp2/router/wamp-cra-router-side-authentication/>WAMP-CRA router-side authentication</a></li></ul></li><li><a href=https://wampsharp.net/categories/callee><span class=doc-list-category>Callee</span></a><ul><li><a href=/wamp2/roles/callee/getting-started-with-callee/>Getting started with Callee</a></li><li><a href=/wamp2/roles/callee/raw-callee/>Raw Callee</a></li><li><a href=/wamp2/roles/callee/reflection-based-callee/>Reflection-based Callee</a></li></ul></li><li><a href=https://wampsharp.net/categories/caller><span class=doc-list-category>Caller</span></a><ul><li><a href=/wamp2/roles/caller/getting-started-with-caller/>Getting started with Caller</a></li><li><a href=/wamp2/roles/caller/raw-caller/>Raw Caller</a></li><li><a href=/wamp2/roles/caller/reflection-based-caller/>Reflection-based Caller</a></li></ul></li><li><a href=https://wampsharp.net/categories/client><span class=doc-list-category>Client</span></a><ul><li><a href=/wamp2/router/transports/rawsocket/>RawSocket transport</a></li><li><a href=/wamp2/client/client-side-authentication/>Client-side authentication</a></li><li><a href=/wamp2/meta-api-service/>Meta-api descriptor service</a></li><li><a href=/wamp2/testament-service/>Testament service</a></li><li><a href=/wamp2/client/wamp-cra-client-side-authentication/>WAMP-CRA client side authentication</a></li><li><a href=/wamp2/client/wampchannel/>WampChannel</a></li><li><a href=/wamp2/client/wampchannelreconnector/>WampChannelReconnector</a></li></ul></li><li><a href=https://wampsharp.net/categories/getting-started><span class=doc-list-category>Getting-Started</span></a><ul><li><a href=/wamp2/roles/callee/getting-started-with-callee/>Getting started with Callee</a></li><li><a href=/wamp2/roles/caller/getting-started-with-caller/>Getting started with Caller</a></li><li><a href=/wamp2/roles/publisher/getting-started-with-publisher/>Getting started with Publisher</a></li><li><a href=/wamp2/roles/subscriber/getting-started-with-subscriber/>Getting started with Subscriber</a></li><li><a href=/wamp2/getting-started-with-wampv2/>Getting started with WAMPv2</a></li></ul></li><li><a href=https://wampsharp.net/categories/publisher><span class=doc-list-category>Publisher</span></a><ul><li><a href=/wamp2/roles/publisher/getting-started-with-publisher/>Getting started with Publisher</a></li><li><a href=/wamp2/roles/publisher/raw-publisher/>Raw Publisher</a></li><li><a href=/wamp2/roles/publisher/reflection-based-publisher/>Reflection-based Publisher</a></li><li><a href=/wamp2/roles/publisher/rx-based-publisher/>Rx-based Publisher</a></li></ul></li><li><a href=https://wampsharp.net/categories/release-notes><span class=doc-list-category>Release-Notes</span></a><ul><li><a href=/release-notes/wampsharp-v20.1.1-release-notes/>WampSharp v20.1.1 release notes</a></li><li><a href=/release-notes/wampsharp-v18.6.1-release-notes/>WampSharp v18.6.1 release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.6.41-beta-release-notes/>WampSharp v1.2.6.41-beta release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.5.21-beta-release-notes/>WampSharp v1.2.5.21-beta release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.4.18-beta-release-notes/>WampSharp v1.2.4.18-beta release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.3.12-beta-release-notes/>WampSharp v1.2.3.12-beta release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.2.8-beta-release-notes/>WampSharp v1.2.2.8-beta release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.1.6-beta-release-notes/>WampSharp v1.2.1.6-beta release notes</a></li></ul></li><li><a href=https://wampsharp.net/categories/roadmap><span class=doc-list-category>Roadmap</span></a><ul><li><a href=/roadmap/>Roadmap</a></li></ul></li><li><a href=https://wampsharp.net/categories/router><span class=doc-list-category>Router</span></a><ul><li><a href=/wamp2/router/transports/rawsocket/>RawSocket transport</a></li><li><a href=/wamp2/router/transports/websocket/>WebSocket transports</a></li><li><a href=/wamp2/router/cookie-based-router-side-authentication/>Cookie based router-side authentication</a></li><li><a href=/wamp2/meta-api-service/>Meta-api descriptor service</a></li><li><a href=/wamp2/router/router-side-authentication/>Router-side authentication</a></li><li><a href=/wamp2/testament-service/>Testament service</a></li><li><a href=/wamp2/router/wamp-cra-router-side-authentication/>WAMP-CRA router-side authentication</a></li><li><a href=/wamp2/router/wamphost/>WampHost</a></li></ul></li><li><a href=https://wampsharp.net/categories/subscriber><span class=doc-list-category>Subscriber</span></a><ul><li><a href=/wamp2/roles/subscriber/getting-started-with-subscriber/>Getting started with Subscriber</a></li><li><a href=/wamp2/roles/subscriber/raw-subscriber/>Raw Subscriber</a></li><li><span class=active>Reflection-based Subscriber</span></li><li><a href=/wamp2/roles/subscriber/rx-based-subscriber/>Rx-based Subscriber</a></li></ul></li><li><a href=https://wampsharp.net/categories/wamp1><span class=doc-list-category>Wamp1</span></a><ul><li><a href=/wamp1/getting-started-with-wampv1/>Getting started with WAMPv1</a></li><li><a href=/wamp1/getting-started-with-wampv1-client/>Getting started with WAMPv1 client</a></li><li><a href=/wamp1/notes-for-wampv1-users/>Notes for WAMP1 users</a></li><li><a href=/wamp1/server-pubsub-hosting-wampv1/>Server PubSub hosting (WAMPv1)</a></li><li><a href=/wamp1/server-rpc-hosting-wampv1/>Server RPC hosting (WAMPv1)</a></li></ul></li></ul></div><div class=sidebar-module><h4 class=sidebar-heading>Tags</h4><div class=tag-box><a class=tag-item href=https://wampsharp.net/tags/authentication>authentication</a>

@@ -3,6 +3,7 @@
 <span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span></button>
 <a class=navbar-brand href=https://wampsharp.net/>WampSharp</a></div><div id=navbar class="navbar-collapse collapse"><ul class="nav navbar-nav"><li><a href=https://wampsharp.net/>Home</a></li><li class=dropdown><a href=# class=dropdown-toggle data-toggle=dropdown role=button aria-expanded=false>Categories<span class=caret></span></a><ul class=dropdown-menu role=menu><li><a href=https://wampsharp.net/categories/authentication>Authentication</a></li><li><a href=https://wampsharp.net/categories/callee>Callee</a></li><li><a href=https://wampsharp.net/categories/caller>Caller</a></li><li><a href=https://wampsharp.net/categories/client>Client</a></li><li><a href=https://wampsharp.net/categories/getting-started>Getting-Started</a></li><li><a href=https://wampsharp.net/categories/publisher>Publisher</a></li><li><a href=https://wampsharp.net/categories/release-notes>Release-Notes</a></li><li><a href=https://wampsharp.net/categories/roadmap>Roadmap</a></li><li><a href=https://wampsharp.net/categories/router>Router</a></li><li><a href=https://wampsharp.net/categories/subscriber>Subscriber</a></li><li><a href=https://wampsharp.net/categories/wamp1>Wamp1</a></li></ul></li></ul></div></div></nav><div class=container><div class=row><div class="col-sm-8 doc-main"><main role=main><article><a id=title></a><h1 class=doc-entry-title>Getting started with Caller</h1><div class=doc-entry-meta><span><time datetime=2017-07-30>July 30, 2017</time></span></div><section><p>Before you start, see <a href=https://wampsharp.net/wamp2/getting-started-with-wampv2/>Getting started with WAMPv2</a> and create a WampChannel/WampHost your caller will use.</p><h2 id=about-caller-role>About Caller role</h2><p>WAMPv2 defines a Caller role, that is a role that can call a remote procedure call registered by a <a href=https://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/>Callee</a> (using the CALL messages). The caller can receive a response with a result or an error from the router (using the RESULT/ERROR message).</p><h3 id=callee-proxy>Callee proxy</h3><p>The Callee proxy is the easiest way to call rpc methods of a WAMP router.</p><p>In order to use it, create an interface having methods decorated with [WampProcedure] attribute.
 Then create a proxy to a callee using the GetCalleeProxy method of the Services property<br>of the IWampRealm/IWampRealmProxy instance.</p><h4 id=client-sample>Client sample</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>using</span> System;
+<span style=color:#66d9ef>using</span> System.Threading.Tasks;
 <span style=color:#66d9ef>using</span> WampSharp.V2;
 <span style=color:#66d9ef>using</span> WampSharp.V2.Rpc;
 
@@ -11,21 +12,21 @@ Then create a proxy to a callee using the GetCalleeProxy method of the Services 
     <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> IArgumentsService
     {
 <span style=color:#a6e22e>        [WampProcedure(&#34;com.arguments.ping&#34;)]</span>
-        <span style=color:#66d9ef>void</span> Ping();
+        Task PingAsync();
 <span style=color:#a6e22e>
 </span><span style=color:#a6e22e>        [WampProcedure(&#34;com.arguments.add2&#34;)]</span>
-        <span style=color:#66d9ef>int</span> Add2(<span style=color:#66d9ef>int</span> a, <span style=color:#66d9ef>int</span> b);
+        Task&lt;<span style=color:#66d9ef>int</span>&gt; Add2Async(<span style=color:#66d9ef>int</span> a, <span style=color:#66d9ef>int</span> b);
 <span style=color:#a6e22e>
 </span><span style=color:#a6e22e>        [WampProcedure(&#34;com.arguments.stars&#34;)]</span>
-        <span style=color:#66d9ef>string</span> Stars(<span style=color:#66d9ef>string</span> nick = <span style=color:#e6db74>&#34;somebody&#34;</span>, <span style=color:#66d9ef>int</span> stars = <span style=color:#ae81ff>0</span>);
+        Task&lt;<span style=color:#66d9ef>string</span>&gt; StarsAsync(<span style=color:#66d9ef>string</span> nick = <span style=color:#e6db74>&#34;somebody&#34;</span>, <span style=color:#66d9ef>int</span> stars = <span style=color:#ae81ff>0</span>);
 <span style=color:#a6e22e>
 </span><span style=color:#a6e22e>        [WampProcedure(&#34;com.arguments.orders&#34;)]</span>
-        <span style=color:#66d9ef>string</span>[] Orders(<span style=color:#66d9ef>string</span> product, <span style=color:#66d9ef>int</span> limit = <span style=color:#ae81ff>5</span>);
+        Task&lt;<span style=color:#66d9ef>string</span>[]&gt; OrdersAsync(<span style=color:#66d9ef>string</span> product, <span style=color:#66d9ef>int</span> limit = <span style=color:#ae81ff>5</span>);
     }
 
     <span style=color:#66d9ef>internal</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Program</span>
     {
-        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Main(<span style=color:#66d9ef>string</span>[] args)
+        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main(<span style=color:#66d9ef>string</span>[] args)
         {
             DefaultWampChannelFactory factory =
                 <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
@@ -35,40 +36,41 @@ Then create a proxy to a callee using the GetCalleeProxy method of the Services 
             IWampChannel channel =
                 factory.CreateJsonChannel(serverAddress, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-            channel.Open().Wait(<span style=color:#ae81ff>5000</span>);
+            <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
             IArgumentsService proxy =
                 channel.RealmProxy.Services.GetCalleeProxy&lt;IArgumentsService&gt;();
 
-            proxy.Ping();
+            <span style=color:#66d9ef>await</span> proxy.PingAsync().ConfigureAwait(<span style=color:#66d9ef>false</span>);
             Console.WriteLine(<span style=color:#e6db74>&#34;Pinged!&#34;</span>);
 
-            <span style=color:#66d9ef>int</span> result = proxy.Add2(<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>);
-            Console.WriteLine(<span style=color:#e6db74>&#34;Add2: {0}&#34;</span>, result);
+            <span style=color:#66d9ef>int</span> result = <span style=color:#66d9ef>await</span> proxy.Add2Async(<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+            Console.WriteLine(<span style=color:#e6db74>$&#34;Add2: {result}&#34;</span>);
 
-            <span style=color:#66d9ef>var</span> starred = proxy.Stars();
-            Console.WriteLine(<span style=color:#e6db74>&#34;Starred 1: {0}&#34;</span>, starred);
+            <span style=color:#66d9ef>var</span> starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync().ConfigureAwait(<span style=color:#66d9ef>false</span>);
+            Console.WriteLine(<span style=color:#e6db74>$&#34;Starred 1: {starred}&#34;</span>);
 
-            starred = proxy.Stars(nick: <span style=color:#e6db74>&#34;Homer&#34;</span>);
-            Console.WriteLine(<span style=color:#e6db74>&#34;Starred 2: {0}&#34;</span>, starred);
+            starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync(nick: <span style=color:#e6db74>&#34;Homer&#34;</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+            Console.WriteLine(<span style=color:#e6db74>$&#34;Starred 2: {starred}&#34;</span>);
 
-            starred = proxy.Stars(stars: <span style=color:#ae81ff>5</span>);
-            Console.WriteLine(<span style=color:#e6db74>&#34;Starred 3: {0}&#34;</span>, starred);
+            starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync(stars: <span style=color:#ae81ff>5</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+            Console.WriteLine(<span style=color:#e6db74>$&#34;Starred 3: {starred}&#34;</span>);
 
-            starred = proxy.Stars(nick: <span style=color:#e6db74>&#34;Homer&#34;</span>, stars: <span style=color:#ae81ff>5</span>);
-            Console.WriteLine(<span style=color:#e6db74>&#34;Starred 4: {0}&#34;</span>, starred);
+            starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync(nick: <span style=color:#e6db74>&#34;Homer&#34;</span>, stars: <span style=color:#ae81ff>5</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+            Console.WriteLine(<span style=color:#e6db74>$&#34;Starred 4: {starred}&#34;</span>);
 
-            <span style=color:#66d9ef>string</span>[] orders = proxy.Orders(<span style=color:#e6db74>&#34;coffee&#34;</span>);
-            Console.WriteLine(<span style=color:#e6db74>&#34;Orders 1: {0}&#34;</span>, <span style=color:#66d9ef>string</span>.Join(<span style=color:#e6db74>&#34;, &#34;</span>, orders));
+            <span style=color:#66d9ef>string</span>[] orders = <span style=color:#66d9ef>await</span> proxy.OrdersAsync(<span style=color:#e6db74>&#34;coffee&#34;</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+            Console.WriteLine(<span style=color:#e6db74>$&#34;Orders 1: {string.Join(&#34;</span>, <span style=color:#e6db74>&#34;, orders)}&#34;</span>);
 
-            orders = proxy.Orders(<span style=color:#e6db74>&#34;coffee&#34;</span>, limit: <span style=color:#ae81ff>10</span>);
-            Console.WriteLine(<span style=color:#e6db74>&#34;Orders 2: {0}&#34;</span>, <span style=color:#66d9ef>string</span>.Join(<span style=color:#e6db74>&#34;, &#34;</span>, orders));
+            orders = <span style=color:#66d9ef>await</span> proxy.OrdersAsync(<span style=color:#e6db74>&#34;coffee&#34;</span>, limit: <span style=color:#ae81ff>10</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+            Console.WriteLine(<span style=color:#e6db74>$&#34;Orders 2: {string.Join(&#34;</span>, <span style=color:#e6db74>&#34;, orders)}&#34;</span>);
 
             Console.ReadLine();
         }
     }
 }
 </code></pre></div><h4 id=router-sample>Router sample</h4><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>using</span> System;
+<span style=color:#66d9ef>using</span> System.Threading.Tasks;
 <span style=color:#66d9ef>using</span> WampSharp.V2;
 <span style=color:#66d9ef>using</span> WampSharp.V2.Realm;
 <span style=color:#66d9ef>using</span> WampSharp.V2.Rpc;
@@ -78,21 +80,21 @@ Then create a proxy to a callee using the GetCalleeProxy method of the Services 
     <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> IArgumentsService
     {
 <span style=color:#a6e22e>        [WampProcedure(&#34;com.arguments.ping&#34;)]</span>
-        <span style=color:#66d9ef>void</span> Ping();
+        Task PingAsync();
 <span style=color:#a6e22e>
 </span><span style=color:#a6e22e>        [WampProcedure(&#34;com.arguments.add2&#34;)]</span>
-        <span style=color:#66d9ef>int</span> Add2(<span style=color:#66d9ef>int</span> a, <span style=color:#66d9ef>int</span> b);
+        Task&lt;<span style=color:#66d9ef>int</span>&gt; Add2Async(<span style=color:#66d9ef>int</span> a, <span style=color:#66d9ef>int</span> b);
 <span style=color:#a6e22e>
 </span><span style=color:#a6e22e>        [WampProcedure(&#34;com.arguments.stars&#34;)]</span>
-        <span style=color:#66d9ef>string</span> Stars(<span style=color:#66d9ef>string</span> nick = <span style=color:#e6db74>&#34;somebody&#34;</span>, <span style=color:#66d9ef>int</span> stars = <span style=color:#ae81ff>0</span>);
+        Task&lt;<span style=color:#66d9ef>string</span>&gt; StarsAsync(<span style=color:#66d9ef>string</span> nick = <span style=color:#e6db74>&#34;somebody&#34;</span>, <span style=color:#66d9ef>int</span> stars = <span style=color:#ae81ff>0</span>);
 <span style=color:#a6e22e>
 </span><span style=color:#a6e22e>        [WampProcedure(&#34;com.arguments.orders&#34;)]</span>
-        <span style=color:#66d9ef>string</span>[] Orders(<span style=color:#66d9ef>string</span> product, <span style=color:#66d9ef>int</span> limit = <span style=color:#ae81ff>5</span>);
+        Task&lt;<span style=color:#66d9ef>string</span>[]&gt; OrdersAsync(<span style=color:#66d9ef>string</span> product, <span style=color:#66d9ef>int</span> limit = <span style=color:#ae81ff>5</span>);
     }
 
     <span style=color:#66d9ef>internal</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Program</span>
     {
-        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Main(<span style=color:#66d9ef>string</span>[] args)
+        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main(<span style=color:#66d9ef>string</span>[] args)
         {
             <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> serverAddress = <span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
@@ -106,31 +108,31 @@ Then create a proxy to a callee using the GetCalleeProxy method of the Services 
             IWampHostedRealm realm = host.RealmContainer.GetRealmByName(<span style=color:#e6db74>&#34;realm1&#34;</span>);
 
             IArgumentsService proxy =
-                realm.Services.GetCalleeProxy&lt;IArgumentsService&gt;();
+                channel.RealmProxy.Services.GetCalleeProxy&lt;IArgumentsService&gt;();
 
-            proxy.Ping();
+            <span style=color:#66d9ef>await</span> proxy.PingAsync().ConfigureAwait(<span style=color:#66d9ef>false</span>);
             Console.WriteLine(<span style=color:#e6db74>&#34;Pinged!&#34;</span>);
 
-            <span style=color:#66d9ef>int</span> result = proxy.Add2(<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>);
-            Console.WriteLine(<span style=color:#e6db74>&#34;Add2: {0}&#34;</span>, result);
+            <span style=color:#66d9ef>int</span> result = <span style=color:#66d9ef>await</span> proxy.Add2Async(<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+            Console.WriteLine(<span style=color:#e6db74>$&#34;Add2: {result}&#34;</span>);
 
-            <span style=color:#66d9ef>var</span> starred = proxy.Stars();
-            Console.WriteLine(<span style=color:#e6db74>&#34;Starred 1: {0}&#34;</span>, starred);
+            <span style=color:#66d9ef>var</span> starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync().ConfigureAwait(<span style=color:#66d9ef>false</span>);
+            Console.WriteLine(<span style=color:#e6db74>$&#34;Starred 1: {starred}&#34;</span>);
 
-            starred = proxy.Stars(nick: <span style=color:#e6db74>&#34;Homer&#34;</span>);
-            Console.WriteLine(<span style=color:#e6db74>&#34;Starred 2: {0}&#34;</span>, starred);
+            starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync(nick: <span style=color:#e6db74>&#34;Homer&#34;</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+            Console.WriteLine(<span style=color:#e6db74>$&#34;Starred 2: {starred}&#34;</span>);
 
-            starred = proxy.Stars(stars: <span style=color:#ae81ff>5</span>);
-            Console.WriteLine(<span style=color:#e6db74>&#34;Starred 3: {0}&#34;</span>, starred);
+            starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync(stars: <span style=color:#ae81ff>5</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+            Console.WriteLine(<span style=color:#e6db74>$&#34;Starred 3: {starred}&#34;</span>);
 
-            starred = proxy.Stars(nick: <span style=color:#e6db74>&#34;Homer&#34;</span>, stars: <span style=color:#ae81ff>5</span>);
-            Console.WriteLine(<span style=color:#e6db74>&#34;Starred 4: {0}&#34;</span>, starred);
+            starred = <span style=color:#66d9ef>await</span> proxy.StarsAsync(nick: <span style=color:#e6db74>&#34;Homer&#34;</span>, stars: <span style=color:#ae81ff>5</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+            Console.WriteLine(<span style=color:#e6db74>$&#34;Starred 4: {starred}&#34;</span>);
 
-            <span style=color:#66d9ef>string</span>[] orders = proxy.Orders(<span style=color:#e6db74>&#34;coffee&#34;</span>);
-            Console.WriteLine(<span style=color:#e6db74>&#34;Orders 1: {0}&#34;</span>, <span style=color:#66d9ef>string</span>.Join(<span style=color:#e6db74>&#34;, &#34;</span>, orders));
+            <span style=color:#66d9ef>string</span>[] orders = <span style=color:#66d9ef>await</span> proxy.OrdersAsync(<span style=color:#e6db74>&#34;coffee&#34;</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+            Console.WriteLine(<span style=color:#e6db74>$&#34;Orders 1: {string.Join(&#34;</span>, <span style=color:#e6db74>&#34;, orders)}&#34;</span>);
 
-            orders = proxy.Orders(<span style=color:#e6db74>&#34;coffee&#34;</span>, limit: <span style=color:#ae81ff>10</span>);
-            Console.WriteLine(<span style=color:#e6db74>&#34;Orders 2: {0}&#34;</span>, <span style=color:#66d9ef>string</span>.Join(<span style=color:#e6db74>&#34;, &#34;</span>, orders));
+            orders = <span style=color:#66d9ef>await</span> proxy.OrdersAsync(<span style=color:#e6db74>&#34;coffee&#34;</span>, limit: <span style=color:#ae81ff>10</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+            Console.WriteLine(<span style=color:#e6db74>$&#34;Orders 2: {string.Join(&#34;</span>, <span style=color:#e6db74>&#34;, orders)}&#34;</span>);
 
             Console.ReadLine();
         }

@@ -15,16 +15,14 @@ Then create a new instance of your class, and access RpcCatalog property of Wamp
 {
     <span style=color:#66d9ef>internal</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Program</span>
     {
-        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Main(<span style=color:#66d9ef>string</span>[] args)
+        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main(<span style=color:#66d9ef>string</span>[] args)
         {
             <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> serverAddress = <span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
             DefaultWampChannelFactory factory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
             IWampChannel channel = factory.CreateJsonChannel(serverAddress, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-            Task openTask = channel.Open();
-
-            openTask.Wait(<span style=color:#ae81ff>5000</span>);
+            <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
             IWampRealmProxy realmProxy = channel.RealmProxy;
 
@@ -34,6 +32,9 @@ Then create a new instance of your class, and access RpcCatalog property of Wamp
                  <span style=color:#e6db74>&#34;com.myapp.add_complex&#34;</span>,
                  <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>object</span>[] {<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>4</span>, <span style=color:#ae81ff>5</span>});
 
+            <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+</span><span style=color:#75715e></span>            <span style=color:#66d9ef>await</span> Task.Yield();
+            
             Console.ReadLine();
         }
     }
@@ -351,7 +352,7 @@ Then create a new instance of your class, and access RpcCatalog property of Wamp
         }
     }
 }
-</code></pre></div><p>Usage:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>static</span> Task Run()
+</code></pre></div><p>Usage:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>static</span> Task Main()
 {
     <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> serverAddress = <span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
@@ -360,7 +361,7 @@ Then create a new instance of your class, and access RpcCatalog property of Wamp
     IWampChannel channel =
         factory.CreateJsonChannel(serverAddress, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-    <span style=color:#66d9ef>await</span> channel.Open();
+    <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     ArgumentsServiceProxy proxy =
         <span style=color:#66d9ef>new</span> ArgumentsServiceProxy(channel.RealmProxy.RpcCatalog);

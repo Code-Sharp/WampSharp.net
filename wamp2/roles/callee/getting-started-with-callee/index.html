@@ -3,8 +3,8 @@
 <span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span></button>
 <a class=navbar-brand href=https://wampsharp.net/>WampSharp</a></div><div id=navbar class="navbar-collapse collapse"><ul class="nav navbar-nav"><li><a href=https://wampsharp.net/>Home</a></li><li class=dropdown><a href=# class=dropdown-toggle data-toggle=dropdown role=button aria-expanded=false>Categories<span class=caret></span></a><ul class=dropdown-menu role=menu><li><a href=https://wampsharp.net/categories/authentication>Authentication</a></li><li><a href=https://wampsharp.net/categories/callee>Callee</a></li><li><a href=https://wampsharp.net/categories/caller>Caller</a></li><li><a href=https://wampsharp.net/categories/client>Client</a></li><li><a href=https://wampsharp.net/categories/getting-started>Getting-Started</a></li><li><a href=https://wampsharp.net/categories/publisher>Publisher</a></li><li><a href=https://wampsharp.net/categories/release-notes>Release-Notes</a></li><li><a href=https://wampsharp.net/categories/roadmap>Roadmap</a></li><li><a href=https://wampsharp.net/categories/router>Router</a></li><li><a href=https://wampsharp.net/categories/subscriber>Subscriber</a></li><li><a href=https://wampsharp.net/categories/wamp1>Wamp1</a></li></ul></li></ul></div></div></nav><div class=container><div class=row><div class="col-sm-8 doc-main"><main role=main><article><a id=title></a><h1 class=doc-entry-title>Getting started with Callee</h1><div class=doc-entry-meta><span><time datetime=2017-07-30>July 30, 2017</time></span></div><section><p>Before you begin, see <a href=https://wampsharp.net/wamp2/getting-started-with-wampv2/>Getting started with WAMPv2</a> and create a WampChannel/WampHost your calleee will be registered to.</p><h2 id=about-callee-role>About Callee role</h2><p>WAMPv2 defines a Callee role, that is a role that can register a remote procedure call to the router (using the REGISTER/UNREGISTER messages). The callee&rsquo;s procedure can be invoked by the router (using the INVOCATION message). The callee can respond with a result or an error to the router (using the YIELD/ERROR message).</p><h2 id=reflection-based-callee>Reflection based callee</h2><p>The Reflection based callee is the easiest way to register callee methods to a WAMP router.</p><p>In order to use it, create a class having methods decorated with [WampProcedure] attribute.
 Then create an instance of the class and register it using the RegisterCalee method of the Services property of the IWampRealmProxy/IWampRealm instance.</p><h3 id=client-sample>Client sample</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>using</span> System;
+<span style=color:#66d9ef>using</span> System.Linq;
 <span style=color:#66d9ef>using</span> System.Threading.Tasks;
-<span style=color:#66d9ef>using</span> SystemEx;
 <span style=color:#66d9ef>using</span> WampSharp.V2;
 <span style=color:#66d9ef>using</span> WampSharp.V2.Client;
 <span style=color:#66d9ef>using</span> WampSharp.V2.Rpc;
@@ -21,6 +21,9 @@ Then create an instance of the class and register it using the RegisterCalee met
 <span style=color:#a6e22e>
 </span><span style=color:#a6e22e>        [WampProcedure(&#34;com.arguments.stars&#34;)]</span>
         <span style=color:#66d9ef>string</span> Stars(<span style=color:#66d9ef>string</span> nick = <span style=color:#e6db74>&#34;somebody&#34;</span>, <span style=color:#66d9ef>int</span> stars = <span style=color:#ae81ff>0</span>);
+<span style=color:#a6e22e>
+</span><span style=color:#a6e22e>        [WampProcedure(&#34;com.arguments.orders&#34;)]</span>
+        <span style=color:#66d9ef>string</span>[] Orders(<span style=color:#66d9ef>string</span> product, <span style=color:#66d9ef>int</span> limit = <span style=color:#ae81ff>5</span>);
     }
 
     <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ArgumentsService</span> : IArgumentsService
@@ -36,15 +39,20 @@ Then create an instance of the class and register it using the RegisterCalee met
 
         <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> Stars(<span style=color:#66d9ef>string</span> nick = <span style=color:#e6db74>&#34;somebody&#34;</span>, <span style=color:#66d9ef>int</span> stars = <span style=color:#ae81ff>0</span>)
         {
-            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>string</span>.Format(<span style=color:#e6db74>&#34;{0} starred {1}x&#34;</span>, nick, stars);
+            <span style=color:#66d9ef>return</span> <span style=color:#e6db74>$&#34;{nick} starred {stars}x&#34;</span>;
+        }
+
+        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span>[] Orders(<span style=color:#66d9ef>string</span> product, <span style=color:#66d9ef>int</span> limit = <span style=color:#ae81ff>5</span>)
+        {
+            <span style=color:#66d9ef>return</span> Enumerable.Range(<span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>50</span>).Take(limit).Select(i =&gt; <span style=color:#e6db74>$&#34;Product {i}&#34;</span>).ToArray();
         }
     }
 
     <span style=color:#66d9ef>internal</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Program</span>
     {
-        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Main(<span style=color:#66d9ef>string</span>[] args)
+        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main(<span style=color:#66d9ef>string</span>[] args)
         {
-            <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> location = <span style=color:#e6db74>&#34;ws://127.0.0.1:8080/&#34;</span>;
+            <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> location = <span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
             DefaultWampChannelFactory channelFactory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
@@ -52,24 +60,26 @@ Then create an instance of the class and register it using the RegisterCalee met
 
             Task openTask = channel.Open();
 
-            <span style=color:#75715e>// await openTask;
-</span><span style=color:#75715e></span>            openTask.Wait();
+            <span style=color:#66d9ef>await</span> openTask.ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
             IArgumentsService instance = <span style=color:#66d9ef>new</span> ArgumentsService();
 
             IWampRealmProxy realm = channel.RealmProxy;
 
             Task&lt;IAsyncDisposable&gt; registrationTask = realm.Services.RegisterCallee(instance);
-            <span style=color:#75715e>// await registrationTask;
-</span><span style=color:#75715e></span>            registrationTask.Wait();
+
+            <span style=color:#66d9ef>await</span> registrationTask.ConfigureAwait(<span style=color:#66d9ef>false</span>);
+
+            <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the Console.ReadLine() line.
+</span><span style=color:#75715e></span>            <span style=color:#66d9ef>await</span> Task.Yield();
 
             Console.ReadLine();
         }
     }
 }
 </code></pre></div><h3 id=router-sample>Router sample</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>using</span> System;
+<span style=color:#66d9ef>using</span> System.Linq;
 <span style=color:#66d9ef>using</span> System.Threading.Tasks;
-<span style=color:#66d9ef>using</span> SystemEx;
 <span style=color:#66d9ef>using</span> WampSharp.V2;
 <span style=color:#66d9ef>using</span> WampSharp.V2.Realm;
 <span style=color:#66d9ef>using</span> WampSharp.V2.Rpc;
@@ -86,6 +96,9 @@ Then create an instance of the class and register it using the RegisterCalee met
 <span style=color:#a6e22e>
 </span><span style=color:#a6e22e>        [WampProcedure(&#34;com.arguments.stars&#34;)]</span>
         <span style=color:#66d9ef>string</span> Stars(<span style=color:#66d9ef>string</span> nick = <span style=color:#e6db74>&#34;somebody&#34;</span>, <span style=color:#66d9ef>int</span> stars = <span style=color:#ae81ff>0</span>);
+<span style=color:#a6e22e>
+</span><span style=color:#a6e22e>        [WampProcedure(&#34;com.arguments.orders&#34;)]</span>
+        <span style=color:#66d9ef>string</span>[] Orders(<span style=color:#66d9ef>string</span> product, <span style=color:#66d9ef>int</span> limit = <span style=color:#ae81ff>5</span>);
     }
 
     <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ArgumentsService</span> : IArgumentsService
@@ -101,15 +114,20 @@ Then create an instance of the class and register it using the RegisterCalee met
 
         <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> Stars(<span style=color:#66d9ef>string</span> nick = <span style=color:#e6db74>&#34;somebody&#34;</span>, <span style=color:#66d9ef>int</span> stars = <span style=color:#ae81ff>0</span>)
         {
-            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>string</span>.Format(<span style=color:#e6db74>&#34;{0} starred {1}x&#34;</span>, nick, stars);
+            <span style=color:#66d9ef>return</span> <span style=color:#e6db74>$&#34;{nick} starred {stars}x&#34;</span>;
+        }
+
+        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span>[] Orders(<span style=color:#66d9ef>string</span> product, <span style=color:#66d9ef>int</span> limit = <span style=color:#ae81ff>5</span>)
+        {
+            <span style=color:#66d9ef>return</span> Enumerable.Range(<span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>50</span>).Take(limit).Select(i =&gt; <span style=color:#e6db74>$&#34;Product {i}&#34;</span>).ToArray();
         }
     }
 
     <span style=color:#66d9ef>internal</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Program</span>
     {
-        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Main(<span style=color:#66d9ef>string</span>[] args)
+        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main(<span style=color:#66d9ef>string</span>[] args)
         {
-            <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> location = <span style=color:#e6db74>&#34;ws://127.0.0.1:8080/&#34;</span>;
+            <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> location = <span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
             <span style=color:#66d9ef>using</span> (IWampHost host = <span style=color:#66d9ef>new</span> DefaultWampHost(location))
             {
@@ -118,8 +136,8 @@ Then create an instance of the class and register it using the RegisterCalee met
                 IWampHostedRealm realm = host.RealmContainer.GetRealmByName(<span style=color:#e6db74>&#34;realm1&#34;</span>);
 
                 Task&lt;IAsyncDisposable&gt; registrationTask = realm.Services.RegisterCallee(instance);
-                <span style=color:#75715e>// await registrationTask;
-</span><span style=color:#75715e></span>                registrationTask.Wait();
+
+                <span style=color:#66d9ef>await</span> registrationTask;
 
                 host.Open();
 

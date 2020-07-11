@@ -31,7 +31,7 @@
 }
 
 
-<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Run()
+<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> location = <span style=color:#e6db74>&#34;ws://127.0.0.1:8080/&#34;</span>;
 
@@ -48,11 +48,19 @@
     IAsyncDisposable disposable =
         <span style=color:#66d9ef>await</span> realm.Services.RegisterCallee(instance).ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
-    <span style=color:#75715e>// Call await disposable.DisposeAsync().ConfigureAwait(false);
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// to unregister
-</span><span style=color:#75715e></span>}
+    <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+</span><span style=color:#75715e></span>    <span style=color:#66d9ef>await</span> Task.Yield();
 
-</code></pre></div><h2 id=supprted-features>Supprted features</h2><p>Both placing attributes on a class method and placing attributes on an interface implemented by the class are supported.</p><h3 id=instance-providers>Instance providers</h3><p>IWampRealmServiceProvider&rsquo;s RegisterCallee method has some overloads which allow you to specify an instance provider for your callee service instance, that is a Func&lt;> delegate that returns an instance of your callee service provider.</p><p>This allows you to control yourself the lifecycle of the callee service instance. You can of course use an dependency injection framework to help you manage that.</p><p>For instance, using <a href=http://www.ninject.org/>Ninject</a>:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Run()
+    Console.WriteLine(<span style=color:#e6db74>&#34;Press enter to unregister&#34;</span>);
+
+    Console.ReadLine();
+
+    <span style=color:#66d9ef>await</span> disposable.DisposeAsync().ConfigureAwait(<span style=color:#66d9ef>false</span>);
+
+    Console.WriteLine(<span style=color:#e6db74>&#34;Unregistered!&#34;</span>);
+}
+
+</code></pre></div><h2 id=supprted-features>Supprted features</h2><p>Both placing attributes on a class method and placing attributes on an interface implemented by the class are supported.</p><h3 id=instance-providers>Instance providers</h3><p>IWampRealmServiceProvider&rsquo;s RegisterCallee method has some overloads which allow you to specify an instance provider for your callee service instance, that is a Func&lt;> delegate that returns an instance of your callee service provider.</p><p>This allows you to control yourself the lifecycle of the callee service instance. You can of course use an dependency injection framework to help you manage that.</p><p>For instance, using <a href=http://www.ninject.org/>Ninject</a>:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     IKernel kernel = <span style=color:#66d9ef>new</span> StandardKernel();
 
@@ -63,9 +71,14 @@
 	IWampChannel channel =
 		factory.CreateJsonChannel(<span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-	<span style=color:#66d9ef>await</span> channel.Open();
+	<span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
-    <span style=color:#66d9ef>await</span> channel.RealmProxy.Services.RegisterCallee(() =&gt; kernel.Get&lt;IAddCalculator&gt;());
+    <span style=color:#66d9ef>await</span> channel.RealmProxy.Services.RegisterCallee(() =&gt; kernel.Get&lt;IAddCalculator&gt;()).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+
+    <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+</span><span style=color:#75715e></span>    <span style=color:#66d9ef>await</span> Task.Yield();
+
+    Console.ReadLine();
 }
 
 <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> IAddCalculator
@@ -91,7 +104,7 @@
 <span style=color:#a6e22e>    [WampProcedure(&#34;com.math.slowsquare&#34;)]</span>
     <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>async</span> Task&lt;<span style=color:#66d9ef>int</span>&gt; SlowSquare(<span style=color:#66d9ef>int</span> x)
     {
-        <span style=color:#66d9ef>await</span> Task.Delay(<span style=color:#ae81ff>1000</span>);
+        <span style=color:#66d9ef>await</span> Task.Delay(<span style=color:#ae81ff>1000</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
         <span style=color:#66d9ef>return</span> x * x;
     }
 <span style=color:#a6e22e>
@@ -190,7 +203,7 @@ In order to report progress, call the progress Report method. Example:</p><div c
         <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i = <span style=color:#ae81ff>0</span>; i &lt; n; i++)
         {
             progress.Report(i);
-            <span style=color:#66d9ef>await</span> Task.Delay(<span style=color:#ae81ff>100</span>);
+            <span style=color:#66d9ef>await</span> Task.Delay(<span style=color:#ae81ff>100</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
         }
 
         <span style=color:#66d9ef>return</span> n;
@@ -205,20 +218,25 @@ In order to report progress, call the progress Report method. Example:</p><div c
 	    <span style=color:#75715e>// ...
 </span><span style=color:#75715e></span>    }
  }
-</code></pre></div><blockquote><p>Then register it to the realm regularly:</p></blockquote><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>async</span> Task Run()
+</code></pre></div><blockquote><p>Then register it to the realm regularly:</p></blockquote><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     DefaultWampChannelFactory factory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
     IWampChannel channel = factory.CreateJsonChannel(<span style=color:#e6db74>&#34;ws://localhost:8080/ws&#34;</span>, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-    <span style=color:#66d9ef>await</span> channel.Open();
+    <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     ILongOpService service = <span style=color:#66d9ef>new</span> LongOpService();
 
     IAsyncDisposable disposable =
-        <span style=color:#66d9ef>await</span> channel.RealmProxy.Services.RegisterCallee(service);
+        <span style=color:#66d9ef>await</span> channel.RealmProxy.Services.RegisterCallee(service).ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     Console.WriteLine(<span style=color:#e6db74>&#34;Registered LongOpService&#34;</span>);
+
+    <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+</span><span style=color:#75715e></span>    <span style=color:#66d9ef>await</span> Task.Yield();
+
+    Console.ReadLine();
 }
 </code></pre></div><blockquote><p>Note: The sample is based on <a href=https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/progress>this</a> AutobahnJS sample</p></blockquote><h3 id=cancellation-support>Cancellation support</h3><p>Cancellation is supported via the <a href="https://msdn.microsoft.com/en-us/library/system.threading.cancellationtoken(v=vs.110).aspx">CancellationToken api</a>. In order to declare a callee procedure which supports cancellation, declare an async method which receives as its last argument a CancellationToken:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>CancellableOpService</span>
 {
@@ -232,7 +250,7 @@ In order to report progress, call the progress Report method. Example:</p><div c
                 <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> WampRpcCanceledException(<span style=color:#e6db74>$&#34; {i * 100.0 / n}% of the work was done&#34;</span>);
             }
 
-            <span style=color:#66d9ef>await</span> Task.Delay(<span style=color:#ae81ff>100</span>, token);
+            <span style=color:#66d9ef>await</span> Task.Delay(<span style=color:#ae81ff>100</span>, token).ConfigureAwait(<span style=color:#66d9ef>false</span>);
         }
 
         <span style=color:#66d9ef>return</span> n;
@@ -252,7 +270,7 @@ In order to report progress, call the progress Report method. Example:</p><div c
             }
 
             progress.Report(i);
-            <span style=color:#66d9ef>await</span> Task.Delay(<span style=color:#ae81ff>100</span>, token);
+            <span style=color:#66d9ef>await</span> Task.Delay(<span style=color:#ae81ff>100</span>, token).ConfigureAwait(<span style=color:#66d9ef>false</span>);
         }
 
         <span style=color:#66d9ef>return</span> n;
@@ -292,20 +310,20 @@ Example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#2728
                 progress.Report(i);                    
             }
 
-            <span style=color:#66d9ef>await</span> Task.Delay(<span style=color:#ae81ff>100</span>);
+            <span style=color:#66d9ef>await</span> Task.Delay(<span style=color:#ae81ff>100</span>).ConfigureAwait(<span style=color:#66d9ef>false</span>);
         }
 
         <span style=color:#66d9ef>return</span> n;
     }
 }
-</code></pre></div><h2 id=registration-customization>Registration customization</h2><p>The RegisterCallee method of IWampRealmServiceProvider has an overload that receives an &ldquo;interceptor&rdquo; instance. The &ldquo;interceptor&rdquo; allows customizing the registration being performed.</p><p>This allows customizing the register options and the procedure uri sent upon REGISTER message.</p><p>The following sections discuss register options modifications that can be used in order to leverage WAMP advanced profile features.</p><h3 id=caller-identification>Caller identification</h3><p>It is possible to get caller identification details. According to WAMP2 specification, a Callee can request to get caller identification details (by specifying <code>disclose_caller = true</code> on registration).</p><p>Specifying this is possible on callee registration.</p><p>Callee registration example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>async</span> Task Run()
+</code></pre></div><h2 id=registration-customization>Registration customization</h2><p>The RegisterCallee method of IWampRealmServiceProvider has an overload that receives an &ldquo;interceptor&rdquo; instance. The &ldquo;interceptor&rdquo; allows customizing the registration being performed.</p><p>This allows customizing the register options and the procedure uri sent upon REGISTER message.</p><p>The following sections discuss register options modifications that can be used in order to leverage WAMP advanced profile features.</p><h3 id=caller-identification>Caller identification</h3><p>It is possible to get caller identification details. According to WAMP2 specification, a Callee can request to get caller identification details (by specifying <code>disclose_caller = true</code> on registration).</p><p>Specifying this is possible on callee registration.</p><p>Callee registration example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     DefaultWampChannelFactory factory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
     IWampChannel channel =
         factory.CreateJsonChannel(<span style=color:#e6db74>&#34;ws://localhost:8080/ws&#34;</span>, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-    <span style=color:#66d9ef>await</span> channel.Open();
+    <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     SquareService service = <span style=color:#66d9ef>new</span> SquareService();
 
@@ -317,7 +335,13 @@ Example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#2728
 
     IAsyncDisposable disposable =
         <span style=color:#66d9ef>await</span> channel.RealmProxy.Services.RegisterCallee(service,
-            <span style=color:#66d9ef>new</span> CalleeRegistrationInterceptor(registerOptions));
+            <span style=color:#66d9ef>new</span> CalleeRegistrationInterceptor(registerOptions))
+            .ConfigureAwait(<span style=color:#66d9ef>false</span>);
+
+    <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+</span><span style=color:#75715e></span>    <span style=color:#66d9ef>await</span> Task.Yield();
+
+    Console.ReadLine();
 }
 </code></pre></div><p>In order to obtain these details as a Callee, access WampInvocationContext.Current.</p><p>Sample:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SquareService</span>
 {
@@ -333,7 +357,7 @@ Example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#2728
     }
 }
 
-</code></pre></div><blockquote><p>Note: This sample is based on <a href=https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/options>this</a> AutobahnJS sample</p></blockquote><h3 id=shared-registrations>Shared registrations</h3><p><a href=http://crossbar.io/docs/Shared-Registrations/>Shared registrations</a> are supported.</p><p>In order to use shared registrations, pass to the Register methods, RegisterOptions with a desired Invoke (the policy to be used). The possible options are: single/first/last/random/roundrobin (there exists a static class named WampInvokePolicy with these values).</p><p>Example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>async</span> Task Run()
+</code></pre></div><blockquote><p>Note: This sample is based on <a href=https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/options>this</a> AutobahnJS sample</p></blockquote><h3 id=shared-registrations>Shared registrations</h3><p><a href=http://crossbar.io/docs/Shared-Registrations/>Shared registrations</a> are supported.</p><p>In order to use shared registrations, pass to the Register methods, RegisterOptions with a desired Invoke (the policy to be used). The possible options are: single/first/last/random/roundrobin (there exists a static class named WampInvokePolicy with these values).</p><p>Example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     DefaultWampChannelFactory channelFactory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
@@ -364,6 +388,11 @@ Example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#2728
             Invoke = WampInvokePolicy.Roundrobin
         }))
         .ConfigureAwait(<span style=color:#66d9ef>false</span>);
+
+    <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+</span><span style=color:#75715e></span>    <span style=color:#66d9ef>await</span> Task.Yield();
+
+    Console.ReadLine();
 }
 
 <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>MyComponent</span>
@@ -387,7 +416,7 @@ Example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#2728
         };
     }
 }
-</code></pre></div><blockquote><p>Note: this sample is based on <a href=https://github.com/crossbario/crossbarexamples/tree/master/sharedregs>this</a> Autobahn sample</p></blockquote><h3 id=pattern-based-registrations>Pattern-based registrations</h3><p><a href=http://crossbar.io/docs/Pattern-Based-Registrations/>Pattern-based registrations</a> are supported.</p><p>In order to use pattern-based registrations, pass to the Register methods, RegisterOptions with a desired Match (the match pattern to be used). The possible options are: exact/prefix/wildcard. (these values are also available in a static class named WampMatchPattern)</p><p>Example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Run()
+</code></pre></div><blockquote><p>Note: this sample is based on <a href=https://github.com/crossbario/crossbarexamples/tree/master/sharedregs>this</a> Autobahn sample</p></blockquote><h3 id=pattern-based-registrations>Pattern-based registrations</h3><p><a href=http://crossbar.io/docs/Pattern-Based-Registrations/>Pattern-based registrations</a> are supported.</p><p>In order to use pattern-based registrations, pass to the Register methods, RegisterOptions with a desired Match (the match pattern to be used). The possible options are: exact/prefix/wildcard. (these values are also available in a static class named WampMatchPattern)</p><p>Example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     DefaultWampChannelFactory channelFactory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
@@ -415,6 +444,11 @@ Example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#2728
              Match = WampMatchPattern.Wildcard
          }))
          .ConfigureAwait(<span style=color:#66d9ef>false</span>);
+
+    <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+</span><span style=color:#75715e></span>    <span style=color:#66d9ef>await</span> Task.Yield();
+
+    Console.ReadLine();
 }
 
 <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Callee1</span>

@@ -11,7 +11,7 @@ IDisposable disposable = realm.HostTestamentService();
 </span><span style=color:#75715e>// disposable.Dispose(); 
 </span><span style=color:#75715e></span>
 host.Open();
-</code></pre></div><h2 id=consuming-the-testament-service>Consuming the testament service</h2><p>In order to consume the Testament service, one can define its contract and consume it using the CalleeProxy method. Another option is to use the GetTestamentServiceProxy extension method of IWampRealmProxy which returns such a proxy:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Run()
+</code></pre></div><h2 id=consuming-the-testament-service>Consuming the testament service</h2><p>In order to consume the Testament service, one can define its contract and consume it using the CalleeProxy method. Another option is to use the GetTestamentServiceProxy extension method of IWampRealmProxy which returns such a proxy:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main()
 {
     WampChannelFactory channelFactory = <span style=color:#66d9ef>new</span> WampChannelFactory();
 
@@ -54,6 +54,10 @@ host.Open();
     }
 
     Console.WriteLine(<span style=color:#e6db74>@&#34;Press any key to close channel. 5 events should be published to &#34;&#34;com.example.testament&#34;&#34;&#34;</span>);
+
+    <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadKey() line.
+</span><span style=color:#75715e></span>    <span style=color:#66d9ef>await</span> Task.Yield();
+
     Console.ReadKey();
     channel.Close();
 }
