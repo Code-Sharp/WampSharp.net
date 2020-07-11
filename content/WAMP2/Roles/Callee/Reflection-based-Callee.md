@@ -20,6 +20,9 @@ public interface IArgumentsService
 
     [WampProcedure("com.arguments.stars")]
     string Stars(string nick = "somebody", int stars = 0);
+
+    [WampProcedure("com.arguments.orders")]
+    string[] Orders(string product, int limit = 5);
 }
 
 public class ArgumentsService : IArgumentsService
@@ -35,10 +38,14 @@ public class ArgumentsService : IArgumentsService
 
     public string Stars(string nick = "somebody", int stars = 0)
     {
-        return string.Format("{0} starred {1}x", nick, stars);
+        return $"{nick} starred {stars}x";
+    }
+
+    public string[] Orders(string product, int limit = 5)
+    {
+        return Enumerable.Range(0, 50).Take(limit).Select(i => $"Product {i}").ToArray();
     }
 }
-
 
 public static async Task Main()
 {
