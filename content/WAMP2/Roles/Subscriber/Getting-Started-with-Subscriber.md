@@ -23,6 +23,7 @@ of the IWampRealmProxy/IWampRealm instance with a generic type representing the 
 
 ```csharp
 using System;
+using System.Threading.Tasks;
 using WampSharp.V2;
 using WampSharp.V2.Client;
 
@@ -30,7 +31,7 @@ namespace MyNamespace
 {
     internal class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             DefaultWampChannelFactory factory =
                 new DefaultWampChannelFactory();
@@ -40,7 +41,7 @@ namespace MyNamespace
             IWampChannel channel =
                 factory.CreateJsonChannel(serverAddress, "realm1");
 
-            channel.Open().Wait(5000);
+            await channel.Open().ConfigureAwait(false);
 
             IWampRealmProxy realmProxy = channel.RealmProxy;
 
@@ -49,18 +50,21 @@ namespace MyNamespace
 
             subscription =
                 realmProxy.Services.GetSubject<int>("com.myapp.topic1")
-                     .Subscribe(x =>
-                         {
-                             Console.WriteLine("Got Event: " + x);
+                          .Subscribe(x =>
+                                     {
+                                         Console.WriteLine($"Got Event: {x}");
 
-                             received++;
+                                         received++;
 
-                             if (received > 5)
-                             {
-                                 Console.WriteLine("Closing ..");
-                                 subscription.Dispose();
-                             }
-                         });
+                                         if (received > 5)
+                                         {
+                                             Console.WriteLine("Closing ..");
+                                             subscription.Dispose();
+                                         }
+                                     });
+
+            // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the Console.ReadLine() line.
+            await Task.Yield();
 
             Console.ReadLine();
         }
