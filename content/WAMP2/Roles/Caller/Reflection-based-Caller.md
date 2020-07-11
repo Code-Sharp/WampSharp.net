@@ -18,7 +18,7 @@ public interface IArgumentsService
     int Add2(int a, int b);
 }
 
-public static void Run()
+public static void Main()
 {
     DefaultWampChannelFactory factory =
         new DefaultWampChannelFactory();
@@ -46,20 +46,8 @@ The following features are supported:
 A method returning a Task&lt;&gt; can be awaited. Example:
 
 ```csharp
-public interface IArgumentsService
+public interface IArgumentsServiceProxy
 {
-    [WampProcedure("com.arguments.ping")]
-    void Ping();
-
-    [WampProcedure("com.arguments.add2")]
-    int Add2(int a, int b);
-
-    [WampProcedure("com.arguments.stars")]
-    string Stars(string nick = "somebody", int stars = 0);
-
-    [WampProcedure("com.arguments.orders")]
-    string[] Orders(string product, int limit = 5);
-
     [WampProcedure("com.arguments.ping")]
     Task PingAsync();
 
@@ -77,29 +65,44 @@ public interface IArgumentsService
 Call example:
 
 ```csharp
-proxy.Ping();
-Console.WriteLine("Pinged!");
+public static async Task Main()
+{
+    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
 
-int result = await proxy.Add2Async(2, 3);
-Console.WriteLine("Add2: {0}", result);
+    const string serverAddress = "ws://127.0.0.1:8080/ws";
 
-var starred = await proxy.StarsAsync();
-Console.WriteLine("Starred 1: {0}", starred);
+    IWampChannel channel =
+        factory.CreateJsonChannel(serverAddress, "realm1");
 
-starred = await proxy.StarsAsync(nick: "Homer");
-Console.WriteLine("Starred 2: {0}", starred);
+    await channel.Open().ConfigureAwait(false);
 
-starred = await proxy.StarsAsync(stars: 5);
-Console.WriteLine("Starred 3: {0}", starred);
+    IArgumentsServiceProxy proxy =
+        channel.RealmProxy.Services.GetCalleeProxy<IArgumentsServiceProxy>();
 
-starred = await proxy.StarsAsync(nick: "Homer", stars: 5);
-Console.WriteLine("Starred 4: {0}", starred);
+    await proxy.PingAsync().ConfigureAwait(false);
+    Console.WriteLine("Pinged!");
 
-string[] orders = await proxy.OrdersAsync("coffee");
-Console.WriteLine("Orders 1: {0}", string.Join(", ", orders));
+    int result = await proxy.Add2Async(2, 3).ConfigureAwait(false);
+    Console.WriteLine("Add2: {0}", result);
 
-orders = await proxy.OrdersAsync("coffee", limit: 10);
-Console.WriteLine("Orders 2: {0}", string.Join(", ", orders));
+    var starred = await proxy.StarsAsync().ConfigureAwait(false);
+    Console.WriteLine($"Starred 1: {starred}");
+
+    starred = await proxy.StarsAsync(nick: "Homer").ConfigureAwait(false);
+    Console.WriteLine($"Starred 2: {starred}");
+
+    starred = await proxy.StarsAsync(stars: 5).ConfigureAwait(false);
+    Console.WriteLine($"Starred 3: {starred}");
+
+    starred = await proxy.StarsAsync(nick: "Homer", stars: 5).ConfigureAwait(false);
+    Console.WriteLine($"Starred 4: {starred}");
+
+    string[] orders = await proxy.OrdersAsync("coffee").ConfigureAwait(false);
+    Console.WriteLine($"Orders 1: {string.Join(", ", orders)}");
+
+    orders = await proxy.OrdersAsync("coffee", limit: 10).ConfigureAwait(false);
+    Console.WriteLine($"Orders 2: {string.Join(", ", orders)}");
+}
 ```
 
 >Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/arguments) AutobahnJS sample
@@ -130,25 +133,25 @@ public interface IComplexResultServiceProxy
 And then obtain a callee proxy and simply call its methods:
 
 ```csharp
-public async Task Run()
+public static async Task Main()
 {
     DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
 
     IWampChannel channel =
         factory.CreateJsonChannel("ws://localhost:8080/ws", "realm1");
 
-    await channel.Open();
+    await channel.Open().ConfigureAwait(false);
 
     IComplexResultServiceProxy proxy =
         channel.RealmProxy.Services.GetCalleeProxy<IComplexResultServiceProxy>();
 
-    (string forename, string surname) = await proxy.SplitNameAsync("Homer Simpson");
+    (string forename, string surname) = await proxy.SplitNameAsync("Homer Simpson").ConfigureAwait(false);
     // Synchronous version: 
     // (string forename, string surname) = proxy.SplitName("Homer Simpson");
 
     Console.WriteLine($"Forename: {forename}, Surname: {surname}");
 
-    (int c, int ci) = await proxy.AddComplexAsync(2, 3, 4, 5);
+    (int c, int ci) = await proxy.AddComplexAsync(2, 3, 4, 5).ConfigureAwait(false);
     // Synchronous version: 
     // (int c, int ci) = proxy.AddComplex(2, 3, 4, 5);
 
@@ -229,20 +232,20 @@ public interface ILongOpService
 Then obtain the proxy and call it:
 
 ```csharp
-public async Task Run()
+public static async Task Main()
 {
     DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
 
     IWampChannel channel = factory.CreateJsonChannel("ws://localhost:8080/ws", "realm1");
 
-    await channel.Open();
+    await channel.Open()ConfigureAwait(false);
 
     ILongOpService proxy = channel.RealmProxy.Services.GetCalleeProxy<ILongOpService>();
 
     Progress<int> progress =
         new Progress<int>(i => Console.WriteLine("Got progress " + i));
 
-    int result = await proxy.LongOp(10, progress);
+    int result = await proxy.LongOp(10, progress).ConfigureAwait(false);
 
     Console.WriteLine("Got result " + result);
 }
@@ -335,14 +338,14 @@ public interface IMultivaluedResultService
 {
     [WampProcedure("com.myapp.split_name")]
     [return: WampResult(CollectionResultTreatment.Multivalued)]
-    string[] SplitName(string fullname);
+    Task<string[]> SplitNameAsync(string fullname);
 }
 ```
 
 Call example:
 
 ```csharp
-string[] splitted = proxy.SplitName("Homer Simpson");
+string[] splitted = proxy.SplitNameAsync("Homer Simpson");
 ```
 >Note:  The sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/rpc/complex) AutobahnJS sample
 
@@ -386,14 +389,14 @@ public interface ISquareService
 And then specify the index in runtime:
 
 ```csharp
-public static async Task Run()
+public static async Task Main()
 {
     DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
 
     IWampChannel channel =
         factory.CreateJsonChannel("ws://localhost:8080/ws", "realm1");
 
-    await channel.Open();
+    await channel.Open().ConfigureAwait(false);
 
     int index = GetRuntimeIndex();
 
@@ -402,7 +405,7 @@ public static async Task Run()
         (new CachedCalleeProxyInterceptor(
             new MyCalleeProxyInterceptor(index)));
 
-    int nine = await proxy.Square(3); // Calls ("com.myapp.square." + index)
+    int nine = await proxy.Square(3).ConfigureAwait(false); // Calls ("com.myapp.square." + index)
 }
 ```
 
@@ -421,14 +424,14 @@ According to WAMP2 specification, a Caller can request to disclose its identific
 Specifying this is possible when obtaining callee proxy.
 
 ```csharp
-public async Task Run()
+public static async Task Main()
 {
     DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
 
     IWampChannel channel =
         factory.CreateJsonChannel("ws://localhost:8080/ws", "realm1");
 
-    await channel.Open();
+    await channel.Open().ConfigureAwait(false);
 
     var callOptions = new CallOptions()
     {
@@ -439,9 +442,9 @@ public async Task Run()
         channel.RealmProxy.Services.GetCalleeProxy<ISquareService>
         (new CachedCalleeProxyInterceptor(new CalleeProxyInterceptor(callOptions)));
 
-    await proxy.Square(-2);
-    await proxy.Square(0);
-    await proxy.Square(2);
+    await proxy.Square(-2).ConfigureAwait(false);
+    await proxy.Square(0).ConfigureAwait(false);
+    await proxy.Square(2).ConfigureAwait(false);
 }
 ```
 
