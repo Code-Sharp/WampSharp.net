@@ -23,6 +23,7 @@ of the IWampRealm/IWampRealmProxy instance.
 
 ```csharp
 using System;
+using System.Threading.Tasks;
 using WampSharp.V2;
 using WampSharp.V2.Rpc;
 
@@ -31,21 +32,21 @@ namespace MyNamespace
     public interface IArgumentsService
     {
         [WampProcedure("com.arguments.ping")]
-        void Ping();
+        Task PingAsync();
 
         [WampProcedure("com.arguments.add2")]
-        int Add2(int a, int b);
+        Task<int> Add2Async(int a, int b);
 
         [WampProcedure("com.arguments.stars")]
-        string Stars(string nick = "somebody", int stars = 0);
+        Task<string> StarsAsync(string nick = "somebody", int stars = 0);
 
         [WampProcedure("com.arguments.orders")]
-        string[] Orders(string product, int limit = 5);
+        Task<string[]> OrdersAsync(string product, int limit = 5);
     }
 
     internal class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             DefaultWampChannelFactory factory =
                 new DefaultWampChannelFactory();
@@ -55,34 +56,34 @@ namespace MyNamespace
             IWampChannel channel =
                 factory.CreateJsonChannel(serverAddress, "realm1");
 
-            channel.Open().Wait(5000);
+            await channel.Open().ConfigureAwait(false);
 
             IArgumentsService proxy =
                 channel.RealmProxy.Services.GetCalleeProxy<IArgumentsService>();
 
-            proxy.Ping();
+            await proxy.PingAsync().ConfigureAwait(false);
             Console.WriteLine("Pinged!");
 
-            int result = proxy.Add2(2, 3);
-            Console.WriteLine("Add2: {0}", result);
+            int result = await proxy.Add2Async(2, 3).ConfigureAwait(false);
+            Console.WriteLine($"Add2: {result}");
 
-            var starred = proxy.Stars();
-            Console.WriteLine("Starred 1: {0}", starred);
+            var starred = await proxy.StarsAsync().ConfigureAwait(false);
+            Console.WriteLine($"Starred 1: {starred}");
 
-            starred = proxy.Stars(nick: "Homer");
-            Console.WriteLine("Starred 2: {0}", starred);
+            starred = await proxy.StarsAsync(nick: "Homer").ConfigureAwait(false);
+            Console.WriteLine($"Starred 2: {starred}");
 
-            starred = proxy.Stars(stars: 5);
-            Console.WriteLine("Starred 3: {0}", starred);
+            starred = await proxy.StarsAsync(stars: 5).ConfigureAwait(false);
+            Console.WriteLine($"Starred 3: {starred}");
 
-            starred = proxy.Stars(nick: "Homer", stars: 5);
-            Console.WriteLine("Starred 4: {0}", starred);
+            starred = await proxy.StarsAsync(nick: "Homer", stars: 5).ConfigureAwait(false);
+            Console.WriteLine($"Starred 4: {starred}");
 
-            string[] orders = proxy.Orders("coffee");
-            Console.WriteLine("Orders 1: {0}", string.Join(", ", orders));
+            string[] orders = await proxy.OrdersAsync("coffee").ConfigureAwait(false);
+            Console.WriteLine($"Orders 1: {string.Join(", ", orders)}");
 
-            orders = proxy.Orders("coffee", limit: 10);
-            Console.WriteLine("Orders 2: {0}", string.Join(", ", orders));
+            orders = await proxy.OrdersAsync("coffee", limit: 10).ConfigureAwait(false);
+            Console.WriteLine($"Orders 2: {string.Join(", ", orders)}");
 
             Console.ReadLine();
         }
@@ -94,6 +95,7 @@ namespace MyNamespace
 
 ```csharp
 using System;
+using System.Threading.Tasks;
 using WampSharp.V2;
 using WampSharp.V2.Realm;
 using WampSharp.V2.Rpc;
@@ -103,21 +105,21 @@ namespace MyNamespace
     public interface IArgumentsService
     {
         [WampProcedure("com.arguments.ping")]
-        void Ping();
+        Task PingAsync();
 
         [WampProcedure("com.arguments.add2")]
-        int Add2(int a, int b);
+        Task<int> Add2Async(int a, int b);
 
         [WampProcedure("com.arguments.stars")]
-        string Stars(string nick = "somebody", int stars = 0);
+        Task<string> StarsAsync(string nick = "somebody", int stars = 0);
 
         [WampProcedure("com.arguments.orders")]
-        string[] Orders(string product, int limit = 5);
+        Task<string[]> OrdersAsync(string product, int limit = 5);
     }
 
     internal class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             const string serverAddress = "ws://127.0.0.1:8080/ws";
 
@@ -131,31 +133,31 @@ namespace MyNamespace
             IWampHostedRealm realm = host.RealmContainer.GetRealmByName("realm1");
 
             IArgumentsService proxy =
-                realm.Services.GetCalleeProxy<IArgumentsService>();
+                channel.RealmProxy.Services.GetCalleeProxy<IArgumentsService>();
 
-            proxy.Ping();
+            await proxy.PingAsync().ConfigureAwait(false);
             Console.WriteLine("Pinged!");
 
-            int result = proxy.Add2(2, 3);
-            Console.WriteLine("Add2: {0}", result);
+            int result = await proxy.Add2Async(2, 3).ConfigureAwait(false);
+            Console.WriteLine($"Add2: {result}");
 
-            var starred = proxy.Stars();
-            Console.WriteLine("Starred 1: {0}", starred);
+            var starred = await proxy.StarsAsync().ConfigureAwait(false);
+            Console.WriteLine($"Starred 1: {starred}");
 
-            starred = proxy.Stars(nick: "Homer");
-            Console.WriteLine("Starred 2: {0}", starred);
+            starred = await proxy.StarsAsync(nick: "Homer").ConfigureAwait(false);
+            Console.WriteLine($"Starred 2: {starred}");
 
-            starred = proxy.Stars(stars: 5);
-            Console.WriteLine("Starred 3: {0}", starred);
+            starred = await proxy.StarsAsync(stars: 5).ConfigureAwait(false);
+            Console.WriteLine($"Starred 3: {starred}");
 
-            starred = proxy.Stars(nick: "Homer", stars: 5);
-            Console.WriteLine("Starred 4: {0}", starred);
+            starred = await proxy.StarsAsync(nick: "Homer", stars: 5).ConfigureAwait(false);
+            Console.WriteLine($"Starred 4: {starred}");
 
-            string[] orders = proxy.Orders("coffee");
-            Console.WriteLine("Orders 1: {0}", string.Join(", ", orders));
+            string[] orders = await proxy.OrdersAsync("coffee").ConfigureAwait(false);
+            Console.WriteLine($"Orders 1: {string.Join(", ", orders)}");
 
-            orders = proxy.Orders("coffee", limit: 10);
-            Console.WriteLine("Orders 2: {0}", string.Join(", ", orders));
+            orders = await proxy.OrdersAsync("coffee", limit: 10).ConfigureAwait(false);
+            Console.WriteLine($"Orders 2: {string.Join(", ", orders)}");
 
             Console.ReadLine();
         }

@@ -24,8 +24,8 @@ Then create an instance of the class and register it using the RegisterCalee met
 
 ```csharp
 using System;
+using System.Linq;
 using System.Threading.Tasks;
-using SystemEx;
 using WampSharp.V2;
 using WampSharp.V2.Client;
 using WampSharp.V2.Rpc;
@@ -42,6 +42,9 @@ namespace MyNamespace
 
         [WampProcedure("com.arguments.stars")]
         string Stars(string nick = "somebody", int stars = 0);
+
+        [WampProcedure("com.arguments.orders")]
+        string[] Orders(string product, int limit = 5);
     }
 
     public class ArgumentsService : IArgumentsService
@@ -57,7 +60,12 @@ namespace MyNamespace
 
         public string Stars(string nick = "somebody", int stars = 0)
         {
-            return string.Format("{0} starred {1}x", nick, stars);
+            return $"{nick} starred {stars}x";
+        }
+
+        public string[] Orders(string product, int limit = 5)
+        {
+            return Enumerable.Range(0, 50).Take(limit).Select(i => $"Product {i}").ToArray();
         }
     }
 
@@ -65,7 +73,7 @@ namespace MyNamespace
     {
         public static async Task Main(string[] args)
         {
-            const string location = "ws://127.0.0.1:8080/";
+            const string location = "ws://127.0.0.1:8080/ws";
 
             DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
 
@@ -96,8 +104,8 @@ namespace MyNamespace
 
 ```csharp
 using System;
+using System.Linq;
 using System.Threading.Tasks;
-using SystemEx;
 using WampSharp.V2;
 using WampSharp.V2.Realm;
 using WampSharp.V2.Rpc;
@@ -114,6 +122,9 @@ namespace MyNamespace
 
         [WampProcedure("com.arguments.stars")]
         string Stars(string nick = "somebody", int stars = 0);
+
+        [WampProcedure("com.arguments.orders")]
+        string[] Orders(string product, int limit = 5);
     }
 
     public class ArgumentsService : IArgumentsService
@@ -129,7 +140,12 @@ namespace MyNamespace
 
         public string Stars(string nick = "somebody", int stars = 0)
         {
-            return string.Format("{0} starred {1}x", nick, stars);
+            return $"{nick} starred {stars}x";
+        }
+
+        public string[] Orders(string product, int limit = 5)
+        {
+            return Enumerable.Range(0, 50).Take(limit).Select(i => $"Product {i}").ToArray();
         }
     }
 
@@ -137,7 +153,7 @@ namespace MyNamespace
     {
         public static async Task Main(string[] args)
         {
-            const string location = "ws://127.0.0.1:8080/";
+            const string location = "ws://127.0.0.1:8080/ws";
 
             using (IWampHost host = new DefaultWampHost(location))
             {
