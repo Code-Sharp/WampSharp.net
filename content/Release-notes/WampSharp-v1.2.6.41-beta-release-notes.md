@@ -8,7 +8,7 @@ date= "2017-08-08T14:39:35+03:00"
 
 ### New transports
 
-A few router-side WebSockets transports have been added in this version. These include [HttpListener based transport]({{< ref "WAMP2\Router\Transports\WebSocket.md" >}}#wampsharp-httplistener), [ASP.NET based transport]({{< ref "WAMP2\Router\Transports\WebSocket.md" >}}#wampsharp-aspnet-websockets-server) and [Microsoft.Owin based transport]({{< ref "WAMP2\Router\Transports\WebSocket.md" >}}#wampsharp-owin).
+A few router-side WebSockets transports have been added in this version. These include [HttpListener based transport]({{< ref "WAMP2/Router/Transports/WebSocket.md" >}}#wampsharp-httplistener), [ASP.NET based transport]({{< ref "WAMP2/Router/Transports/WebSocket.md" >}}#wampsharp-aspnet-websockets-server) and [Microsoft.Owin based transport]({{< ref "WAMP2/Router/Transports/WebSocket.md" >}}#wampsharp-owin).
 
 ### CANCEL/INTERRUPT support
 
@@ -160,7 +160,7 @@ From this version, the [Testament feature](http://wamp-proto.org/static/rfc/draf
 
 This feature allows a client to request the router to publish some predefined events when the client disconnects.
 
-In order to enable it from router-side, call HostTestamentService extension method of the relevant realm (this is similiar to the [Router-side meta-api usage]({{< ref "WAMP2\Meta-api-service.md" >}}#exposing-meta-api)):
+In order to enable it from router-side, call HostTestamentService extension method of the relevant realm (this is similiar to the [Router-side meta-api usage]({{< ref "WAMP2/Meta-api-service.md" >}}#exposing-meta-api)):
 
 ```csharp
 DefaultWampHost host = new DefaultWampHost("ws://127.0.0.1:8080/ws");
@@ -234,7 +234,7 @@ A subscriber can indicate that it is interested in getting the retained event by
 
 A publisher can indicate that it is interested in retaining a publication by specifying `Retain = true` in the PublisherOptions argument.
 
-An example for a subscription which requests getting a retained event (Using [Reflection-based Subscriber]({{< ref "WAMP2\Roles\Subscriber\Reflection-based-Subscriber.md" >}})):
+An example for a subscription which requests getting a retained event (Using [Reflection-based Subscriber]({{< ref "WAMP2/Roles/Subscriber/Reflection-based-Subscriber.md" >}})):
 
 ```csharp
 public class MySubscriber
@@ -288,7 +288,7 @@ private static async Task Run()
 }
 ```
 
-An example for a publisher which publishes retained events (Using [Reflection-based Publisher]({{< ref "WAMP2\Roles\Publisher\Reflection-based-Publisher.md" >}})):
+An example for a publisher which publishes retained events (Using [Reflection-based Publisher]({{< ref "WAMP2/Roles/Publisher/Reflection-based-Publisher.md" >}})):
 
 ```csharp
 public class MyPublisher

@@ -58,10 +58,10 @@ host.Open();
 
 After that, you consume the roles you are interested in as described in the getting started tutorials:
 
-* [Getting started with Callee]({{< ref "WAMP2\Roles\Callee\Getting-Started-with-Callee.md" >}})
-* [Getting started with Caller]({{< ref "WAMP2\Roles\Caller\Getting-Started-with-Caller.md" >}})
-* [Getting started with Subscriber]({{< ref "WAMP2\Roles\Subscriber\Getting-Started-with-Subscriber.md" >}})
-* [Getting started with Publisher]({{< ref "WAMP2\Roles\Publisher\Getting-Started-with-Publisher.md" >}})
+* [Getting started with Callee]({{< ref "WAMP2/Roles/Callee/Getting-Started-with-Callee.md" >}})
+* [Getting started with Caller]({{< ref "WAMP2/Roles/Caller/Getting-Started-with-Caller.md" >}})
+* [Getting started with Subscriber]({{< ref "WAMP2/Roles/Subscriber/Getting-Started-with-Subscriber.md" >}})
+* [Getting started with Publisher]({{< ref "WAMP2/Roles/Publisher/Getting-Started-with-Publisher.md" >}})
 
 ## DefaultWampHost
 

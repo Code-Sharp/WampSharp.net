@@ -5,7 +5,7 @@ tags = ["wamp1"]
 date = "2017-07-30T00:16:09+03:00"
 +++
 
-As you've seen in [The getting started tutorial]({{<ref "WAMP1\Getting-started-with-WAMPv1.md">}}), WampSharp allows you to host RPC services and consume them from a WAMP client.
+As you've seen in [The getting started tutorial]({{<ref "WAMP1/Getting-started-with-WAMPv1.md">}}), WampSharp allows you to host RPC services and consume them from a WAMP client.
 
 ## Declaring RPC services
 

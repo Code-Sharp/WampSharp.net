@@ -95,7 +95,7 @@ namespace MyNamespace
 
 ## Manual proxy samples
 
-This sample demonstrates a manual implementation of [Reflection-based caller]({{< ref "WAMP2\Roles\Caller\Reflection-based-Caller.md" >}}).
+This sample demonstrates a manual implementation of [Reflection-based caller]({{< ref "WAMP2/Roles/Caller/Reflection-based-Caller.md" >}}).
 
 ```csharp
 using System;

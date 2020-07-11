@@ -8,9 +8,9 @@ date = "2015-10-09T10:25:07+09:00"
 
 ### Router side authentication
 
-From this version, [router-side authentication]({{< ref "WAMP2\Router\Router-side-authentication.md" >}}) is supported. Also [WAMP-CRA is supported]({{< ref "WAMP2\Router\WAMP-CRA-router-side-authentication.md" >}}).
+From this version, [router-side authentication]({{< ref "WAMP2/Router/Router-side-authentication.md" >}}) is supported. Also [WAMP-CRA is supported]({{< ref "WAMP2/Router/WAMP-CRA-router-side-authentication.md" >}}).
 
-Also, [Cookie based authenticators are supported]({{< ref "WAMP2\Router\Cookie-based-router-side-authentication.md" >}}).
+Also, [Cookie based authenticators are supported]({{< ref "WAMP2/Router/Cookie-based-router-side-authentication.md" >}}).
 
 Currently authentication details (authid, authmethod and authrole) are forwarded to callees if the caller is disclosed. These are accessible via WampInvocationContext. This might change according to the [WAMP spec decision](https://github.com/wamp-proto/wamp-proto/issues/57).
 

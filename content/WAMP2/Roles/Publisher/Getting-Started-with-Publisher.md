@@ -5,7 +5,7 @@ tags = ["publisher"]
 date = "2017-07-30T00:16:09+03:00"
 +++
 
-Before you start, see [Getting started with WAMPv2]({{< ref "WAMP2\Getting-started-with-WAMPv2.md" >}}) and create a WampChannel/WampHost your publisher will use.
+Before you start, see [Getting started with WAMPv2]({{< ref "WAMP2/Getting-started-with-WAMPv2.md" >}}) and create a WampChannel/WampHost your publisher will use.
 
 ## About Publisher role
 
@@ -144,6 +144,6 @@ namespace MyNamespace
 ## See also
 
 
-* [Reflection based Publisher]({{< ref "WAMP2\Roles\Publisher\Reflection-based-Publisher.md" >}})
-* [Rx based Publisher]({{< ref "WAMP2\Roles\Publisher\Rx-based-Publisher.md" >}})
-* [Raw Publisher]({{< ref "WAMP2\Roles\Publisher\Raw-Publisher.md" >}})
+* [Reflection based Publisher]({{< ref "WAMP2/Roles/Publisher/Reflection-based-Publisher.md" >}})
+* [Rx based Publisher]({{< ref "WAMP2/Roles/Publisher/Rx-based-Publisher.md" >}})
+* [Raw Publisher]({{< ref "WAMP2/Roles/Publisher/Raw-Publisher.md" >}})

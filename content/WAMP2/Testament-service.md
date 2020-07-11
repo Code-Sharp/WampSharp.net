@@ -11,7 +11,7 @@ This feature allows a client to request the router to publish some predefined ev
 
 ## Enabling the testament service on the router-side
 
-In order to enable it from router-side, call HostTestamentService extension method of the relevant realm (this is similiar to the [Router-side meta-api usage]({{< ref "WAMP2\Meta-api-service.md" >}}#exposing-meta-api)):
+In order to enable it from router-side, call HostTestamentService extension method of the relevant realm (this is similiar to the [Router-side meta-api usage]({{< ref "WAMP2/Meta-api-service.md" >}}#exposing-meta-api)):
 
 ```csharp
 DefaultWampHost host = new DefaultWampHost("ws://127.0.0.1:8080/ws");

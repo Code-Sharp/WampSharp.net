@@ -6,7 +6,7 @@ date = "2017-07-30T00:16:09+03:00"
 +++
 
 ## Before you begin
-Raise up a WampHost such as in the [Getting started tutorial]({{<ref "WAMP1\Getting-started-with-WAMPv1.md">}}).
+Raise up a WampHost such as in the [Getting started tutorial]({{<ref "WAMP1/Getting-started-with-WAMPv1.md">}}).
 
 This tutorial will work against it.
 

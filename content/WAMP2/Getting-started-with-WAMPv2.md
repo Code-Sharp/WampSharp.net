@@ -74,7 +74,7 @@ A WampChannel represents a session to a WAMPv2 router. It contains a property na
 
 See the following tutorials for getting started with a WAMPv2 role:
 
-* [Getting started with Callee]({{< ref "WAMP2\Roles\Callee\Getting-Started-with-Callee.md" >}})
-* [Getting started with Caller]({{< ref "WAMP2\Roles\Caller\Getting-Started-with-Caller.md" >}})
-* [Getting started with Subscriber]({{< ref "WAMP2\Roles\Subscriber\Getting-Started-with-Subscriber.md" >}})
-* [Getting started with Publisher]({{< ref "WAMP2\Roles\Publisher\Getting-Started-with-Publisher.md" >}})
+* [Getting started with Callee]({{< ref "WAMP2/Roles/Callee/Getting-Started-with-Callee.md" >}})
+* [Getting started with Caller]({{< ref "WAMP2/Roles/Caller/Getting-Started-with-Caller.md" >}})
+* [Getting started with Subscriber]({{< ref "WAMP2/Roles/Subscriber/Getting-Started-with-Subscriber.md" >}})
+* [Getting started with Publisher]({{< ref "WAMP2/Roles/Publisher/Getting-Started-with-Publisher.md" >}})

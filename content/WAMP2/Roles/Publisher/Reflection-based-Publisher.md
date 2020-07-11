@@ -5,7 +5,7 @@ tags = ["publisher", "reflection"]
 date = "2017-07-30T00:16:09+03:00"
 +++
 
-**Reflection-based Publisher** allows to use publisher features in a similar fashion as [Reflection based Callee]({{< ref "WAMP2\Roles\Callee\Reflection-based-Callee.md" >}}).
+**Reflection-based Publisher** allows to use publisher features in a similar fashion as [Reflection based Callee]({{< ref "WAMP2/Roles/Callee/Reflection-based-Callee.md" >}}).
 
 In order to use it, create a class containing an event decorated with a [WampTopic] attribute. Then register an instance of the class using the RegisterPublisher method of IWampRealmServiceProvider. The arguments published to the event will be treated as the arguments keywords of the publication.
 

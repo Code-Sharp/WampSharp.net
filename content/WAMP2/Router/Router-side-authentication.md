@@ -206,4 +206,4 @@ public class Program
 
 ## IWampSessionAuthenticatorFactory
 
-You might been asking yourself what is the transportAuthenticator parameter in IWampSessionAuthenticatorFactory's GetSessionAuthenticator method. Glad you've asked! This is an authenticator that can be provided by the transport of the session. Some transports have built-in metadata that can be used in order to authenticate a client. The common example is [cookies]({{< ref "WAMP2\Router\Cookie-based-router-side-authentication.md" >}}).
+You might been asking yourself what is the transportAuthenticator parameter in IWampSessionAuthenticatorFactory's GetSessionAuthenticator method. Glad you've asked! This is an authenticator that can be provided by the transport of the session. Some transports have built-in metadata that can be used in order to authenticate a client. The common example is [cookies]({{< ref "WAMP2/Router/Cookie-based-router-side-authentication.md" >}}).

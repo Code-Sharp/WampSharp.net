@@ -5,7 +5,7 @@ tags = ["subscriber"]
 date = "2017-07-30T00:16:09+03:00"
 +++
 
-Before you start, see [Getting started with WAMPv2]({{< ref "WAMP2\Getting-started-with-WAMPv2.md" >}}) and create a WampChannel/WampHost your subscriber will use.
+Before you start, see [Getting started with WAMPv2]({{< ref "WAMP2/Getting-started-with-WAMPv2.md" >}}) and create a WampChannel/WampHost your subscriber will use.
 
 ## About Subscriber role
 
@@ -115,6 +115,6 @@ namespace MyNamespace
 
 ## See also
 
-* [Reflection based Subscriber]({{< ref "WAMP2\Roles\Subscriber\Reflection-based-Subscriber.md" >}})
-* [Rx based Subscriber]({{< ref "WAMP2\Roles\Subscriber\Rx-based-Subscriber.md" >}})
-* [Raw Subscriber]({{< ref "WAMP2\Roles\Subscriber\Raw-Subscriber.md" >}})
+* [Reflection based Subscriber]({{< ref "WAMP2/Roles/Subscriber/Reflection-based-Subscriber.md" >}})
+* [Rx based Subscriber]({{< ref "WAMP2/Roles/Subscriber/Rx-based-Subscriber.md" >}})
+* [Raw Subscriber]({{< ref "WAMP2/Roles/Subscriber/Raw-Subscriber.md" >}})

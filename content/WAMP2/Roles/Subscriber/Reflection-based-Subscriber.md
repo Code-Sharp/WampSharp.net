@@ -5,7 +5,7 @@ tags = ["subscriber", "reflection"]
 date = "2017-07-30T00:16:09+03:00"
 +++
 
-**Reflection-based Subscriber** allows to use WAMPv2 subscriber features in a similar fashion as [Reflection based Callee]({{< ref "WAMP2\Roles\Callee\Reflection-based-Callee.md" >}}).
+**Reflection-based Subscriber** allows to use WAMPv2 subscriber features in a similar fashion as [Reflection based Callee]({{< ref "WAMP2/Roles/Callee/Reflection-based-Callee.md" >}}).
 
 In order to use it, create a class with a method having a [WampTopic] attribute, Then call RegisterSubscriber of IWampRealmServiceProvider.
 

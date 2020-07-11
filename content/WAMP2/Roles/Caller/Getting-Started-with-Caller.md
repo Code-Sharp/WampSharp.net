@@ -5,11 +5,11 @@ tags = ["caller"]
 date = "2017-07-30T00:16:09+03:00"
 +++
 
-Before you start, see [Getting started with WAMPv2]({{< ref "WAMP2\Getting-started-with-WAMPv2.md" >}}) and create a WampChannel/WampHost your caller will use.
+Before you start, see [Getting started with WAMPv2]({{< ref "WAMP2/Getting-started-with-WAMPv2.md" >}}) and create a WampChannel/WampHost your caller will use.
 
 ## About Caller role
 
-WAMPv2 defines a Caller role, that is a role that can call a remote procedure call registered by a [Callee]({{< ref "WAMP2\Roles\Callee\Getting-Started-with-Callee.md" >}}) (using the CALL messages). The caller can receive a response with a result or an error from the router  (using the RESULT/ERROR message).
+WAMPv2 defines a Caller role, that is a role that can call a remote procedure call registered by a [Callee]({{< ref "WAMP2/Roles/Callee/Getting-Started-with-Callee.md" >}}) (using the CALL messages). The caller can receive a response with a result or an error from the router  (using the RESULT/ERROR message).
 
 ### Callee proxy
 
@@ -165,5 +165,5 @@ namespace MyNamespace
 
 ### See also
 
-* [Reflection based Caller]({{< ref "WAMP2\Roles\Caller\Reflection-based-Caller.md" >}})
-* [Raw Caller]({{< ref "WAMP2\Roles\Caller\Raw-Caller.md" >}})
+* [Reflection based Caller]({{< ref "WAMP2/Roles/Caller/Reflection-based-Caller.md" >}})
+* [Raw Caller]({{< ref "WAMP2/Roles/Caller/Raw-Caller.md" >}})

@@ -6,7 +6,7 @@ date = "2017-07-30T00:16:09+03:00"
 +++
 
 
-Before you begin, see [Getting started with WAMPv2]({{< ref "WAMP2\Getting-started-with-WAMPv2.md" >}}) and create a WampChannel/WampHost your calleee will be registered to.
+Before you begin, see [Getting started with WAMPv2]({{< ref "WAMP2/Getting-started-with-WAMPv2.md" >}}) and create a WampChannel/WampHost your calleee will be registered to.
 
 
 ## About Callee role
@@ -159,5 +159,5 @@ namespace MyNamespace
 
 ### See also
 
-* [Reflection based Callee]({{< ref "WAMP2\Roles\Callee\Reflection-based-Callee.md" >}})
-* [Raw Callee]({{< ref "WAMP2\Roles\Callee\Raw-Callee.md" >}})
+* [Reflection based Callee]({{< ref "WAMP2/Roles/Callee/Reflection-based-Callee.md" >}})
+* [Raw Callee]({{< ref "WAMP2/Roles/Callee/Raw-Callee.md" >}})
