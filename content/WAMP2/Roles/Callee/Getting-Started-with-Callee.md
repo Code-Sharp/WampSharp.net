@@ -63,7 +63,7 @@ namespace MyNamespace
 
     internal class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             const string location = "ws://127.0.0.1:8080/";
 
@@ -73,16 +73,18 @@ namespace MyNamespace
 
             Task openTask = channel.Open();
 
-            // await openTask;
-            openTask.Wait();
+            await openTask.ConfigureAwait(false);
 
             IArgumentsService instance = new ArgumentsService();
 
             IWampRealmProxy realm = channel.RealmProxy;
 
             Task<IAsyncDisposable> registrationTask = realm.Services.RegisterCallee(instance);
-            // await registrationTask;
-            registrationTask.Wait();
+
+            await registrationTask.ConfigureAwait(false);
+
+            // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the Console.ReadLine() line.
+            await Task.Yield();
 
             Console.ReadLine();
         }
@@ -133,7 +135,7 @@ namespace MyNamespace
 
     internal class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             const string location = "ws://127.0.0.1:8080/";
 
@@ -144,8 +146,8 @@ namespace MyNamespace
                 IWampHostedRealm realm = host.RealmContainer.GetRealmByName("realm1");
 
                 Task<IAsyncDisposable> registrationTask = realm.Services.RegisterCallee(instance);
-                // await registrationTask;
-                registrationTask.Wait();
+
+                await registrationTask;
 
                 host.Open();
 

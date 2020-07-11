@@ -40,7 +40,7 @@ public class ArgumentsService : IArgumentsService
 }
 
 
-public static async Task Run()
+public static async Task Main()
 {
     const string location = "ws://127.0.0.1:8080/";
 
@@ -57,8 +57,16 @@ public static async Task Run()
     IAsyncDisposable disposable =
         await realm.Services.RegisterCallee(instance).ConfigureAwait(false);
 
-    // Call await disposable.DisposeAsync().ConfigureAwait(false);
-    // to unregister
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.WriteLine("Press enter to unregister");
+
+    Console.ReadLine();
+
+    await disposable.DisposeAsync().ConfigureAwait(false);
+
+    Console.WriteLine("Unregistered!");
 }
 
 ```
@@ -76,7 +84,7 @@ This allows you to control yourself the lifecycle of the callee service instance
 For instance, using [Ninject](http://www.ninject.org/):
 
 ```csharp
-public static async Task Run()
+public static async Task Main()
 {
     IKernel kernel = new StandardKernel();
 
@@ -87,9 +95,14 @@ public static async Task Run()
 	IWampChannel channel =
 		factory.CreateJsonChannel("ws://127.0.0.1:8080/ws", "realm1");
 
-	await channel.Open();
+	await channel.Open().ConfigureAwait(false);
 
-    await channel.RealmProxy.Services.RegisterCallee(() => kernel.Get<IAddCalculator>());
+    await channel.RealmProxy.Services.RegisterCallee(() => kernel.Get<IAddCalculator>()).ConfigureAwait(false);
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.ReadLine();
 }
 
 public interface IAddCalculator
@@ -131,7 +144,7 @@ public class SlowSquareService
     [WampProcedure("com.math.slowsquare")]
     public async Task<int> SlowSquare(int x)
     {
-        await Task.Delay(1000);
+        await Task.Delay(1000).ConfigureAwait(false);
         return x * x;
     }
 
@@ -282,7 +295,7 @@ public class LongOpService : ILongOpService
         for (int i = 0; i < n; i++)
         {
             progress.Report(i);
-            await Task.Delay(100);
+            await Task.Delay(100).ConfigureAwait(false);
         }
 
         return n;
@@ -304,20 +317,25 @@ public class LongOpService
 ```
 > Then register it to the realm regularly:
 ```csharp
-public async Task Run()
+public static async Task Main()
 {
     DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
 
     IWampChannel channel = factory.CreateJsonChannel("ws://localhost:8080/ws", "realm1");
 
-    await channel.Open();
+    await channel.Open().ConfigureAwait(false);
 
     ILongOpService service = new LongOpService();
 
     IAsyncDisposable disposable =
-        await channel.RealmProxy.Services.RegisterCallee(service);
+        await channel.RealmProxy.Services.RegisterCallee(service).ConfigureAwait(false);
 
     Console.WriteLine("Registered LongOpService");
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.ReadLine();
 }
 ```
 
@@ -340,7 +358,7 @@ public class CancellableOpService
                 throw new WampRpcCanceledException($" {i * 100.0 / n}% of the work was done");
             }
 
-            await Task.Delay(100, token);
+            await Task.Delay(100, token).ConfigureAwait(false);
         }
 
         return n;
@@ -364,7 +382,7 @@ public class LongCancellableOpService
             }
 
             progress.Report(i);
-            await Task.Delay(100, token);
+            await Task.Delay(100, token).ConfigureAwait(false);
         }
 
         return n;
@@ -433,7 +451,7 @@ public class LongOpService : ILongOpService
                 progress.Report(i);                    
             }
 
-            await Task.Delay(100);
+            await Task.Delay(100).ConfigureAwait(false);
         }
 
         return n;
@@ -458,14 +476,14 @@ Specifying this is possible on callee registration.
 Callee registration example:
 
 ```csharp
-public async Task Run()
+public static async Task Main()
 {
     DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
 
     IWampChannel channel =
         factory.CreateJsonChannel("ws://localhost:8080/ws", "realm1");
 
-    await channel.Open();
+    await channel.Open().ConfigureAwait(false);
 
     SquareService service = new SquareService();
 
@@ -477,7 +495,13 @@ public async Task Run()
 
     IAsyncDisposable disposable =
         await channel.RealmProxy.Services.RegisterCallee(service,
-            new CalleeRegistrationInterceptor(registerOptions));
+            new CalleeRegistrationInterceptor(registerOptions))
+            .ConfigureAwait(false);
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.ReadLine();
 }
 ```
 
@@ -513,7 +537,7 @@ In order to use shared registrations, pass to the Register methods, RegisterOpti
 Example:
 
 ```csharp
-public async Task Run()
+public static async Task Main()
 {
     DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
 
@@ -544,6 +568,11 @@ public async Task Run()
             Invoke = WampInvokePolicy.Roundrobin
         }))
         .ConfigureAwait(false);
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.ReadLine();
 }
 
 public class MyComponent
@@ -580,7 +609,7 @@ In order to use pattern-based registrations, pass to the Register methods, Regis
 Example:
 
 ```csharp
-public static async Task Run()
+public static async Task Main()
 {
     DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
 
@@ -608,6 +637,11 @@ public static async Task Run()
              Match = WampMatchPattern.Wildcard
          }))
          .ConfigureAwait(false);
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.ReadLine();
 }
 
 public class Callee1
