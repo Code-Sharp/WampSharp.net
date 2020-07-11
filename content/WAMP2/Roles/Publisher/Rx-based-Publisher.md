@@ -10,7 +10,7 @@ date = "2017-07-30T00:16:09+03:00"
 ## Basic usage
 
 ```csharp
-private static void Run()
+private static async Task Main()
 {
     const string serverAddress = "ws://127.0.0.1:8080/ws";
 
@@ -18,9 +18,7 @@ private static void Run()
 
     IWampChannel channel = channelFactory.CreateJsonChannel(serverAddress, "realm1");
 
-    Task openTask = channel.Open();
-
-    openTask.Wait(5000);
+    await channel.Open().ConfigureAwait(false);
 
     IWampRealmProxy realm = channel.RealmProxy;
 
@@ -50,7 +48,7 @@ Luckily enough, in order to implement this interface, it suffices to derive from
 Then, just pass an instance of your IWampEventValueTupleConverter to the overload of IWampRealmServiceProvider's GetSubject method, which receives the topic's uri and an instance of IWampEventValueTupleConverter, in order to receive a ISubject<> instance of your desired tuple type.
 
 ```csharp
-public async Task Run()
+public static async Task Main()
 {
 	DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
 
@@ -87,6 +85,11 @@ public async Task Run()
 									  Foo = new int[] { 1, 2, 3 }
 								  }));
 		});
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.ReadLine();
 }
 
 public class MyPositionalTupleEventConverter : WampEventValueTupleConverter<(int, int)>
@@ -136,7 +139,7 @@ session.subscribe('com.myapp.topic2', on_topic2);
 Specifying no generic type will a return a IWampSubject, that is a IObserver of a IWampEvent. IWampEvent is an interface representing an outgoing WAMP PUBLISH message. It has properties that represent PUBLISH message arguments.
 
 ```csharp
-private static void Run()
+private static async Task Main()
 {
     const string serverAddress = "ws://127.0.0.1:8080/ws";
 
@@ -144,9 +147,7 @@ private static void Run()
 
     IWampChannel channel = channelFactory.CreateJsonChannel(serverAddress, "realm1");
 
-    Task openTask = channel.Open();
-
-    openTask.Wait(5000);
+    await channel.Open().ConfigureAwait(false);
 
     IWampRealmProxy realm = channel.RealmProxy;
 
@@ -187,6 +188,9 @@ private static void Run()
 
             counter += 1;
         });
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
 
     Console.ReadLine();
 }

@@ -11,7 +11,7 @@ date = "2017-07-30T00:16:09+03:00"
 ## Example
 
 ```csharp
-public async Task Run()
+public static async Task Main()
 {
     DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
 
@@ -116,6 +116,11 @@ public async Task Run()
             Console.WriteLine("publication to topic " + topic + " failed: " + ex.ErrorUri);
         }
     }
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.ReadLine();
 }
 
 

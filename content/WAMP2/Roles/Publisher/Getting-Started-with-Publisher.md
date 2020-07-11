@@ -34,7 +34,7 @@ namespace MyNamespace
 {
     internal class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             const string serverAddress = "ws://127.0.0.1:8080/ws";
 
@@ -42,9 +42,7 @@ namespace MyNamespace
 
             IWampChannel channel = channelFactory.CreateJsonChannel(serverAddress, "realm1");
 
-            Task openTask = channel.Open();
-
-            openTask.Wait(5000);
+            await channel.Open().ConfigureAwait(false);
 
             Console.WriteLine("Press enter after a subscriber subscribes to com.myapp.topic1");
 
@@ -77,6 +75,10 @@ namespace MyNamespace
                     }
                 });
 
+
+            // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+            await Task.Yield();
+            
             Console.ReadLine();
         }
     }

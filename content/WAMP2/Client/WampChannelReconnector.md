@@ -10,7 +10,7 @@ The WampChannelReconnector class helps handling re-connection of WampChannel.
 Usage sample:
 
 ```csharp
-public static async Task Run()
+public static async Task Main()
 {
     DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
 
@@ -23,17 +23,22 @@ public static async Task Run()
 
     Func<Task> connect = async () =>
     {
-        await channel.Open();
+        await channel.Open().ConfigureAwait(false);
 
         var subscriptionTask =
             channel.RealmProxy.Services.RegisterSubscriber(mySubscriber);
 
-        var asyncDisposable = await subscriptionTask;
+        var asyncDisposable = await subscriptionTask.ConfigureAwait(false);
     };
 
     WampChannelReconnector reconnector =
         new WampChannelReconnector(channel, connect);
 
     reconnector.Start();
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.ReadLine();
 }
 ```

@@ -18,7 +18,7 @@ public interface IArgumentsService
     int Add2(int a, int b);
 }
 
-public static void Main()
+public static async Task Main()
 {
     DefaultWampChannelFactory factory =
         new DefaultWampChannelFactory();
@@ -28,7 +28,10 @@ public static void Main()
     IWampChannel channel =
         factory.CreateJsonChannel(serverAddress, "realm1");
 
-    channel.Open().Wait(5000);
+    await channel.Open().ConfigureAwait(false);
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following synchronous proxy.Add2(2,3) call.
+    await Task.Yield();
 
     IArgumentsService proxy =
         channel.RealmProxy.Services.GetCalleeProxy<IArgumentsService>();

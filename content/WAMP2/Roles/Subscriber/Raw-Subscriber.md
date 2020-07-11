@@ -179,7 +179,7 @@ public class MySubscriber : LocalSubscriber
     }
 }
 
-private static void Run()
+private static async Task Main()
 {
     const string serverAddress = "ws://127.0.0.1:8080/ws";
 
@@ -188,15 +188,16 @@ private static void Run()
     IWampChannel channel =
         factory.CreateJsonChannel(serverAddress, "realm1");
 
-    Task openTask = channel.Open();
-
-    openTask.Wait(TimeSpan.FromSeconds(5));
+    await channel.Open().ConfigureAwait(false);
 
     IWampTopicProxy topicProxy =
         channel.RealmProxy.TopicContainer.GetTopicByUri("com.myapp.topic2");
 
-    Task<IAsyncDisposable> subscribeTask =
-        topicProxy.Subscribe(new MySubscriber(), new SubscribeOptions());
+    IAsyncDisposable disposable =
+        await topicProxy.Subscribe(new MySubscriber(), new SubscribeOptions()).ConfigureAwait(false);
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
 
     Console.ReadLine();
 }

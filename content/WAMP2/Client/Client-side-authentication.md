@@ -62,7 +62,7 @@ public class TicketAuthenticator : IWampClientAuthenticator
 Then we pass an instance of our authenticator to the ChannelFactory:
 
 ```csharp
-public async Task Run()
+public static async Task Main()
 {
     DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
 
@@ -75,14 +75,14 @@ public async Task Run()
 
     IWampRealmProxy realmProxy = channel.RealmProxy;
 
-    await channel.Open();
+    await channel.Open().ConfigureAwait(false);
 
     // Call a rpc for example
     ITimeService proxy = realmProxy.Services.GetCalleeProxy<ITimeService>();
 
     try
     {
-        string now = await proxy.Now();
+        string now = await proxy.Now().ConfigureAwait(false);
         Console.WriteLine("call result {0}", now);
     }
     catch (Exception e)

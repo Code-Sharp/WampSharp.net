@@ -82,19 +82,28 @@ public class MyPublisher : IMyPublisher
     public event MyPublicationDelegate MyEvent;
 }
 
-public static async Task Run()
+public static async Task Main()
 {
     DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
 
     IWampChannel channel =
         factory.CreateJsonChannel("ws://localhost:8080/ws", "realm1");
 
-    await channel.Open();
+    await channel.Open().ConfigureAwait(false);
 
     IDisposable publisherDisposable =
         channel.RealmProxy.Services.RegisterPublisher(new MyPublisher());
 
-    // call publisherDisposable.Dispose(); to unsubscribe from the event.
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.WriteLine("Press enter to stop publishing");
+
+    Console.ReadLine();
+
+    publisherDisposable.Dispose();
+
+    Console.WriteLine("Stopped publishing!");
 }
 ```
 

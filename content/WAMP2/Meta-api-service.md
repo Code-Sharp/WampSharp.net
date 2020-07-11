@@ -28,7 +28,7 @@ host.Open();
 In order to consume meta-api, you can use declare the WAMP meta-api contracts yourself and consume it with plain WampSharp client-side code. In order to save that amount of work, a client-side api is provided which allows you to consume the meta-api without having to write any contracts yourself. This is api is available via an extension method of IWampRealmProxy which is named "GetMetaApiServiceProxy".
 
 ```csharp
-private static async Task Run()
+private static async Task Main()
 {
     WampChannelFactory channelFactory = new WampChannelFactory();
 
@@ -42,7 +42,7 @@ private static async Task Run()
 
     WampMetaApiServiceProxy proxy = channel.RealmProxy.GetMetaApiServiceProxy();
 
-    long sessionCount = await proxy.CountSessionsAsync();
+    long sessionCount = await proxy.CountSessionsAsync().ConfigureAwait(false);
 
     IAsyncDisposable onCreateDisposable =
         await proxy.SubscribeTo.Subscription.OnCreate(
@@ -59,5 +59,10 @@ private static async Task Run()
                 Console.WriteLine($"Session with id {details.Session} joined");
             })
             .ConfigureAwait(false);
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.ReadLine();
 }
 ```

@@ -28,16 +28,14 @@ namespace MyNamespace
 {
     internal class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             const string serverAddress = "ws://127.0.0.1:8080/ws";
 
             DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
             IWampChannel channel = factory.CreateJsonChannel(serverAddress, "realm1");
 
-            Task openTask = channel.Open();
-
-            openTask.Wait(5000);
+            await channel.Open().ConfigureAwait(false);
 
             IWampRealmProxy realmProxy = channel.RealmProxy;
 
@@ -47,6 +45,9 @@ namespace MyNamespace
                  "com.myapp.add_complex",
                  new object[] {2, 3, 4, 5});
 
+            // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+            await Task.Yield();
+            
             Console.ReadLine();
         }
     }
@@ -376,7 +377,7 @@ public class ArgumentsServiceProxy : IArgumentsService
 Usage:
 
 ```csharp
-public async static Task Run()
+public async static Task Main()
 {
     const string serverAddress = "ws://127.0.0.1:8080/ws";
 
@@ -385,7 +386,7 @@ public async static Task Run()
     IWampChannel channel =
         factory.CreateJsonChannel(serverAddress, "realm1");
 
-    await channel.Open();
+    await channel.Open().ConfigureAwait(false);
 
     ArgumentsServiceProxy proxy =
         new ArgumentsServiceProxy(channel.RealmProxy.RpcCatalog);

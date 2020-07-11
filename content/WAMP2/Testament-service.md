@@ -31,7 +31,7 @@ host.Open();
 In order to consume the Testament service, one can define its contract and consume it using the CalleeProxy method. Another option is to use the GetTestamentServiceProxy extension method of IWampRealmProxy which returns such a proxy:
 
 ```csharp
-private static async Task Run()
+private static async Task Main()
 {
     WampChannelFactory channelFactory = new WampChannelFactory();
 
@@ -74,6 +74,10 @@ private static async Task Run()
     }
 
     Console.WriteLine(@"Press any key to close channel. 5 events should be published to ""com.example.testament""");
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadKey() line.
+    await Task.Yield();
+
     Console.ReadKey();
     channel.Close();
 }
