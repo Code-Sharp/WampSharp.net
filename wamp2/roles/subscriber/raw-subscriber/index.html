@@ -15,7 +15,7 @@
 {
     <span style=color:#66d9ef>internal</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Program</span>
     {
-        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Main(<span style=color:#66d9ef>string</span>[] args)
+        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main(<span style=color:#66d9ef>string</span>[] args)
         {
             <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> serverAddress = <span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
@@ -24,17 +24,24 @@
             IWampChannel channel =
                 factory.CreateJsonChannel(serverAddress, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-            Task openTask = channel.Open();
-
-            openTask.Wait(TimeSpan.FromSeconds(<span style=color:#ae81ff>5</span>));
+            <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
             IWampTopicProxy topicProxy =
                 channel.RealmProxy.TopicContainer.GetTopicByUri(<span style=color:#e6db74>&#34;com.myapp.topic1&#34;</span>);
 
-            Task&lt;IAsyncDisposable&gt; subscribeTask =
-                topicProxy.Subscribe(<span style=color:#66d9ef>new</span> MySubscriber(), <span style=color:#66d9ef>new</span> SubscribeOptions());
+            IAsyncDisposable disposable =
+                <span style=color:#66d9ef>await</span> topicProxy.Subscribe(<span style=color:#66d9ef>new</span> MySubscriber(), <span style=color:#66d9ef>new</span> SubscribeOptions()).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+
+            <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+</span><span style=color:#75715e></span>            <span style=color:#66d9ef>await</span> Task.Yield();
+
+            Console.WriteLine(<span style=color:#e6db74>&#34;Press enter to unsubscribe&#34;</span>);
 
             Console.ReadLine();
+
+            <span style=color:#66d9ef>await</span> disposable.DisposeAsync().ConfigureAwait(<span style=color:#66d9ef>false</span>);
+
+            Console.WriteLine(<span style=color:#e6db74>&#34;Unsubscribed!&#34;</span>);
         }
     }
 

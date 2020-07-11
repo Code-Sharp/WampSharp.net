@@ -3,18 +3,15 @@
 <span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span></button>
 <a class=navbar-brand href=https://wampsharp.net/>WampSharp</a></div><div id=navbar class="navbar-collapse collapse"><ul class="nav navbar-nav"><li><a href=https://wampsharp.net/>Home</a></li><li class=dropdown><a href=# class=dropdown-toggle data-toggle=dropdown role=button aria-expanded=false>Categories<span class=caret></span></a><ul class=dropdown-menu role=menu><li><a href=https://wampsharp.net/categories/authentication>Authentication</a></li><li><a href=https://wampsharp.net/categories/callee>Callee</a></li><li><a href=https://wampsharp.net/categories/caller>Caller</a></li><li><a href=https://wampsharp.net/categories/client>Client</a></li><li><a href=https://wampsharp.net/categories/getting-started>Getting-Started</a></li><li><a href=https://wampsharp.net/categories/publisher>Publisher</a></li><li><a href=https://wampsharp.net/categories/release-notes>Release-Notes</a></li><li><a href=https://wampsharp.net/categories/roadmap>Roadmap</a></li><li><a href=https://wampsharp.net/categories/router>Router</a></li><li><a href=https://wampsharp.net/categories/subscriber>Subscriber</a></li><li><a href=https://wampsharp.net/categories/wamp1>Wamp1</a></li></ul></li></ul></div></div></nav><div class=container><div class=row><div class="col-sm-8 doc-main"><main role=main><article><a id=title></a><h1 class=doc-entry-title>Raw Callee</h1><div class=doc-entry-meta><span><time datetime=2017-07-30>July 30, 2017</time></span></div><section><p>WampSharp provides a lower level api that allows to deal with rpc operations as they are sent/received, which is called Raw callee.</p><p>Actually, the reflection based callee api is built above the Raw callee api.</p><p>In order to use the raw callee api, implement IWampRpcOperation. A IWampFormatter is passed to your methods in order to allow you to deserialize the method parameters. In order to return a result or an error, call the corresponding caller method.</p><p>After that, register it using Register method of RpcOperationCatalog property of IWampRealm/IWampRealmProxy interfaces.</p><h2 id=registration-samples>Registration samples</h2><h3 id=client-side>Client side</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>internal</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Program</span>
 {
-    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Main(<span style=color:#66d9ef>string</span>[] args)
+    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main(<span style=color:#66d9ef>string</span>[] args)
     {
-        <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> location = <span style=color:#e6db74>&#34;ws://127.0.0.1:8080/&#34;</span>;
+        <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> location = <span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
         DefaultWampChannelFactory channelFactory = <span style=color:#66d9ef>new</span> DefaultWampChannelFactory();
 
         IWampChannel channel = channelFactory.CreateJsonChannel(location, <span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-        Task openTask = channel.Open();
-
-        <span style=color:#75715e>// await openTask;
-</span><span style=color:#75715e></span>        openTask.Wait();
+        Task openTask = <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
         ArgLenOperation operation = <span style=color:#66d9ef>new</span> ArgLenOperation();
 
@@ -22,18 +19,25 @@
 
         RegisterOptions registerOptions = <span style=color:#66d9ef>new</span> RegisterOptions();
 
-        Task&lt;IAsyncDisposable&gt; registrationTask = realm.RpcCatalog.Register(operation, registerOptions);
-        <span style=color:#75715e>// await registrationTask;
-</span><span style=color:#75715e></span>        registrationTask.Wait();
+        IAsyncDisposable disposable = <span style=color:#66d9ef>await</span> realm.RpcCatalog.Register(operation, registerOptions).ConfigureAwait(<span style=color:#66d9ef>false</span>);
+
+        <span style=color:#75715e>// This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+</span><span style=color:#75715e></span>        <span style=color:#66d9ef>await</span> Task.Yield();
+
+        Console.WriteLine(<span style=color:#e6db74>&#34;Press enter to unregister&#34;</span>);
 
         Console.ReadLine();
+
+        <span style=color:#66d9ef>await</span> disposable.DisposeAsync().ConfigureAwait(<span style=color:#66d9ef>false</span>);
+
+        Console.WriteLine(<span style=color:#e6db74>&#34;Unregistered!&#34;</span>);        
     }
 }
 </code></pre></div><h3 id=router-side>Router side</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>internal</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Program</span>
 {
-    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Main(<span style=color:#66d9ef>string</span>[] args)
+    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Main(<span style=color:#66d9ef>string</span>[] args)
     {
-        <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> location = <span style=color:#e6db74>&#34;ws://127.0.0.1:8080/&#34;</span>;
+        <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>string</span> location = <span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>;
 
         <span style=color:#66d9ef>using</span> (IWampHost host = <span style=color:#66d9ef>new</span> DefaultWampHost(location))
         {
@@ -41,9 +45,7 @@
 
             IWampHostedRealm realm = host.RealmContainer.GetRealmByName(<span style=color:#e6db74>&#34;realm1&#34;</span>);
 
-            Task&lt;IAsyncDisposable&gt; registrationTask = realm.Services.RegisterCallee(operation);
-            <span style=color:#75715e>// await registrationTask;
-</span><span style=color:#75715e></span>            registrationTask.Wait();
+            IAsyncDisposable registrationTask = <span style=color:#66d9ef>await</span> realm.Services.RegisterCallee(operation).ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
             host.Open();
 
