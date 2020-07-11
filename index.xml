@@ -1,480 +1,96 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>_index on WampSharp</title>
-    <link>https://wampsharp.net/</link>
-    <description>Recent content in _index on WampSharp</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright>
-    <lastBuildDate>Sat, 18 Jan 2020 00:12:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://wampsharp.net/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>WampSharp v20.1.1 release notes</title>
-      <link>https://wampsharp.net/release-notes/wampsharp-v20.1.1-release-notes/</link>
-      <pubDate>Sat, 18 Jan 2020 00:12:00 +0000</pubDate>
-      
-      <guid>https://wampsharp.net/release-notes/wampsharp-v20.1.1-release-notes/</guid>
-      <description>Breaking changes Supported frameworks From this version, WampSharp targets only the following .NET variants: net461, netstandard2.0, netstandard2.1. Support for the following variants has been dropped: net40, net45, netstandard1.3, pcl, uap.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>_index on WampSharp</title><link>https://wampsharp.net/</link><description>Recent content in _index on WampSharp</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright><lastBuildDate>Sat, 18 Jan 2020 00:12:00 +0000</lastBuildDate><atom:link href="https://wampsharp.net/index.xml" rel="self" type="application/rss+xml"/><item><title>WampSharp v20.1.1 release notes</title><link>https://wampsharp.net/release-notes/wampsharp-v20.1.1-release-notes/</link><pubDate>Sat, 18 Jan 2020 00:12:00 +0000</pubDate><guid>https://wampsharp.net/release-notes/wampsharp-v20.1.1-release-notes/</guid><description>Breaking changes Supported frameworks From this version, WampSharp targets only the following .NET variants: net461, netstandard2.0, netstandard2.1. Support for the following variants has been dropped: net40, net45, netstandard1.3, pcl, uap.
 .NET Standard 2.0/2.1 is the future for .NET libraries and every major .NET variant will implement .NET Standard. For instance, UWP implements .NET Standard 2.0.
-Removed packages  The package WampSharp.Windows is removed - UWP targets should now use WampSharp.WebSockets. The package WampSharp.</description>
-    </item>
-    
-    <item>
-      <title>WampSharp v18.6.1 release notes</title>
-      <link>https://wampsharp.net/release-notes/wampsharp-v18.6.1-release-notes/</link>
-      <pubDate>Fri, 01 Jun 2018 09:51:52 -0400</pubDate>
-      
-      <guid>https://wampsharp.net/release-notes/wampsharp-v18.6.1-release-notes/</guid>
-      <description>New features ObserveOn extension method From this version, the client fluent syntax api supports a new ObserverOn method. This method allows you to specify an IScheduler that WAMP messages will be observed on. This for instance allows to ensure that reflection based callee methods or reflection based subscriber event handlers are invoked on the Dispatcher thread.
+Removed packages The package WampSharp.Windows is removed - UWP targets should now use WampSharp.WebSockets. The package WampSharp.</description></item><item><title>WampSharp v18.6.1 release notes</title><link>https://wampsharp.net/release-notes/wampsharp-v18.6.1-release-notes/</link><pubDate>Fri, 01 Jun 2018 09:51:52 -0400</pubDate><guid>https://wampsharp.net/release-notes/wampsharp-v18.6.1-release-notes/</guid><description>New features ObserveOn extension method From this version, the client fluent syntax api supports a new ObserverOn method. This method allows you to specify an IScheduler that WAMP messages will be observed on. This for instance allows to ensure that reflection based callee methods or reflection based subscriber event handlers are invoked on the Dispatcher thread.
 Usage example:
-IWampChannel channel =channelFactory.ConnectToRealm(&amp;#34;realm1&amp;#34;).WebSocketTransport(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;).JsonSerialization().ObserveOn(DispatcherScheduler.Current).Build();RawSocket Ssl support From this version, RawSocket Ssl security is supported.</description>
-    </item>
-    
-    <item>
-      <title>WampSharp v1.2.6.41-beta release notes</title>
-      <link>https://wampsharp.net/release-notes/wampsharp-v1.2.6.41-beta-release-notes/</link>
-      <pubDate>Tue, 08 Aug 2017 14:39:35 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/release-notes/wampsharp-v1.2.6.41-beta-release-notes/</guid>
-      <description>New features New transports A few router-side WebSockets transports have been added in this version. These include HttpListener based transport, ASP.NET based transport and Microsoft.Owin based transport.
+IWampChannel channel = channelFactory.ConnectToRealm(&amp;#34;realm1&amp;#34;) .WebSocketTransport(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;) .JsonSerialization() .ObserveOn(DispatcherScheduler.Current) .Build(); RawSocket Ssl support From this version, RawSocket Ssl security is supported.</description></item><item><title>WampSharp v1.2.6.41-beta release notes</title><link>https://wampsharp.net/release-notes/wampsharp-v1.2.6.41-beta-release-notes/</link><pubDate>Tue, 08 Aug 2017 14:39:35 +0300</pubDate><guid>https://wampsharp.net/release-notes/wampsharp-v1.2.6.41-beta-release-notes/</guid><description>New features New transports A few router-side WebSockets transports have been added in this version. These include HttpListener based transport, ASP.NET based transport and Microsoft.Owin based transport.
 CANCEL/INTERRUPT support CANCEL/INTERRUPT support has been added to Crossbar recently. From this version, WampSharp supports rpc cancellations, both on router-side and on client-side.
-Reflection based caller/callee cancellation support Cancellation is supported for reflection based caller and callee via the CancellationToken api. In order to declare a callee procedure which supports cancellation, declare an async method which receives as its last argument a CancellationToken:</description>
-    </item>
-    
-    <item>
-      <title>RawSocket transport</title>
-      <link>https://wampsharp.net/wamp2/router/transports/rawsocket/</link>
-      <pubDate>Tue, 01 Aug 2017 10:25:07 +0900</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/router/transports/rawsocket/</guid>
-      <description>WampSharp supports the RawSocket transport. It is available through the WampSharp.RawSocket NuGet package.
+Reflection based caller/callee cancellation support Cancellation is supported for reflection based caller and callee via the CancellationToken api. In order to declare a callee procedure which supports cancellation, declare an async method which receives as its last argument a CancellationToken:</description></item><item><title>RawSocket transport</title><link>https://wampsharp.net/wamp2/router/transports/rawsocket/</link><pubDate>Tue, 01 Aug 2017 10:25:07 +0900</pubDate><guid>https://wampsharp.net/wamp2/router/transports/rawsocket/</guid><description>WampSharp supports the RawSocket transport. It is available through the WampSharp.RawSocket NuGet package.
 Router-side usage TcpListener implementation This is a standalone implementation which uses TcpListener. In order to use it, install the WampSharp.RawSocket NuGet package. Usage example:
-IWampHost host = new WampHost();RawSocketTransport transport =new RawSocketTransport(TcpListener.Create(8080));host.RegisterTransport(transport,new JTokenJsonBinding());ASP.NET Core implementation This is an implementation of the RawSocket protocol using Microsoft.AspNetCore.Connections.Abstractions package, which is part of Project Bedrock. This implementation is present in the package WampSharp.</description>
-    </item>
-    
-    <item>
-      <title>WebSocket transports</title>
-      <link>https://wampsharp.net/wamp2/router/transports/websocket/</link>
-      <pubDate>Tue, 01 Aug 2017 10:25:07 +0900</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/router/transports/websocket/</guid>
-      <description>This pages describes the currently available router side WebSockets transports for WampSharp.
+IWampHost host = new WampHost(); RawSocketTransport transport = new RawSocketTransport(TcpListener.Create(8080)); host.RegisterTransport(transport, new JTokenJsonBinding()); ASP.NET Core implementation This is an implementation of the RawSocket protocol using Microsoft.AspNetCore.Connections.Abstractions package, which is part of Project Bedrock. This implementation is present in the package WampSharp.</description></item><item><title>WebSocket transports</title><link>https://wampsharp.net/wamp2/router/transports/websocket/</link><pubDate>Tue, 01 Aug 2017 10:25:07 +0900</pubDate><guid>https://wampsharp.net/wamp2/router/transports/websocket/</guid><description>This pages describes the currently available router side WebSockets transports for WampSharp.
 WampSharp.Fleck A Fleck based transport. It is the default transport for WampSharp (DefaultWampHost uses it). Supports .NET Framework 4.0.
 Usage:
-WampHost host = new WampHost();host.RegisterTransport(new FleckWebSocketTransport(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;),new JTokenJsonBinding(),new JTokenMsgpackBinding());host.Open();Or
-WampHost host = new DefaultWampHost(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;);host.Open();WampSharp.Vtortola A transport based on vtortola&#39;s WebSocketListener. Supports permessage-deflate.
+WampHost host = new WampHost(); host.RegisterTransport(new FleckWebSocketTransport(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;), new JTokenJsonBinding(), new JTokenMsgpackBinding()); host.Open(); Or
+WampHost host = new DefaultWampHost(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;); host.Open(); WampSharp.Vtortola A transport based on vtortola&amp;rsquo;s WebSocketListener. Supports permessage-deflate.
 Usage:
-WampHost host = new WampHost();IWampTransport transport =new VtortolaWebSocketTransport(endpoint: new IPEndPoint(IPAddress.</description>
-    </item>
-    
-    <item>
-      <title>Client-side authentication</title>
-      <link>https://wampsharp.net/wamp2/client/client-side-authentication/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/client/client-side-authentication/</guid>
-      <description>Client-side authentication is supported. In order to use client authentication, you need to implement an interface named IWampClientAuthenticator. Then, pass it to CreateChannel/CreateJsonChannel/CreateMsgpackChannel overloads of DefaultChannelFactory. In IWampClientAuthenticator we supply the supported authentication methods and the authenticationid, these are passed in the HELLO message to the router (as details.authmethods, details.authid). We also implement Authenticate method, which sends an AUTHENTICATE message to the router upon CHALLENGE.
-Example public class TicketAuthenticator : IWampClientAuthenticator{private static readonly string[] mAuthenticationMethods = { &amp;#34;ticket&amp;#34; };private readonly IDictionary&amp;lt;string, string&amp;gt; mTickets =new Dictionary&amp;lt;string, string&amp;gt;(){{&amp;#34;peter&amp;#34;, &amp;#34;magic_secret_1&amp;#34;},{&amp;#34;joe&amp;#34;, &amp;#34;magic_secret_2&amp;#34;}};private const string User = &amp;#34;peter&amp;#34;;public AuthenticationResponse Authenticate(string authmethod, ChallengeDetails extra){if (authmethod == &amp;#34;ticket&amp;#34;){Console.</description>
-    </item>
-    
-    <item>
-      <title>Cookie based router-side authentication</title>
-      <link>https://wampsharp.net/wamp2/router/cookie-based-router-side-authentication/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/router/cookie-based-router-side-authentication/</guid>
-      <description>It is possible to build authenticators that are cookie-based. In order to that, one needs to implement an interface named ICookieAuthenticatorFactory and pass it to DefaultWampAuthenticationHost&#39;s constructor, (or to FleckAuthenticatedWebSocketTransport/VtortolaAuthenticatedWebSocketTransport constructors).
+WampHost host = new WampHost(); IWampTransport transport = new VtortolaWebSocketTransport (endpoint: new IPEndPoint(IPAddress.</description></item><item><title>Client-side authentication</title><link>https://wampsharp.net/wamp2/client/client-side-authentication/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/client/client-side-authentication/</guid><description>Client-side authentication is supported. In order to use client authentication, you need to implement an interface named IWampClientAuthenticator. Then, pass it to CreateChannel/CreateJsonChannel/CreateMsgpackChannel overloads of DefaultChannelFactory. In IWampClientAuthenticator we supply the supported authentication methods and the authenticationid, these are passed in the HELLO message to the router (as details.authmethods, details.authid). We also implement Authenticate method, which sends an AUTHENTICATE message to the router upon CHALLENGE.
+Example public class TicketAuthenticator : IWampClientAuthenticator { private static readonly string[] mAuthenticationMethods = { &amp;#34;ticket&amp;#34; }; private readonly IDictionary&amp;lt;string, string&amp;gt; mTickets = new Dictionary&amp;lt;string, string&amp;gt;() { {&amp;#34;peter&amp;#34;, &amp;#34;magic_secret_1&amp;#34;}, {&amp;#34;joe&amp;#34;, &amp;#34;magic_secret_2&amp;#34;} }; private const string User = &amp;#34;peter&amp;#34;; public AuthenticationResponse Authenticate(string authmethod, ChallengeDetails extra) { if (authmethod == &amp;#34;ticket&amp;#34;) { Console.</description></item><item><title>Cookie based router-side authentication</title><link>https://wampsharp.net/wamp2/router/cookie-based-router-side-authentication/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/router/cookie-based-router-side-authentication/</guid><description>It is possible to build authenticators that are cookie-based. In order to that, one needs to implement an interface named ICookieAuthenticatorFactory and pass it to DefaultWampAuthenticationHost&amp;rsquo;s constructor, (or to FleckAuthenticatedWebSocketTransport/VtortolaAuthenticatedWebSocketTransport constructors).
 The interface consists of a single method named &amp;ldquo;CreateAuthenticator&amp;rdquo;, which receives as a parameter an ICookieProvider, that is an interface that allows to access client cookies for read-only.
-The authenticator created by the &amp;ldquo;CreateAuthenticator&amp;rdquo; method will be passed to the IWampSessionAuthenticatorFactory passed to the (Default)WampAuthenticationHost as the transportAuthenticator parameter.</description>
-    </item>
-    
-    <item>
-      <title>Getting started with Callee</title>
-      <link>https://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/</guid>
-      <description>Before you begin, see Getting started with WAMPv2 and create a WampChannel/WampHost your calleee will be registered to.
-About Callee role WAMPv2 defines a Callee role, that is a role that can register a remote procedure call to the router (using the REGISTER/UNREGISTER messages). The callee&#39;s procedure can be invoked by the router (using the INVOCATION message). The callee can respond with a result or an error to the router (using the YIELD/ERROR message).</description>
-    </item>
-    
-    <item>
-      <title>Getting started with Caller</title>
-      <link>https://wampsharp.net/wamp2/roles/caller/getting-started-with-caller/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/caller/getting-started-with-caller/</guid>
-      <description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your caller will use.
+The authenticator created by the &amp;ldquo;CreateAuthenticator&amp;rdquo; method will be passed to the IWampSessionAuthenticatorFactory passed to the (Default)WampAuthenticationHost as the transportAuthenticator parameter.</description></item><item><title>Getting started with Callee</title><link>https://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/</guid><description>Before you begin, see Getting started with WAMPv2 and create a WampChannel/WampHost your calleee will be registered to.
+About Callee role WAMPv2 defines a Callee role, that is a role that can register a remote procedure call to the router (using the REGISTER/UNREGISTER messages). The callee&amp;rsquo;s procedure can be invoked by the router (using the INVOCATION message). The callee can respond with a result or an error to the router (using the YIELD/ERROR message).</description></item><item><title>Getting started with Caller</title><link>https://wampsharp.net/wamp2/roles/caller/getting-started-with-caller/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/caller/getting-started-with-caller/</guid><description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your caller will use.
 About Caller role WAMPv2 defines a Caller role, that is a role that can call a remote procedure call registered by a Callee (using the CALL messages). The caller can receive a response with a result or an error from the router (using the RESULT/ERROR message).
-Callee proxy The Callee proxy is the easiest way to call rpc methods of a WAMP router.</description>
-    </item>
-    
-    <item>
-      <title>Getting started with Publisher</title>
-      <link>https://wampsharp.net/wamp2/roles/publisher/getting-started-with-publisher/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/publisher/getting-started-with-publisher/</guid>
-      <description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your publisher will use.
-About Publisher role WAMPv2 defines a Publisher role, that is a role that can publish events to a WAMP realm&#39;s topic.
+Callee proxy The Callee proxy is the easiest way to call rpc methods of a WAMP router.</description></item><item><title>Getting started with Publisher</title><link>https://wampsharp.net/wamp2/roles/publisher/getting-started-with-publisher/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/publisher/getting-started-with-publisher/</guid><description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your publisher will use.
+About Publisher role WAMPv2 defines a Publisher role, that is a role that can publish events to a WAMP realm&amp;rsquo;s topic.
 WampSubject The WampSubject is the easiest way to publish to a topic of a WAMP router.
 In order to use it, call the GetSubject method of the Services property
-of the IWampRealm/IWampRealmProxy instance with a generic type representing the type you want to send to the router.</description>
-    </item>
-    
-    <item>
-      <title>Getting started with Subscriber</title>
-      <link>https://wampsharp.net/wamp2/roles/subscriber/getting-started-with-subscriber/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/subscriber/getting-started-with-subscriber/</guid>
-      <description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your subscriber will use.
-About Subscriber role WAMPv2 defines a Subscriber role, that is a role that can subscribe to a WAMP realm&#39;s topic. The subscriber will be notified about events published to the topic by publishers.
+of the IWampRealm/IWampRealmProxy instance with a generic type representing the type you want to send to the router.</description></item><item><title>Getting started with Subscriber</title><link>https://wampsharp.net/wamp2/roles/subscriber/getting-started-with-subscriber/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/subscriber/getting-started-with-subscriber/</guid><description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your subscriber will use.
+About Subscriber role WAMPv2 defines a Subscriber role, that is a role that can subscribe to a WAMP realm&amp;rsquo;s topic. The subscriber will be notified about events published to the topic by publishers.
 WampSubject The WampSubject is the easiest way to subscribe to a topic of a WAMP router.
-In order to use it, call the GetSubject method of the Services property</description>
-    </item>
-    
-    <item>
-      <title>Getting started with WAMPv1</title>
-      <link>https://wampsharp.net/wamp1/getting-started-with-wampv1/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp1/getting-started-with-wampv1/</guid>
-      <description>Create a new Console Application in Visual Studio.
+In order to use it, call the GetSubject method of the Services property</description></item><item><title>Getting started with WAMPv1</title><link>https://wampsharp.net/wamp1/getting-started-with-wampv1/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp1/getting-started-with-wampv1/</guid><description>Create a new Console Application in Visual Studio.
 Open Package Manager Console (Tools -&amp;gt; Library Package Manager -&amp;gt; Package Manager Console) and enter the command
- Install-Package WampSharp.Default -Pre
- This will install the pre-release version of WampSharp.
+Install-Package WampSharp.Default -Pre
+This will install the pre-release version of WampSharp.
 In your Program file, add the following code:
-using System;using WampSharp.V1;using WampSharp.V1.Rpc;namespace MyNamespace{public interface ICalculator{[WampRpcMethod(&amp;#34;http://example.com/simple/calc#add&amp;#34;)]int Add(int x, int y);}internal class Calculator : ICalculator{public int Add(int x, int y){return x + y;}}class Program{public static void Main(string[] args){const string location = &amp;#34;ws://127.</description>
-    </item>
-    
-    <item>
-      <title>Getting started with WAMPv1 client</title>
-      <link>https://wampsharp.net/wamp1/getting-started-with-wampv1-client/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp1/getting-started-with-wampv1-client/</guid>
-      <description>Before you begin Raise up a WampHost such as in the Getting started tutorial.
+using System; using WampSharp.V1; using WampSharp.V1.Rpc; namespace MyNamespace { public interface ICalculator { [WampRpcMethod(&amp;#34;http://example.com/simple/calc#add&amp;#34;)] int Add(int x, int y); } internal class Calculator : ICalculator { public int Add(int x, int y) { return x + y; } } class Program { public static void Main(string[] args) { const string location = &amp;#34;ws://127.</description></item><item><title>Getting started with WAMPv1 client</title><link>https://wampsharp.net/wamp1/getting-started-with-wampv1-client/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp1/getting-started-with-wampv1-client/</guid><description>Before you begin Raise up a WampHost such as in the Getting started tutorial.
 This tutorial will work against it.
 Create a console application Create a new Console Application in Visual Studio.
 Open Package Manager Console (Tools -&amp;gt; Library Package Manager -&amp;gt; Package Manager Console) and enter the command
- Install-Package WampSharp.Default -Pre
- This will install the pre-release version of WampSharp.
-Creating a channel factory In order to create a channel factory use DefaultWampChannelFactory&#39;s default constructor.</description>
-    </item>
-    
-    <item>
-      <title>Getting started with WAMPv2</title>
-      <link>https://wampsharp.net/wamp2/getting-started-with-wampv2/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/getting-started-with-wampv2/</guid>
-      <description>Create a new Console Application in Visual Studio.
+Install-Package WampSharp.Default -Pre
+This will install the pre-release version of WampSharp.
+Creating a channel factory In order to create a channel factory use DefaultWampChannelFactory&amp;rsquo;s default constructor.</description></item><item><title>Getting started with WAMPv2</title><link>https://wampsharp.net/wamp2/getting-started-with-wampv2/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/getting-started-with-wampv2/</guid><description>Create a new Console Application in Visual Studio.
 Install WampSharp:
 Go to Tools -&amp;gt; NuGet Package Manager -&amp;gt; Package Manager Console.
 Enter in the Package Manager Console
- Install-Package WampSharp.Default -Pre
- Now WampSharp is installed on your project.
+Install-Package WampSharp.Default -Pre
+Now WampSharp is installed on your project.
 About realms WAMPv2 protocol consists of the idea of realms. A WAMP realm, can be thought as a domain, where uris are mapped to procedures/topics.
-WampSharp WAMPv2 api is based on the realm idea.</description>
-    </item>
-    
-    <item>
-      <title>Meta-api descriptor service</title>
-      <link>https://wampsharp.net/wamp2/meta-api-service/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/meta-api-service/</guid>
-      <description>WampSharp implements WAMP meta-api (i.e. session meta api, registration meta api and subscription meta api). It is possible both to consume WAMP meta-api from a WampSharp client, and to expose it from a WampSharp router.
+WampSharp WAMPv2 api is based on the realm idea.</description></item><item><title>Meta-api descriptor service</title><link>https://wampsharp.net/wamp2/meta-api-service/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/meta-api-service/</guid><description>WampSharp implements WAMP meta-api (i.e. session meta api, registration meta api and subscription meta api). It is possible both to consume WAMP meta-api from a WampSharp client, and to expose it from a WampSharp router.
 Exposing meta-api In order to expose meta-api, you can call an extension method of IWampHostedRealm, named &amp;ldquo;HostMetaApiService&amp;rdquo;. This method returns an IDisposable which you can dispose in order to unregister the meta-api service.
- Note: it is important to call HostMetaApiService before hosting any other components (callees/subscribers), since otherwise the meta-api service isn&#39;t be able to track components registered before it.</description>
-    </item>
-    
-    <item>
-      <title>Notes for WAMP1 users</title>
-      <link>https://wampsharp.net/wamp1/notes-for-wampv1-users/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp1/notes-for-wampv1-users/</guid>
-      <description>If you are using WampSharp with WAMPv1 support and want to update to WAMPv2 version (without updating the protocol to WAMPv2) please read the following notes:
- All classes of WampSharp that are specific for WAMPv1 implementation have moved to namespace WampSharp.V1 Since Fleck has been updated to a newer version, specifying a host name in the serverAddress of a DefaultWampHost isn&#39;t supported anymore. You need to specify an IP address.</description>
-    </item>
-    
-    <item>
-      <title>Raw Callee</title>
-      <link>https://wampsharp.net/wamp2/roles/callee/raw-callee/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/callee/raw-callee/</guid>
-      <description>WampSharp provides a lower level api that allows to deal with rpc operations as they are sent/received, which is called Raw callee.
+Note: it is important to call HostMetaApiService before hosting any other components (callees/subscribers), since otherwise the meta-api service isn&amp;rsquo;t be able to track components registered before it.</description></item><item><title>Notes for WAMP1 users</title><link>https://wampsharp.net/wamp1/notes-for-wampv1-users/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp1/notes-for-wampv1-users/</guid><description>If you are using WampSharp with WAMPv1 support and want to update to WAMPv2 version (without updating the protocol to WAMPv2) please read the following notes:
+All classes of WampSharp that are specific for WAMPv1 implementation have moved to namespace WampSharp.V1 Since Fleck has been updated to a newer version, specifying a host name in the serverAddress of a DefaultWampHost isn&amp;rsquo;t supported anymore. You need to specify an IP address.</description></item><item><title>Raw Callee</title><link>https://wampsharp.net/wamp2/roles/callee/raw-callee/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/callee/raw-callee/</guid><description>WampSharp provides a lower level api that allows to deal with rpc operations as they are sent/received, which is called Raw callee.
 Actually, the reflection based callee api is built above the Raw callee api.
-In order to use the raw callee api, implement IWampRpcOperation. A IWampFormatter is passed to your methods in order to allow you to deserialize the method parameters. In order to return a result or an error, call the corresponding caller method.</description>
-    </item>
-    
-    <item>
-      <title>Raw Caller</title>
-      <link>https://wampsharp.net/wamp2/roles/caller/raw-caller/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/caller/raw-caller/</guid>
-      <description>The callee proxy is the easiest way to consume WAMP caller capabilities, but it is limited to C# features. In some cases you might want to handle a RESULT message differently. For these cases, the Raw callback api exists.
-In order to use raw callback api from a WampSharp client, create a class implementing IWampRawRpcOperationClientCallback. This class will be notified when a result arrives. Then create a new instance of your class, and access RpcCatalog property of WampChannel&#39;s RealmProxy, then call Invoke of your desired method with desired parameters.</description>
-    </item>
-    
-    <item>
-      <title>Raw Publisher</title>
-      <link>https://wampsharp.net/wamp2/roles/publisher/raw-publisher/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/publisher/raw-publisher/</guid>
-      <description>If you want to get feedbacks for publications, you can use publisher raw api. In order to use it in client side, access the RealmProxy of your WampChannel and then access its TopicContainer property in order to obtain a WampTopicProxy to your topic. Then call Publish with PUBLISH parameters.
-In order to use it from router side: Obtain the realm by accessing the RealmContainer property of your WampHost, then access its TopicContainer property in order to access the topic by its uri, then call publish with desired parameters.</description>
-    </item>
-    
-    <item>
-      <title>Raw Subscriber</title>
-      <link>https://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/</guid>
-      <description>Like other roles, subscriber also has a raw version, which allows you treat EVENT messages as you like. In order to use it, you need to implement the IWampRawTopicClientSubscriber interface.
-Usage Client sample using System;using System.Collections.Generic;using System.Threading.Tasks;using SystemEx;using WampSharp.Core.Serialization;using WampSharp.V2;using WampSharp.V2.Client;using WampSharp.V2.Core.Contracts;using WampSharp.V2.PubSub;namespace MyNamespace{internal class Program{public static void Main(string[] args){const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;;DefaultWampChannelFactory factory = new DefaultWampChannelFactory();IWampChannel channel =factory.</description>
-    </item>
-    
-    <item>
-      <title>Reflection-based Callee</title>
-      <link>https://wampsharp.net/wamp2/roles/callee/reflection-based-callee/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/callee/reflection-based-callee/</guid>
-      <description>Reflection-based Callee allows you to register classes instances with method decorated with a [WampProcedure] attribute as remote procedure operation to a WAMP realm.
-Basic usage public interface IArgumentsService{[WampProcedure(&amp;#34;com.arguments.ping&amp;#34;)]void Ping();[WampProcedure(&amp;#34;com.arguments.add2&amp;#34;)]int Add2(int a, int b);[WampProcedure(&amp;#34;com.arguments.stars&amp;#34;)]string Stars(string nick = &amp;#34;somebody&amp;#34;, int stars = 0);}public class ArgumentsService : IArgumentsService{public void Ping(){}public int Add2(int a, int b){return a + b;}public string Stars(string nick = &amp;#34;somebody&amp;#34;, int stars = 0){return string.</description>
-    </item>
-    
-    <item>
-      <title>Reflection-based Caller</title>
-      <link>https://wampsharp.net/wamp2/roles/caller/reflection-based-caller/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/caller/reflection-based-caller/</guid>
-      <description>Reflection-based Caller (or &amp;ldquo;Callee proxy&amp;rdquo;) allows you to call callee methods of a WAMP realm, by declaring an interface with methods decorated with a [WampProcedure] attribute.
+In order to use the raw callee api, implement IWampRpcOperation. A IWampFormatter is passed to your methods in order to allow you to deserialize the method parameters. In order to return a result or an error, call the corresponding caller method.</description></item><item><title>Raw Caller</title><link>https://wampsharp.net/wamp2/roles/caller/raw-caller/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/caller/raw-caller/</guid><description>The callee proxy is the easiest way to consume WAMP caller capabilities, but it is limited to C# features. In some cases you might want to handle a RESULT message differently. For these cases, the Raw callback api exists.
+In order to use raw callback api from a WampSharp client, create a class implementing IWampRawRpcOperationClientCallback. This class will be notified when a result arrives. Then create a new instance of your class, and access RpcCatalog property of WampChannel&amp;rsquo;s RealmProxy, then call Invoke of your desired method with desired parameters.</description></item><item><title>Raw Publisher</title><link>https://wampsharp.net/wamp2/roles/publisher/raw-publisher/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/publisher/raw-publisher/</guid><description>If you want to get feedbacks for publications, you can use publisher raw api. In order to use it in client side, access the RealmProxy of your WampChannel and then access its TopicContainer property in order to obtain a WampTopicProxy to your topic. Then call Publish with PUBLISH parameters.
+In order to use it from router side: Obtain the realm by accessing the RealmContainer property of your WampHost, then access its TopicContainer property in order to access the topic by its uri, then call publish with desired parameters.</description></item><item><title>Raw Subscriber</title><link>https://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/subscriber/raw-subscriber/</guid><description>Like other roles, subscriber also has a raw version, which allows you treat EVENT messages as you like. In order to use it, you need to implement the IWampRawTopicClientSubscriber interface.
+Usage Client sample using System; using System.Collections.Generic; using System.Threading.Tasks; using SystemEx; using WampSharp.Core.Serialization; using WampSharp.V2; using WampSharp.V2.Client; using WampSharp.V2.Core.Contracts; using WampSharp.V2.PubSub; namespace MyNamespace { internal class Program { public static void Main(string[] args) { const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;; DefaultWampChannelFactory factory = new DefaultWampChannelFactory(); IWampChannel channel = factory.</description></item><item><title>Reflection-based Callee</title><link>https://wampsharp.net/wamp2/roles/callee/reflection-based-callee/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/callee/reflection-based-callee/</guid><description>Reflection-based Callee allows you to register classes instances with method decorated with a [WampProcedure] attribute as remote procedure operation to a WAMP realm.
+Basic usage public interface IArgumentsService { [WampProcedure(&amp;#34;com.arguments.ping&amp;#34;)] void Ping(); [WampProcedure(&amp;#34;com.arguments.add2&amp;#34;)] int Add2(int a, int b); [WampProcedure(&amp;#34;com.arguments.stars&amp;#34;)] string Stars(string nick = &amp;#34;somebody&amp;#34;, int stars = 0); } public class ArgumentsService : IArgumentsService { public void Ping() { } public int Add2(int a, int b) { return a + b; } public string Stars(string nick = &amp;#34;somebody&amp;#34;, int stars = 0) { return string.</description></item><item><title>Reflection-based Caller</title><link>https://wampsharp.net/wamp2/roles/caller/reflection-based-caller/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/caller/reflection-based-caller/</guid><description>Reflection-based Caller (or &amp;ldquo;Callee proxy&amp;rdquo;) allows you to call callee methods of a WAMP realm, by declaring an interface with methods decorated with a [WampProcedure] attribute.
 The interface must be public.
-Basic usage public interface IArgumentsService{[WampProcedure(&amp;#34;com.arguments.add2&amp;#34;)]int Add2(int a, int b);}public static void Run(){DefaultWampChannelFactory factory =new DefaultWampChannelFactory();const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;;IWampChannel channel =factory.CreateJsonChannel(serverAddress, &amp;#34;realm1&amp;#34;);channel.Open().Wait(5000);IArgumentsService proxy =channel.RealmProxy.Services.GetCalleeProxy&amp;lt;IArgumentsService&amp;gt;();int five = proxy.</description>
-    </item>
-    
-    <item>
-      <title>Reflection-based Publisher</title>
-      <link>https://wampsharp.net/wamp2/roles/publisher/reflection-based-publisher/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/publisher/reflection-based-publisher/</guid>
-      <description>Reflection-based Publisher allows to use publisher features in a similar fashion as Reflection based Callee.
+Basic usage public interface IArgumentsService { [WampProcedure(&amp;#34;com.arguments.add2&amp;#34;)] int Add2(int a, int b); } public static void Run() { DefaultWampChannelFactory factory = new DefaultWampChannelFactory(); const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;; IWampChannel channel = factory.CreateJsonChannel(serverAddress, &amp;#34;realm1&amp;#34;); channel.Open().Wait(5000); IArgumentsService proxy = channel.RealmProxy.Services.GetCalleeProxy&amp;lt;IArgumentsService&amp;gt;(); int five = proxy.</description></item><item><title>Reflection-based Publisher</title><link>https://wampsharp.net/wamp2/roles/publisher/reflection-based-publisher/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/publisher/reflection-based-publisher/</guid><description>Reflection-based Publisher allows to use publisher features in a similar fashion as Reflection based Callee.
 In order to use it, create a class containing an event decorated with a [WampTopic] attribute. Then register an instance of the class using the RegisterPublisher method of IWampRealmServiceProvider. The arguments published to the event will be treated as the arguments keywords of the publication.
-Basic usage public class MyClass{[JsonProperty(&amp;#34;counter&amp;#34;)]public int Counter { get; set; }[JsonProperty(&amp;#34;foo&amp;#34;)]public int[] Foo { get; set; }}public delegate void MyPublicationDelegate(int number1, int number2, string c, MyClass d);public interface IMyPublisher{[WampTopic(&amp;#34;com.</description>
-    </item>
-    
-    <item>
-      <title>Reflection-based Subscriber</title>
-      <link>https://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/</guid>
-      <description>Reflection-based Subscriber allows to use WAMPv2 subscriber features in a similar fashion as Reflection based Callee.
+Basic usage public class MyClass { [JsonProperty(&amp;#34;counter&amp;#34;)] public int Counter { get; set; } [JsonProperty(&amp;#34;foo&amp;#34;)] public int[] Foo { get; set; } } public delegate void MyPublicationDelegate(int number1, int number2, string c, MyClass d); public interface IMyPublisher { [WampTopic(&amp;#34;com.</description></item><item><title>Reflection-based Subscriber</title><link>https://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/</guid><description>Reflection-based Subscriber allows to use WAMPv2 subscriber features in a similar fashion as Reflection based Callee.
 In order to use it, create a class with a method having a [WampTopic] attribute, Then call RegisterSubscriber of IWampRealmServiceProvider.
 Both placing attributes on a class method and placing attributes on an interface implemented by the class are supported.
-Basic usage public class MyClass{[JsonProperty(&amp;#34;counter&amp;#34;)]public int Counter { get; set; }[JsonProperty(&amp;#34;foo&amp;#34;)]public int[] Foo { get; set; }public override string ToString(){return string.</description>
-    </item>
-    
-    <item>
-      <title>Roadmap</title>
-      <link>https://wampsharp.net/roadmap/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/roadmap/</guid>
-      <description>This is some proposal for WampSharp&#39;s future.
-Short term roadmap  Bug fixes WAMP Advanced profile modifications (meta-api, disclose_caller, shared registrations, etc)  Long term roadmap  Replacing IAsyncDisposable with framework interface - see here Reactive Extensions Reactor Support - see #1 #2 #3 ISubscribable, ISubscription, IMultiSubject remote LINQ: IAsyncReactiveQbservable, IAsyncReactiveQbserver, IAsyncReactiveQubscription WAMP schema router support See #1 #2 and #3 and Crossbar roadmap (0.13.0) and issue WAMP schema code generators (for C#/Typescript too?</description>
-    </item>
-    
-    <item>
-      <title>Router-side authentication</title>
-      <link>https://wampsharp.net/wamp2/router/router-side-authentication/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/router/router-side-authentication/</guid>
-      <description>This page describes router-side authentication.
-In order to use router-side authentication, you&#39;ll need to create an instance of a (Default)WampAuthenticationHost and initialize it with a IWampSessionAuthenticatorFactory - that is an interface which will create a IWampSessionAuthenticator - a mechanism which is responsible of the authentication process of an individual client.
-IWampSessionAuthenticator IWampSessionAuthenticator is an interface which represents a mechanism which is responsible of the authentication process of an individual client. Whenever a client requests to join the router (i.</description>
-    </item>
-    
-    <item>
-      <title>Rx-based Publisher</title>
-      <link>https://wampsharp.net/wamp2/roles/publisher/rx-based-publisher/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/publisher/rx-based-publisher/</guid>
-      <description>Rx-based Publisher allows you to publish events to a topic of a WAMP router realm, using Reactive Extensions Observer api.
-Basic usage private static void Run(){const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;;DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();IWampChannel channel = channelFactory.CreateJsonChannel(serverAddress, &amp;#34;realm1&amp;#34;);Task openTask = channel.Open();openTask.Wait(5000);IWampRealmProxy realm = channel.RealmProxy;ISubject&amp;lt;int&amp;gt; subject =realm.Services.GetSubject&amp;lt;int&amp;gt;(&amp;#34;com.myapp.topic1&amp;#34;);// Publishes 5 to com.myapp.topic1 subject.OnNext(5);}GetSubject overloads If a generic type is specified in the GetSubject method, the ARGUMENTS parameter of the EVENT message will contain the single parameter OnNext receives.</description>
-    </item>
-    
-    <item>
-      <title>Rx-based Subscriber</title>
-      <link>https://wampsharp.net/wamp2/roles/subscriber/rx-based-subscriber/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/subscriber/rx-based-subscriber/</guid>
-      <description>Rx-based Subscriber allows you to subscribe to events of a topic of a WAMP router realm, using Reactive Extensions Observable api.
-Basic usage private static async Task RunAsync(){DefaultWampChannelFactory factory = new DefaultWampChannelFactory();const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;;IWampChannel channel =factory.CreateJsonChannel(serverAddress, &amp;#34;realm1&amp;#34;);await channel.Open().ConfigureAwait(false);IWampRealmProxy realmProxy = channel.RealmProxy;IDisposable subscription =realmProxy.Services.GetSubject&amp;lt;int&amp;gt;(&amp;#34;com.myapp.topic1&amp;#34;).Subscribe(x =&amp;gt;{Console.WriteLine(&amp;#34;Got Event: &amp;#34; + x);});// Call subscription.Dispose(); to unsubscribe.}GetSubject overloads GetSubject allows you to subscribe to a topic of a WAMP realm, given the type of the received events.</description>
-    </item>
-    
-    <item>
-      <title>Server PubSub hosting (WAMPv1)</title>
-      <link>https://wampsharp.net/wamp1/server-pubsub-hosting-wampv1/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp1/server-pubsub-hosting-wampv1/</guid>
-      <description>WampSharp contains a Pub/Sub mechanism.
+Basic usage public class MyClass { [JsonProperty(&amp;#34;counter&amp;#34;)] public int Counter { get; set; } [JsonProperty(&amp;#34;foo&amp;#34;)] public int[] Foo { get; set; } public override string ToString() { return string.</description></item><item><title>Roadmap</title><link>https://wampsharp.net/roadmap/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/roadmap/</guid><description>This is some proposal for WampSharp&amp;rsquo;s future.
+Short term roadmap Bug fixes WAMP Advanced profile modifications (meta-api, disclose_caller, shared registrations, etc) Long term roadmap Replacing IAsyncDisposable with framework interface - see here Reactive Extensions Reactor Support - see #1 #2 #3 ISubscribable, ISubscription, IMultiSubject remote LINQ: IAsyncReactiveQbservable, IAsyncReactiveQbserver, IAsyncReactiveQubscription WAMP schema router support See #1 #2 and #3 and Crossbar roadmap (0.13.0) and issue WAMP schema code generators (for C#/Typescript too?</description></item><item><title>Router-side authentication</title><link>https://wampsharp.net/wamp2/router/router-side-authentication/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/router/router-side-authentication/</guid><description>This page describes router-side authentication.
+In order to use router-side authentication, you&amp;rsquo;ll need to create an instance of a (Default)WampAuthenticationHost and initialize it with a IWampSessionAuthenticatorFactory - that is an interface which will create a IWampSessionAuthenticator - a mechanism which is responsible of the authentication process of an individual client.
+IWampSessionAuthenticator IWampSessionAuthenticator is an interface which represents a mechanism which is responsible of the authentication process of an individual client. Whenever a client requests to join the router (i.</description></item><item><title>Rx-based Publisher</title><link>https://wampsharp.net/wamp2/roles/publisher/rx-based-publisher/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/publisher/rx-based-publisher/</guid><description>Rx-based Publisher allows you to publish events to a topic of a WAMP router realm, using Reactive Extensions Observer api.
+Basic usage private static void Run() { const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;; DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory(); IWampChannel channel = channelFactory.CreateJsonChannel(serverAddress, &amp;#34;realm1&amp;#34;); Task openTask = channel.Open(); openTask.Wait(5000); IWampRealmProxy realm = channel.RealmProxy; ISubject&amp;lt;int&amp;gt; subject = realm.Services.GetSubject&amp;lt;int&amp;gt;(&amp;#34;com.myapp.topic1&amp;#34;); // Publishes 5 to com.myapp.topic1 subject.OnNext(5); } GetSubject overloads If a generic type is specified in the GetSubject method, the ARGUMENTS parameter of the EVENT message will contain the single parameter OnNext receives.</description></item><item><title>Rx-based Subscriber</title><link>https://wampsharp.net/wamp2/roles/subscriber/rx-based-subscriber/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/subscriber/rx-based-subscriber/</guid><description>Rx-based Subscriber allows you to subscribe to events of a topic of a WAMP router realm, using Reactive Extensions Observable api.
+Basic usage private static async Task RunAsync() { DefaultWampChannelFactory factory = new DefaultWampChannelFactory(); const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;; IWampChannel channel = factory.CreateJsonChannel(serverAddress, &amp;#34;realm1&amp;#34;); await channel.Open().ConfigureAwait(false); IWampRealmProxy realmProxy = channel.RealmProxy; IDisposable subscription = realmProxy.Services.GetSubject&amp;lt;int&amp;gt;(&amp;#34;com.myapp.topic1&amp;#34;) .Subscribe(x =&amp;gt; { Console.WriteLine(&amp;#34;Got Event: &amp;#34; + x); }); // Call subscription.Dispose(); to unsubscribe. } GetSubject overloads GetSubject allows you to subscribe to a topic of a WAMP realm, given the type of the received events.</description></item><item><title>Server PubSub hosting (WAMPv1)</title><link>https://wampsharp.net/wamp1/server-pubsub-hosting-wampv1/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp1/server-pubsub-hosting-wampv1/</guid><description>WampSharp contains a Pub/Sub mechanism.
 Declaring topics All WampSharp server-side topics are contained in a WampTopicContainer. This is a property of the DefaultWampHost (called TopicContainer).
 There are two types of topics:
- Temporary topics - created automatically when a subscriber subscribes to them, deleted when no one is subscribed. Persistent topics - created once by the application, never deleted.  In order to subscribe to new created topics, the WampTopicContainer has a TopicCreated event.</description>
-    </item>
-    
-    <item>
-      <title>Server RPC hosting (WAMPv1)</title>
-      <link>https://wampsharp.net/wamp1/server-rpc-hosting-wampv1/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp1/server-rpc-hosting-wampv1/</guid>
-      <description>As you&#39;ve seen in The getting started tutorial, WampSharp allows you to host RPC services and consume them from a WAMP client.
+Temporary topics - created automatically when a subscriber subscribes to them, deleted when no one is subscribed. Persistent topics - created once by the application, never deleted. In order to subscribe to new created topics, the WampTopicContainer has a TopicCreated event.</description></item><item><title>Server RPC hosting (WAMPv1)</title><link>https://wampsharp.net/wamp1/server-rpc-hosting-wampv1/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp1/server-rpc-hosting-wampv1/</guid><description>As you&amp;rsquo;ve seen in The getting started tutorial, WampSharp allows you to host RPC services and consume them from a WAMP client.
 Declaring RPC services In order to declare a RPC service, just place a [WampRpcMethod] attribute above a method you want to expose. You can place the attribute either on the implemented method itself, or on a method belonging to an interface the RPC service implements.
-The WampRpcMethod receives a ProcUri in its constructor - that is used as an identifier for the WAMP method (used by a WAMP CALL request).</description>
-    </item>
-    
-    <item>
-      <title>Testament service</title>
-      <link>https://wampsharp.net/wamp2/testament-service/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/testament-service/</guid>
-      <description>The Testament feature is supported.
+The WampRpcMethod receives a ProcUri in its constructor - that is used as an identifier for the WAMP method (used by a WAMP CALL request).</description></item><item><title>Testament service</title><link>https://wampsharp.net/wamp2/testament-service/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/testament-service/</guid><description>The Testament feature is supported.
 This feature allows a client to request the router to publish some predefined events when the client disconnects.
 Enabling the testament service on the router-side In order to enable it from router-side, call HostTestamentService extension method of the relevant realm (this is similiar to the Router-side meta-api usage):
-DefaultWampHost host = new DefaultWampHost(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;);IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&amp;#34;realm1&amp;#34;);IDisposable disposable = realm.HostTestamentService();// Uncomment to unregister the Testament service.</description>
-    </item>
-    
-    <item>
-      <title>WAMP-CRA client side authentication</title>
-      <link>https://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</guid>
-      <description>WAMP-CRA client side authentication is supported. In order to use it, instantiate a new instance of WampCraAuthenticator and pass it to the channel factory.
-Example public async Task Run(){DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();IWampClientAuthenticator authenticator;if (false){authenticator = new WampCraClientAuthenticator(authenticationId: &amp;#34;joe&amp;#34;, secret: &amp;#34;secret2&amp;#34;);}else{authenticator =new WampCraClientAuthenticator(authenticationId: &amp;#34;peter&amp;#34;, secret: &amp;#34;secret1&amp;#34;, salt: &amp;#34;salt123&amp;#34;,iterations: 100, keyLen: 16);}IWampChannel channel =channelFactory.CreateJsonChannel(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;,&amp;#34;realm1&amp;#34;,authenticator);channel.</description>
-    </item>
-    
-    <item>
-      <title>WAMP-CRA router-side authentication</title>
-      <link>https://wampsharp.net/wamp2/router/wamp-cra-router-side-authentication/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/router/wamp-cra-router-side-authentication/</guid>
-      <description>WAMP-CRA router side authentication is supported. It is available as an abstract class named WampCraSessionAuthenticator which inherits from the WampSessionAuthenticator class. The class has two abstract properties needed to be implemented: AuthenticationChallenge and Secret - the AuthenticationChallenge is the challenge to be sent upon CHALLENGE message, the Secret is the secret used to compute the signature
-It is also possible to add additional data (sent upon CHALLENGE message in extra parameter), such as salt, iterations and keylen by setting the CraChallengeDetails property.</description>
-    </item>
-    
-    <item>
-      <title>WampChannel</title>
-      <link>https://wampsharp.net/wamp2/client/wampchannel/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/client/wampchannel/</guid>
-      <description>A WampChannel is an object that represents a WAMP client session to a remote router.
+DefaultWampHost host = new DefaultWampHost(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;); IWampHostedRealm realm = host.RealmContainer.GetRealmByName(&amp;#34;realm1&amp;#34;); IDisposable disposable = realm.HostTestamentService(); // Uncomment to unregister the Testament service.</description></item><item><title>WAMP-CRA client side authentication</title><link>https://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</guid><description>WAMP-CRA client side authentication is supported. In order to use it, instantiate a new instance of WampCraAuthenticator and pass it to the channel factory.
+Example public async Task Run() { DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory(); IWampClientAuthenticator authenticator; if (false) { authenticator = new WampCraClientAuthenticator(authenticationId: &amp;#34;joe&amp;#34;, secret: &amp;#34;secret2&amp;#34;); } else { authenticator = new WampCraClientAuthenticator(authenticationId: &amp;#34;peter&amp;#34;, secret: &amp;#34;secret1&amp;#34;, salt: &amp;#34;salt123&amp;#34;, iterations: 100, keyLen: 16); } IWampChannel channel = channelFactory.CreateJsonChannel(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;, &amp;#34;realm1&amp;#34;, authenticator); channel.</description></item><item><title>WAMP-CRA router-side authentication</title><link>https://wampsharp.net/wamp2/router/wamp-cra-router-side-authentication/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/router/wamp-cra-router-side-authentication/</guid><description>WAMP-CRA router side authentication is supported. It is available as an abstract class named WampCraSessionAuthenticator which inherits from the WampSessionAuthenticator class. The class has two abstract properties needed to be implemented: AuthenticationChallenge and Secret - the AuthenticationChallenge is the challenge to be sent upon CHALLENGE message, the Secret is the secret used to compute the signature
+It is also possible to add additional data (sent upon CHALLENGE message in extra parameter), such as salt, iterations and keylen by setting the CraChallengeDetails property.</description></item><item><title>WampChannel</title><link>https://wampsharp.net/wamp2/client/wampchannel/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/client/wampchannel/</guid><description>A WampChannel is an object that represents a WAMP client session to a remote router.
 In order to obtain a WampChannel, instantiate an instance of the WampChannelFactory class, and call CreateChannel with the desired realm to connect to, the desired WampConnection and the desired binding.
 For example: connecting to a remote router with Msgpack support and WebSocket4NetConnection:
-const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;;WampChannelFactory factory = new WampChannelFactory();JTokenMsgpackBinding msgpackBinding = new JTokenMsgpackBinding();IWampChannel channel =factory.</description>
-    </item>
-    
-    <item>
-      <title>WampChannelReconnector</title>
-      <link>https://wampsharp.net/wamp2/client/wampchannelreconnector/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/client/wampchannelreconnector/</guid>
-      <description>The WampChannelReconnector class helps handling re-connection of WampChannel.
+const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;; WampChannelFactory factory = new WampChannelFactory(); JTokenMsgpackBinding msgpackBinding = new JTokenMsgpackBinding(); IWampChannel channel = factory.</description></item><item><title>WampChannelReconnector</title><link>https://wampsharp.net/wamp2/client/wampchannelreconnector/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/client/wampchannelreconnector/</guid><description>The WampChannelReconnector class helps handling re-connection of WampChannel.
 Usage sample:
-public static async Task Run(){DefaultWampChannelFactory factory = new DefaultWampChannelFactory();string address = &amp;#34;ws://localhost:8080/ws&amp;#34;;MySubscriber mySubscriber = new MySubscriber();IWampChannel channel =factory.CreateJsonChannel(address, &amp;#34;realm1&amp;#34;);Func&amp;lt;Task&amp;gt; connect = async () =&amp;gt;{await channel.Open();var subscriptionTask =channel.RealmProxy.Services.RegisterSubscriber(mySubscriber);var asyncDisposable = await subscriptionTask;};WampChannelReconnector reconnector =new WampChannelReconnector(channel, connect);reconnector.Start();}</description>
-    </item>
-    
-    <item>
-      <title>WampHost</title>
-      <link>https://wampsharp.net/wamp2/router/wamphost/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/router/wamphost/</guid>
-      <description>A WampHost is an object that hosts a WampSharp router.
+public static async Task Run() { DefaultWampChannelFactory factory = new DefaultWampChannelFactory(); string address = &amp;#34;ws://localhost:8080/ws&amp;#34;; MySubscriber mySubscriber = new MySubscriber(); IWampChannel channel = factory.CreateJsonChannel(address, &amp;#34;realm1&amp;#34;); Func&amp;lt;Task&amp;gt; connect = async () =&amp;gt; { await channel.Open(); var subscriptionTask = channel.RealmProxy.Services.RegisterSubscriber(mySubscriber); var asyncDisposable = await subscriptionTask; }; WampChannelReconnector reconnector = new WampChannelReconnector(channel, connect); reconnector.Start(); }</description></item><item><title>WampHost</title><link>https://wampsharp.net/wamp2/router/wamphost/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/router/wamphost/</guid><description>A WampHost is an object that hosts a WampSharp router.
 In order to use WampHost, instantiate a new instance of WampHost class. Then register the host with the transport and bindings you are interested in:
 For example: Initialization of a WampHost with FleckWebSocketTransport and Json and Msgpack binding support:
-const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;;WampHost host = new WampHost();host.RegisterTransport(new FleckWebSocketTransport(serverAddress),new JTokenJsonBinding(),new JTokenMsgpackBinding());host.Open();For example: Initialization of a WampHost with SignalRTransport and Json binding support:</description>
-    </item>
-    
-    <item>
-      <title>WampSharp v1.2.5.21-beta release notes</title>
-      <link>https://wampsharp.net/release-notes/wampsharp-v1.2.5.21-beta-release-notes/</link>
-      <pubDate>Mon, 29 Aug 2016 10:25:07 +0900</pubDate>
-      
-      <guid>https://wampsharp.net/release-notes/wampsharp-v1.2.5.21-beta-release-notes/</guid>
-      <description>C# 7.0 tuples support This verion mainly focuses on C# 7.0 tuples support.
- Note: C# 7.0 tuples syntax is currently supported only by Visual Studio &amp;ldquo;15&amp;rdquo; Preview 4. You can download it here.
- Reflection-based callee tuples support From this version, you can return a C# 7.0 tuple from a reflection-based callee method. The tuple will be serialized to either the arguments keywords or to the arguments array of the YIELD message, depending on whether the returned tuple has named elements or positional elements.</description>
-    </item>
-    
-    <item>
-      <title>WampSharp v1.2.4.18-beta release notes</title>
-      <link>https://wampsharp.net/release-notes/wampsharp-v1.2.4.18-beta-release-notes/</link>
-      <pubDate>Sat, 30 Jul 2016 10:25:07 +0900</pubDate>
-      
-      <guid>https://wampsharp.net/release-notes/wampsharp-v1.2.4.18-beta-release-notes/</guid>
-      <description>New features .NET Standard support This verion mainly focuses on .NET Standard support. WampSharp now supports .NET Standard 1.3 which means that it is compatible with .NET Framework 4.6, NET Core, Universal Windows Platform 10 and Mono/Xamarin platforms.
-Only WAMPv2 is currenly supported (WAMPv1 hasn&#39;t been ported yet). Both Json and MsgPack support is available. RawSocket support has also been ported.
+const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;; WampHost host = new WampHost(); host.RegisterTransport(new FleckWebSocketTransport(serverAddress), new JTokenJsonBinding(), new JTokenMsgpackBinding()); host.Open(); For example: Initialization of a WampHost with SignalRTransport and Json binding support:</description></item><item><title>WampSharp v1.2.5.21-beta release notes</title><link>https://wampsharp.net/release-notes/wampsharp-v1.2.5.21-beta-release-notes/</link><pubDate>Mon, 29 Aug 2016 10:25:07 +0900</pubDate><guid>https://wampsharp.net/release-notes/wampsharp-v1.2.5.21-beta-release-notes/</guid><description>C# 7.0 tuples support This verion mainly focuses on C# 7.0 tuples support.
+Note: C# 7.0 tuples syntax is currently supported only by Visual Studio &amp;ldquo;15&amp;rdquo; Preview 4. You can download it here.
+Reflection-based callee tuples support From this version, you can return a C# 7.0 tuple from a reflection-based callee method. The tuple will be serialized to either the arguments keywords or to the arguments array of the YIELD message, depending on whether the returned tuple has named elements or positional elements.</description></item><item><title>WampSharp v1.2.4.18-beta release notes</title><link>https://wampsharp.net/release-notes/wampsharp-v1.2.4.18-beta-release-notes/</link><pubDate>Sat, 30 Jul 2016 10:25:07 +0900</pubDate><guid>https://wampsharp.net/release-notes/wampsharp-v1.2.4.18-beta-release-notes/</guid><description>New features .NET Standard support This verion mainly focuses on .NET Standard support. WampSharp now supports .NET Standard 1.3 which means that it is compatible with .NET Framework 4.6, NET Core, Universal Windows Platform 10 and Mono/Xamarin platforms.
+Only WAMPv2 is currenly supported (WAMPv1 hasn&amp;rsquo;t been ported yet). Both Json and MsgPack support is available. RawSocket support has also been ported.
 Regarding WebSockets:
- Client-side support is available: it works via a new implementation of WampConnection which is based on System.</description>
-    </item>
-    
-    <item>
-      <title>WampSharp v1.2.3.12-beta release notes</title>
-      <link>https://wampsharp.net/release-notes/wampsharp-v1.2.3.12-beta-release-notes/</link>
-      <pubDate>Fri, 09 Oct 2015 10:25:07 +0900</pubDate>
-      
-      <guid>https://wampsharp.net/release-notes/wampsharp-v1.2.3.12-beta-release-notes/</guid>
-      <description>New features Router side authentication From this version, router-side authentication is supported. Also WAMP-CRA is supported.
+Client-side support is available: it works via a new implementation of WampConnection which is based on System.</description></item><item><title>WampSharp v1.2.3.12-beta release notes</title><link>https://wampsharp.net/release-notes/wampsharp-v1.2.3.12-beta-release-notes/</link><pubDate>Fri, 09 Oct 2015 10:25:07 +0900</pubDate><guid>https://wampsharp.net/release-notes/wampsharp-v1.2.3.12-beta-release-notes/</guid><description>New features Router side authentication From this version, router-side authentication is supported. Also WAMP-CRA is supported.
 Also, Cookie based authenticators are supported.
 Currently authentication details (authid, authmethod and authrole) are forwarded to callees if the caller is disclosed. These are accessible via WampInvocationContext. This might change according to the WAMP spec decision.
-WampChannelFactory fluent syntax This version introduces new api to obtain a IWampChannel. The api is fluent and allows customization.</description>
-    </item>
-    
-    <item>
-      <title>WampSharp v1.2.2.8-beta release notes</title>
-      <link>https://wampsharp.net/release-notes/wampsharp-v1.2.2.8-beta-release-notes/</link>
-      <pubDate>Sat, 13 Jun 2015 10:25:07 +0900</pubDate>
-      
-      <guid>https://wampsharp.net/release-notes/wampsharp-v1.2.2.8-beta-release-notes/</guid>
-      <description>Breaking changes Library split up WampSharp.Default split up WampSharp.Default.dll has been split up into a couple of libraries. This allows you to consume only the libraries you are interested in:
- WampSharp.Fleck - This NuGet package contains WampSharp implementation of a WebSocket transport using Fleck. WampSharp.NewtonsoftJson - This NuGet package contains WampSharp support for Json serialization using Newtonsoft Json WampSharp.NewtonsoftMsgpack - This NuGet package contains WampSharp support for MsgPack serialization using Newtonsoft.</description>
-    </item>
-    
-    <item>
-      <title>WampSharp v1.2.1.6-beta release notes</title>
-      <link>https://wampsharp.net/release-notes/wampsharp-v1.2.1.6-beta-release-notes/</link>
-      <pubDate>Sat, 28 Feb 2015 10:25:07 +0900</pubDate>
-      
-      <guid>https://wampsharp.net/release-notes/wampsharp-v1.2.1.6-beta-release-notes/</guid>
-      <description>Api changes IAsyncDisposable A new type called IAsyncDisposable is introduced in the library. It&#39;s similar to IDisposable, but returns a Task.
-public interface IAsyncDisposable{Task DisposeAsync();}Task&amp;lt;IAsyncDisposable&amp;gt; is returned from some methods:
- IWampTopicProxy Subscribe method now returns an Task&amp;lt;IAsyncDisposable&amp;gt; instead of Task&amp;lt;IDisposable&amp;gt;, you can call DisposeAsync in order to unsubscribe from the topic. IWampRpcOperationCatalogProxy Register method now returns Task&amp;lt;IAsyncDisposable&amp;gt; instead of Task. Call DisposeAsync to Unregister the procedure from router.</description>
-    </item>
-    
-  </channel>
-</rss>
+WampChannelFactory fluent syntax This version introduces new api to obtain a IWampChannel. The api is fluent and allows customization.</description></item><item><title>WampSharp v1.2.2.8-beta release notes</title><link>https://wampsharp.net/release-notes/wampsharp-v1.2.2.8-beta-release-notes/</link><pubDate>Sat, 13 Jun 2015 10:25:07 +0900</pubDate><guid>https://wampsharp.net/release-notes/wampsharp-v1.2.2.8-beta-release-notes/</guid><description>Breaking changes Library split up WampSharp.Default split up WampSharp.Default.dll has been split up into a couple of libraries. This allows you to consume only the libraries you are interested in:
+WampSharp.Fleck - This NuGet package contains WampSharp implementation of a WebSocket transport using Fleck. WampSharp.NewtonsoftJson - This NuGet package contains WampSharp support for Json serialization using Newtonsoft Json WampSharp.NewtonsoftMsgpack - This NuGet package contains WampSharp support for MsgPack serialization using Newtonsoft.</description></item><item><title>WampSharp v1.2.1.6-beta release notes</title><link>https://wampsharp.net/release-notes/wampsharp-v1.2.1.6-beta-release-notes/</link><pubDate>Sat, 28 Feb 2015 10:25:07 +0900</pubDate><guid>https://wampsharp.net/release-notes/wampsharp-v1.2.1.6-beta-release-notes/</guid><description>Api changes IAsyncDisposable A new type called IAsyncDisposable is introduced in the library. It&amp;rsquo;s similar to IDisposable, but returns a Task.
+public interface IAsyncDisposable { Task DisposeAsync(); } Task&amp;lt;IAsyncDisposable&amp;gt; is returned from some methods:
+IWampTopicProxy Subscribe method now returns an Task&amp;lt;IAsyncDisposable&amp;gt; instead of Task&amp;lt;IDisposable&amp;gt;, you can call DisposeAsync in order to unsubscribe from the topic. IWampRpcOperationCatalogProxy Register method now returns Task&amp;lt;IAsyncDisposable&amp;gt; instead of Task. Call DisposeAsync to Unregister the procedure from router.</description></item></channel></rss>

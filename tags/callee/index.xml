@@ -1,47 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>callee on WampSharp</title>
-    <link>https://wampsharp.net/tags/callee/</link>
-    <description>Recent content in callee on WampSharp</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright>
-    <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
-    
-	<atom:link href="https://wampsharp.net/tags/callee/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>Getting started with Callee</title>
-      <link>https://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/</guid>
-      <description>Before you begin, see Getting started with WAMPv2 and create a WampChannel/WampHost your calleee will be registered to.
-About Callee role WAMPv2 defines a Callee role, that is a role that can register a remote procedure call to the router (using the REGISTER/UNREGISTER messages). The callee&#39;s procedure can be invoked by the router (using the INVOCATION message). The callee can respond with a result or an error to the router (using the YIELD/ERROR message).</description>
-    </item>
-    
-    <item>
-      <title>Raw Callee</title>
-      <link>https://wampsharp.net/wamp2/roles/callee/raw-callee/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/callee/raw-callee/</guid>
-      <description>WampSharp provides a lower level api that allows to deal with rpc operations as they are sent/received, which is called Raw callee.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>callee on WampSharp</title><link>https://wampsharp.net/tags/callee/</link><description>Recent content in callee on WampSharp</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright><lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate><atom:link href="https://wampsharp.net/tags/callee/index.xml" rel="self" type="application/rss+xml"/><item><title>Getting started with Callee</title><link>https://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/callee/getting-started-with-callee/</guid><description>Before you begin, see Getting started with WAMPv2 and create a WampChannel/WampHost your calleee will be registered to.
+About Callee role WAMPv2 defines a Callee role, that is a role that can register a remote procedure call to the router (using the REGISTER/UNREGISTER messages). The callee&amp;rsquo;s procedure can be invoked by the router (using the INVOCATION message). The callee can respond with a result or an error to the router (using the YIELD/ERROR message).</description></item><item><title>Raw Callee</title><link>https://wampsharp.net/wamp2/roles/callee/raw-callee/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/callee/raw-callee/</guid><description>WampSharp provides a lower level api that allows to deal with rpc operations as they are sent/received, which is called Raw callee.
 Actually, the reflection based callee api is built above the Raw callee api.
-In order to use the raw callee api, implement IWampRpcOperation. A IWampFormatter is passed to your methods in order to allow you to deserialize the method parameters. In order to return a result or an error, call the corresponding caller method.</description>
-    </item>
-    
-    <item>
-      <title>Reflection-based Callee</title>
-      <link>https://wampsharp.net/wamp2/roles/callee/reflection-based-callee/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/callee/reflection-based-callee/</guid>
-      <description>Reflection-based Callee allows you to register classes instances with method decorated with a [WampProcedure] attribute as remote procedure operation to a WAMP realm.
-Basic usage public interface IArgumentsService{[WampProcedure(&amp;#34;com.arguments.ping&amp;#34;)]void Ping();[WampProcedure(&amp;#34;com.arguments.add2&amp;#34;)]int Add2(int a, int b);[WampProcedure(&amp;#34;com.arguments.stars&amp;#34;)]string Stars(string nick = &amp;#34;somebody&amp;#34;, int stars = 0);}public class ArgumentsService : IArgumentsService{public void Ping(){}public int Add2(int a, int b){return a + b;}public string Stars(string nick = &amp;#34;somebody&amp;#34;, int stars = 0){return string.</description>
-    </item>
-    
-  </channel>
-</rss>
+In order to use the raw callee api, implement IWampRpcOperation. A IWampFormatter is passed to your methods in order to allow you to deserialize the method parameters. In order to return a result or an error, call the corresponding caller method.</description></item><item><title>Reflection-based Callee</title><link>https://wampsharp.net/wamp2/roles/callee/reflection-based-callee/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/callee/reflection-based-callee/</guid><description>Reflection-based Callee allows you to register classes instances with method decorated with a [WampProcedure] attribute as remote procedure operation to a WAMP realm.
+Basic usage public interface IArgumentsService { [WampProcedure(&amp;#34;com.arguments.ping&amp;#34;)] void Ping(); [WampProcedure(&amp;#34;com.arguments.add2&amp;#34;)] int Add2(int a, int b); [WampProcedure(&amp;#34;com.arguments.stars&amp;#34;)] string Stars(string nick = &amp;#34;somebody&amp;#34;, int stars = 0); } public class ArgumentsService : IArgumentsService { public void Ping() { } public int Add2(int a, int b) { return a + b; } public string Stars(string nick = &amp;#34;somebody&amp;#34;, int stars = 0) { return string.</description></item></channel></rss>

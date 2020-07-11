@@ -1,68 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>authentication on WampSharp</title>
-    <link>https://wampsharp.net/categories/authentication/</link>
-    <description>Recent content in authentication on WampSharp</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright>
-    <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
-    
-	<atom:link href="https://wampsharp.net/categories/authentication/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>Client-side authentication</title>
-      <link>https://wampsharp.net/wamp2/client/client-side-authentication/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/client/client-side-authentication/</guid>
-      <description>Client-side authentication is supported. In order to use client authentication, you need to implement an interface named IWampClientAuthenticator. Then, pass it to CreateChannel/CreateJsonChannel/CreateMsgpackChannel overloads of DefaultChannelFactory. In IWampClientAuthenticator we supply the supported authentication methods and the authenticationid, these are passed in the HELLO message to the router (as details.authmethods, details.authid). We also implement Authenticate method, which sends an AUTHENTICATE message to the router upon CHALLENGE.
-Example public class TicketAuthenticator : IWampClientAuthenticator{private static readonly string[] mAuthenticationMethods = { &amp;#34;ticket&amp;#34; };private readonly IDictionary&amp;lt;string, string&amp;gt; mTickets =new Dictionary&amp;lt;string, string&amp;gt;(){{&amp;#34;peter&amp;#34;, &amp;#34;magic_secret_1&amp;#34;},{&amp;#34;joe&amp;#34;, &amp;#34;magic_secret_2&amp;#34;}};private const string User = &amp;#34;peter&amp;#34;;public AuthenticationResponse Authenticate(string authmethod, ChallengeDetails extra){if (authmethod == &amp;#34;ticket&amp;#34;){Console.</description>
-    </item>
-    
-    <item>
-      <title>Cookie based router-side authentication</title>
-      <link>https://wampsharp.net/wamp2/router/cookie-based-router-side-authentication/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/router/cookie-based-router-side-authentication/</guid>
-      <description>It is possible to build authenticators that are cookie-based. In order to that, one needs to implement an interface named ICookieAuthenticatorFactory and pass it to DefaultWampAuthenticationHost&#39;s constructor, (or to FleckAuthenticatedWebSocketTransport/VtortolaAuthenticatedWebSocketTransport constructors).
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>authentication on WampSharp</title><link>https://wampsharp.net/categories/authentication/</link><description>Recent content in authentication on WampSharp</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright><lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate><atom:link href="https://wampsharp.net/categories/authentication/index.xml" rel="self" type="application/rss+xml"/><item><title>Client-side authentication</title><link>https://wampsharp.net/wamp2/client/client-side-authentication/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/client/client-side-authentication/</guid><description>Client-side authentication is supported. In order to use client authentication, you need to implement an interface named IWampClientAuthenticator. Then, pass it to CreateChannel/CreateJsonChannel/CreateMsgpackChannel overloads of DefaultChannelFactory. In IWampClientAuthenticator we supply the supported authentication methods and the authenticationid, these are passed in the HELLO message to the router (as details.authmethods, details.authid). We also implement Authenticate method, which sends an AUTHENTICATE message to the router upon CHALLENGE.
+Example public class TicketAuthenticator : IWampClientAuthenticator { private static readonly string[] mAuthenticationMethods = { &amp;#34;ticket&amp;#34; }; private readonly IDictionary&amp;lt;string, string&amp;gt; mTickets = new Dictionary&amp;lt;string, string&amp;gt;() { {&amp;#34;peter&amp;#34;, &amp;#34;magic_secret_1&amp;#34;}, {&amp;#34;joe&amp;#34;, &amp;#34;magic_secret_2&amp;#34;} }; private const string User = &amp;#34;peter&amp;#34;; public AuthenticationResponse Authenticate(string authmethod, ChallengeDetails extra) { if (authmethod == &amp;#34;ticket&amp;#34;) { Console.</description></item><item><title>Cookie based router-side authentication</title><link>https://wampsharp.net/wamp2/router/cookie-based-router-side-authentication/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/router/cookie-based-router-side-authentication/</guid><description>It is possible to build authenticators that are cookie-based. In order to that, one needs to implement an interface named ICookieAuthenticatorFactory and pass it to DefaultWampAuthenticationHost&amp;rsquo;s constructor, (or to FleckAuthenticatedWebSocketTransport/VtortolaAuthenticatedWebSocketTransport constructors).
 The interface consists of a single method named &amp;ldquo;CreateAuthenticator&amp;rdquo;, which receives as a parameter an ICookieProvider, that is an interface that allows to access client cookies for read-only.
-The authenticator created by the &amp;ldquo;CreateAuthenticator&amp;rdquo; method will be passed to the IWampSessionAuthenticatorFactory passed to the (Default)WampAuthenticationHost as the transportAuthenticator parameter.</description>
-    </item>
-    
-    <item>
-      <title>Router-side authentication</title>
-      <link>https://wampsharp.net/wamp2/router/router-side-authentication/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/router/router-side-authentication/</guid>
-      <description>This page describes router-side authentication.
-In order to use router-side authentication, you&#39;ll need to create an instance of a (Default)WampAuthenticationHost and initialize it with a IWampSessionAuthenticatorFactory - that is an interface which will create a IWampSessionAuthenticator - a mechanism which is responsible of the authentication process of an individual client.
-IWampSessionAuthenticator IWampSessionAuthenticator is an interface which represents a mechanism which is responsible of the authentication process of an individual client. Whenever a client requests to join the router (i.</description>
-    </item>
-    
-    <item>
-      <title>WAMP-CRA client side authentication</title>
-      <link>https://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</guid>
-      <description>WAMP-CRA client side authentication is supported. In order to use it, instantiate a new instance of WampCraAuthenticator and pass it to the channel factory.
-Example public async Task Run(){DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();IWampClientAuthenticator authenticator;if (false){authenticator = new WampCraClientAuthenticator(authenticationId: &amp;#34;joe&amp;#34;, secret: &amp;#34;secret2&amp;#34;);}else{authenticator =new WampCraClientAuthenticator(authenticationId: &amp;#34;peter&amp;#34;, secret: &amp;#34;secret1&amp;#34;, salt: &amp;#34;salt123&amp;#34;,iterations: 100, keyLen: 16);}IWampChannel channel =channelFactory.CreateJsonChannel(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;,&amp;#34;realm1&amp;#34;,authenticator);channel.</description>
-    </item>
-    
-    <item>
-      <title>WAMP-CRA router-side authentication</title>
-      <link>https://wampsharp.net/wamp2/router/wamp-cra-router-side-authentication/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/router/wamp-cra-router-side-authentication/</guid>
-      <description>WAMP-CRA router side authentication is supported. It is available as an abstract class named WampCraSessionAuthenticator which inherits from the WampSessionAuthenticator class. The class has two abstract properties needed to be implemented: AuthenticationChallenge and Secret - the AuthenticationChallenge is the challenge to be sent upon CHALLENGE message, the Secret is the secret used to compute the signature
-It is also possible to add additional data (sent upon CHALLENGE message in extra parameter), such as salt, iterations and keylen by setting the CraChallengeDetails property.</description>
-    </item>
-    
-  </channel>
-</rss>
+The authenticator created by the &amp;ldquo;CreateAuthenticator&amp;rdquo; method will be passed to the IWampSessionAuthenticatorFactory passed to the (Default)WampAuthenticationHost as the transportAuthenticator parameter.</description></item><item><title>Router-side authentication</title><link>https://wampsharp.net/wamp2/router/router-side-authentication/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/router/router-side-authentication/</guid><description>This page describes router-side authentication.
+In order to use router-side authentication, you&amp;rsquo;ll need to create an instance of a (Default)WampAuthenticationHost and initialize it with a IWampSessionAuthenticatorFactory - that is an interface which will create a IWampSessionAuthenticator - a mechanism which is responsible of the authentication process of an individual client.
+IWampSessionAuthenticator IWampSessionAuthenticator is an interface which represents a mechanism which is responsible of the authentication process of an individual client. Whenever a client requests to join the router (i.</description></item><item><title>WAMP-CRA client side authentication</title><link>https://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/client/wamp-cra-client-side-authentication/</guid><description>WAMP-CRA client side authentication is supported. In order to use it, instantiate a new instance of WampCraAuthenticator and pass it to the channel factory.
+Example public async Task Run() { DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory(); IWampClientAuthenticator authenticator; if (false) { authenticator = new WampCraClientAuthenticator(authenticationId: &amp;#34;joe&amp;#34;, secret: &amp;#34;secret2&amp;#34;); } else { authenticator = new WampCraClientAuthenticator(authenticationId: &amp;#34;peter&amp;#34;, secret: &amp;#34;secret1&amp;#34;, salt: &amp;#34;salt123&amp;#34;, iterations: 100, keyLen: 16); } IWampChannel channel = channelFactory.CreateJsonChannel(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;, &amp;#34;realm1&amp;#34;, authenticator); channel.</description></item><item><title>WAMP-CRA router-side authentication</title><link>https://wampsharp.net/wamp2/router/wamp-cra-router-side-authentication/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/router/wamp-cra-router-side-authentication/</guid><description>WAMP-CRA router side authentication is supported. It is available as an abstract class named WampCraSessionAuthenticator which inherits from the WampSessionAuthenticator class. The class has two abstract properties needed to be implemented: AuthenticationChallenge and Secret - the AuthenticationChallenge is the challenge to be sent upon CHALLENGE message, the Secret is the secret used to compute the signature
+It is also possible to add additional data (sent upon CHALLENGE message in extra parameter), such as salt, iterations and keylen by setting the CraChallengeDetails property.</description></item></channel></rss>

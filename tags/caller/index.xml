@@ -1,48 +1,6 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>caller on WampSharp</title>
-    <link>https://wampsharp.net/tags/caller/</link>
-    <description>Recent content in caller on WampSharp</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright>
-    <lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate>
-    
-	<atom:link href="https://wampsharp.net/tags/caller/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>Getting started with Caller</title>
-      <link>https://wampsharp.net/wamp2/roles/caller/getting-started-with-caller/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/caller/getting-started-with-caller/</guid>
-      <description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your caller will use.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>caller on WampSharp</title><link>https://wampsharp.net/tags/caller/</link><description>Recent content in caller on WampSharp</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</copyright><lastBuildDate>Sun, 30 Jul 2017 00:16:09 +0300</lastBuildDate><atom:link href="https://wampsharp.net/tags/caller/index.xml" rel="self" type="application/rss+xml"/><item><title>Getting started with Caller</title><link>https://wampsharp.net/wamp2/roles/caller/getting-started-with-caller/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/caller/getting-started-with-caller/</guid><description>Before you start, see Getting started with WAMPv2 and create a WampChannel/WampHost your caller will use.
 About Caller role WAMPv2 defines a Caller role, that is a role that can call a remote procedure call registered by a Callee (using the CALL messages). The caller can receive a response with a result or an error from the router (using the RESULT/ERROR message).
-Callee proxy The Callee proxy is the easiest way to call rpc methods of a WAMP router.</description>
-    </item>
-    
-    <item>
-      <title>Raw Caller</title>
-      <link>https://wampsharp.net/wamp2/roles/caller/raw-caller/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/caller/raw-caller/</guid>
-      <description>The callee proxy is the easiest way to consume WAMP caller capabilities, but it is limited to C# features. In some cases you might want to handle a RESULT message differently. For these cases, the Raw callback api exists.
-In order to use raw callback api from a WampSharp client, create a class implementing IWampRawRpcOperationClientCallback. This class will be notified when a result arrives. Then create a new instance of your class, and access RpcCatalog property of WampChannel&#39;s RealmProxy, then call Invoke of your desired method with desired parameters.</description>
-    </item>
-    
-    <item>
-      <title>Reflection-based Caller</title>
-      <link>https://wampsharp.net/wamp2/roles/caller/reflection-based-caller/</link>
-      <pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate>
-      
-      <guid>https://wampsharp.net/wamp2/roles/caller/reflection-based-caller/</guid>
-      <description>Reflection-based Caller (or &amp;ldquo;Callee proxy&amp;rdquo;) allows you to call callee methods of a WAMP realm, by declaring an interface with methods decorated with a [WampProcedure] attribute.
+Callee proxy The Callee proxy is the easiest way to call rpc methods of a WAMP router.</description></item><item><title>Raw Caller</title><link>https://wampsharp.net/wamp2/roles/caller/raw-caller/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/caller/raw-caller/</guid><description>The callee proxy is the easiest way to consume WAMP caller capabilities, but it is limited to C# features. In some cases you might want to handle a RESULT message differently. For these cases, the Raw callback api exists.
+In order to use raw callback api from a WampSharp client, create a class implementing IWampRawRpcOperationClientCallback. This class will be notified when a result arrives. Then create a new instance of your class, and access RpcCatalog property of WampChannel&amp;rsquo;s RealmProxy, then call Invoke of your desired method with desired parameters.</description></item><item><title>Reflection-based Caller</title><link>https://wampsharp.net/wamp2/roles/caller/reflection-based-caller/</link><pubDate>Sun, 30 Jul 2017 00:16:09 +0300</pubDate><guid>https://wampsharp.net/wamp2/roles/caller/reflection-based-caller/</guid><description>Reflection-based Caller (or &amp;ldquo;Callee proxy&amp;rdquo;) allows you to call callee methods of a WAMP realm, by declaring an interface with methods decorated with a [WampProcedure] attribute.
 The interface must be public.
-Basic usage public interface IArgumentsService{[WampProcedure(&amp;#34;com.arguments.add2&amp;#34;)]int Add2(int a, int b);}public static void Run(){DefaultWampChannelFactory factory =new DefaultWampChannelFactory();const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;;IWampChannel channel =factory.CreateJsonChannel(serverAddress, &amp;#34;realm1&amp;#34;);channel.Open().Wait(5000);IArgumentsService proxy =channel.RealmProxy.Services.GetCalleeProxy&amp;lt;IArgumentsService&amp;gt;();int five = proxy.</description>
-    </item>
-    
-  </channel>
-</rss>
+Basic usage public interface IArgumentsService { [WampProcedure(&amp;#34;com.arguments.add2&amp;#34;)] int Add2(int a, int b); } public static void Run() { DefaultWampChannelFactory factory = new DefaultWampChannelFactory(); const string serverAddress = &amp;#34;ws://127.0.0.1:8080/ws&amp;#34;; IWampChannel channel = factory.CreateJsonChannel(serverAddress, &amp;#34;realm1&amp;#34;); channel.Open().Wait(5000); IArgumentsService proxy = channel.RealmProxy.Services.GetCalleeProxy&amp;lt;IArgumentsService&amp;gt;(); int five = proxy.</description></item></channel></rss>

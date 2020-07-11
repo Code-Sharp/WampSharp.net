@@ -1,740 +1,258 @@
-<!DOCTYPE html>
-
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="alternate" href="/index.xml" type="application/rss+xml" title="WampSharp">
-		<link rel="icon" href="https://wampsharp.net/favicon.ico">
-		<title>WampSharp v1.2.6.41-beta release notes - WampSharp</title>
-		
-		<link rel="stylesheet" href="https://wampsharp.net/css/highlight/github.css">
-		<link rel="stylesheet" href="https://wampsharp.net/css/bootstrap.min.css">
-		<link rel="stylesheet" href="https://wampsharp.net/css/bootstrap-theme.min.css">
-		<link rel="stylesheet" href="https://wampsharp.net/css/theme.css">
-		<link rel="stylesheet" href="https://wampsharp.net/css/bootie-docs.css">
-		<link rel="stylesheet" href="https://wampsharp.net/css/site.css">
-	</head>
-
-<body role="document">
-
-	
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="https://wampsharp.net/">WampSharp</a>
-			</div>
-			<div id="navbar" class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li ><a href="https://wampsharp.net/">Home</a></li>
-			
-			
-				
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Categories<span class="caret"></span></a>
-						<ul class="dropdown-menu" role="menu">
-						
-							<li><a href="https://wampsharp.net/categories/authentication">Authentication</a></li>
-						
-							<li><a href="https://wampsharp.net/categories/callee">Callee</a></li>
-						
-							<li><a href="https://wampsharp.net/categories/caller">Caller</a></li>
-						
-							<li><a href="https://wampsharp.net/categories/client">Client</a></li>
-						
-							<li><a href="https://wampsharp.net/categories/getting-started">Getting-Started</a></li>
-						
-							<li><a href="https://wampsharp.net/categories/publisher">Publisher</a></li>
-						
-							<li><a href="https://wampsharp.net/categories/release-notes">Release-Notes</a></li>
-						
-							<li><a href="https://wampsharp.net/categories/roadmap">Roadmap</a></li>
-						
-							<li><a href="https://wampsharp.net/categories/router">Router</a></li>
-						
-							<li><a href="https://wampsharp.net/categories/subscriber">Subscriber</a></li>
-						
-							<li><a href="https://wampsharp.net/categories/wamp1">Wamp1</a></li>
-						
-						</ul>
-					</li>
-				
-				</ul>
-				
-			</div>
-		</div>
-	</nav>
-
-<div class="container">
-
-
-<div class="row">
-	<div class="col-sm-8 doc-main">
-		<main role="main">
-			<article>
-				<a id="title"></a>
-				<h1 class="doc-entry-title">WampSharp v1.2.6.41-beta release notes</h1>
-				<div class="doc-entry-meta">
-					<span><time datetime="2017-08-08">August 08, 2017</time></span>
-				</div>
-				<section>
-					<h2 id="new-features">New features</h2>
-<h3 id="new-transports">New transports</h3>
-<p>A few router-side WebSockets transports have been added in this version. These include <a href="https://wampsharp.net/wamp2/router/transports/websocket/#wampsharp-httplistener">HttpListener based transport</a>, <a href="https://wampsharp.net/wamp2/router/transports/websocket/#wampsharp-aspnet-websockets-server">ASP.NET based transport</a> and <a href="https://wampsharp.net/wamp2/router/transports/websocket/#wampsharp-owin">Microsoft.Owin based transport</a>.</p>
-<h3 id="cancelinterrupt-support">CANCEL/INTERRUPT support</h3>
-<p>CANCEL/INTERRUPT support has been added to <a href="http://crossbar.io/">Crossbar</a> <a href="https://github.com/crossbario/crossbar/pull/1111">recently</a>. From this version, WampSharp supports rpc cancellations, both on router-side and on client-side.</p>
-<h4 id="reflection-based-callercallee-cancellation-support">Reflection based caller/callee cancellation support</h4>
-<p>Cancellation is supported for reflection based caller and callee via the <a href="https://msdn.microsoft.com/en-us/library/system.threading.cancellationtoken(v=vs.110).aspx">CancellationToken api</a>. In order to declare a callee procedure which supports cancellation, declare an async method which receives as its last argument a CancellationToken:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CancellableOpService</span>
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel=alternate href=/index.xml type=application/rss+xml title=WampSharp><link rel=icon href=https://wampsharp.net/favicon.ico><title>WampSharp v1.2.6.41-beta release notes - WampSharp</title><link rel=stylesheet href=https://wampsharp.net/css/highlight/github.css><link rel=stylesheet href=https://wampsharp.net/css/bootstrap.min.css><link rel=stylesheet href=https://wampsharp.net/css/bootstrap-theme.min.css><link rel=stylesheet href=https://wampsharp.net/css/theme.css><link rel=stylesheet href=https://wampsharp.net/css/bootie-docs.css><link rel=stylesheet href=https://wampsharp.net/css/site.css></head><body role=document><nav class="navbar navbar-inverse navbar-fixed-top"><div class=container><div class=navbar-header><button type=button class="navbar-toggle collapsed" data-toggle=collapse data-target=#navbar aria-expanded=false aria-controls=navbar>
+<span class=sr-only>Toggle navigation</span>
+<span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span></button>
+<a class=navbar-brand href=https://wampsharp.net/>WampSharp</a></div><div id=navbar class="navbar-collapse collapse"><ul class="nav navbar-nav"><li><a href=https://wampsharp.net/>Home</a></li><li class=dropdown><a href=# class=dropdown-toggle data-toggle=dropdown role=button aria-expanded=false>Categories<span class=caret></span></a><ul class=dropdown-menu role=menu><li><a href=https://wampsharp.net/categories/authentication>Authentication</a></li><li><a href=https://wampsharp.net/categories/callee>Callee</a></li><li><a href=https://wampsharp.net/categories/caller>Caller</a></li><li><a href=https://wampsharp.net/categories/client>Client</a></li><li><a href=https://wampsharp.net/categories/getting-started>Getting-Started</a></li><li><a href=https://wampsharp.net/categories/publisher>Publisher</a></li><li><a href=https://wampsharp.net/categories/release-notes>Release-Notes</a></li><li><a href=https://wampsharp.net/categories/roadmap>Roadmap</a></li><li><a href=https://wampsharp.net/categories/router>Router</a></li><li><a href=https://wampsharp.net/categories/subscriber>Subscriber</a></li><li><a href=https://wampsharp.net/categories/wamp1>Wamp1</a></li></ul></li></ul></div></div></nav><div class=container><div class=row><div class="col-sm-8 doc-main"><main role=main><article><a id=title></a><h1 class=doc-entry-title>WampSharp v1.2.6.41-beta release notes</h1><div class=doc-entry-meta><span><time datetime=2017-08-08>August 08, 2017</time></span></div><section><h2 id=new-features>New features</h2><h3 id=new-transports>New transports</h3><p>A few router-side WebSockets transports have been added in this version. These include <a href=https://wampsharp.net/wamp2/router/transports/websocket/#wampsharp-httplistener>HttpListener based transport</a>, <a href=https://wampsharp.net/wamp2/router/transports/websocket/#wampsharp-aspnet-websockets-server>ASP.NET based transport</a> and <a href=https://wampsharp.net/wamp2/router/transports/websocket/#wampsharp-owin>Microsoft.Owin based transport</a>.</p><h3 id=cancelinterrupt-support>CANCEL/INTERRUPT support</h3><p>CANCEL/INTERRUPT support has been added to <a href=http://crossbar.io/>Crossbar</a> <a href=https://github.com/crossbario/crossbar/pull/1111>recently</a>. From this version, WampSharp supports rpc cancellations, both on router-side and on client-side.</p><h4 id=reflection-based-callercallee-cancellation-support>Reflection based caller/callee cancellation support</h4><p>Cancellation is supported for reflection based caller and callee via the <a href="https://msdn.microsoft.com/en-us/library/system.threading.cancellationtoken(v=vs.110).aspx">CancellationToken api</a>. In order to declare a callee procedure which supports cancellation, declare an async method which receives as its last argument a CancellationToken:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>CancellableOpService</span>
 {
-<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.cancellableop&#34;)]</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;<span style="color:#66d9ef">int</span>&gt; CancellableOp(<span style="color:#66d9ef">int</span> n, CancellationToken token)
+<span style=color:#a6e22e>    [WampProcedure(&#34;com.myapp.cancellableop&#34;)]</span>
+    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>async</span> Task&lt;<span style=color:#66d9ef>int</span>&gt; CancellableOp(<span style=color:#66d9ef>int</span> n, CancellationToken token)
     {
-        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; n; i++)
+        <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i = <span style=color:#ae81ff>0</span>; i &lt; n; i++)
         {
-            <span style="color:#66d9ef">if</span> (token.IsCancellationRequested)
+            <span style=color:#66d9ef>if</span> (token.IsCancellationRequested)
             {
-                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampRpcCanceledException(<span style="color:#e6db74">$&#34; {i * 100.0 / n}% of the work was done&#34;</span>);
+                <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> WampRpcCanceledException(<span style=color:#e6db74>$&#34; {i * 100.0 / n}% of the work was done&#34;</span>);
             }
 
-            <span style="color:#66d9ef">await</span> Task.Delay(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>, token);
+            <span style=color:#66d9ef>await</span> Task.Delay(<span style=color:#ae81ff>100</span>, token);
         }
 
-        <span style="color:#66d9ef">return</span> n;
+        <span style=color:#66d9ef>return</span> n;
     }
 }
-</code></pre></div><blockquote>
-<p><strong>Note</strong>: This works also with progressive call results:</p>
-</blockquote>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LongCancellableOpService</span>
+</code></pre></div><blockquote><p><strong>Note</strong>: This works also with progressive call results:</p></blockquote><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>LongCancellableOpService</span>
 {
-<span style="color:#a6e22e">    [WampProgressiveResultProcedure]</span>
-<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.longop&#34;)]</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">async</span> Task&lt;<span style="color:#66d9ef">int</span>&gt; LongCancellableOp(<span style="color:#66d9ef">int</span> n, IProgress&lt;<span style="color:#66d9ef">int</span>&gt; progress, CancellationToken token)
+<span style=color:#a6e22e>    [WampProgressiveResultProcedure]</span>
+<span style=color:#a6e22e>    [WampProcedure(&#34;com.myapp.longop&#34;)]</span>
+    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>async</span> Task&lt;<span style=color:#66d9ef>int</span>&gt; LongCancellableOp(<span style=color:#66d9ef>int</span> n, IProgress&lt;<span style=color:#66d9ef>int</span>&gt; progress, CancellationToken token)
     {
-        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; n; i++)
+        <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i = <span style=color:#ae81ff>0</span>; i &lt; n; i++)
         {
-            <span style="color:#66d9ef">if</span> (token.IsCancellationRequested)
+            <span style=color:#66d9ef>if</span> (token.IsCancellationRequested)
             {
-                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> WampRpcCanceledException(<span style="color:#e6db74">$&#34; {i * 100.0 / n}% of the work was done&#34;</span>);
+                <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> WampRpcCanceledException(<span style=color:#e6db74>$&#34; {i * 100.0 / n}% of the work was done&#34;</span>);
             }
 
             progress.Report(i);
-            <span style="color:#66d9ef">await</span> Task.Delay(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>, token);
+            <span style=color:#66d9ef>await</span> Task.Delay(<span style=color:#ae81ff>100</span>, token);
         }
 
-        <span style="color:#66d9ef">return</span> n;
+        <span style=color:#66d9ef>return</span> n;
     }
 }
-</code></pre></div><p>In order to cancel a pending rpc invocation from a WAMP caller using the callee proxy api, declare an interface containing an async method receiving a CancellationToken as its last parameter:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> ICancellableOpService
+</code></pre></div><p>In order to cancel a pending rpc invocation from a WAMP caller using the callee proxy api, declare an interface containing an async method receiving a CancellationToken as its last parameter:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> ICancellableOpService
 {
-<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.cancellableop&#34;)]</span>
-    Task&lt;<span style="color:#66d9ef">int</span>&gt; CancellableOp(<span style="color:#66d9ef">int</span> n, CancellationToken token);
+<span style=color:#a6e22e>    [WampProcedure(&#34;com.myapp.cancellableop&#34;)]</span>
+    Task&lt;<span style=color:#66d9ef>int</span>&gt; CancellableOp(<span style=color:#66d9ef>int</span> n, CancellationToken token);
 }
-</code></pre></div><p>Then pass a CancellationToken to the method call, this is usually done using CancellationTokenSource. Call CancellationTokenSource.Cancel in order to cancel the invocation.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">ICancellableOpService proxy =
+</code></pre></div><p>Then pass a CancellationToken to the method call, this is usually done using CancellationTokenSource. Call CancellationTokenSource.Cancel in order to cancel the invocation.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp>ICancellableOpService proxy =
     channel.RealmProxy.Services.GetCalleeProxy&lt;ICancellableOpService&gt;();
 
-CancellationTokenSource cancellationTokenSource = <span style="color:#66d9ef">new</span> CancellationTokenSource();
+CancellationTokenSource cancellationTokenSource = <span style=color:#66d9ef>new</span> CancellationTokenSource();
 
-Task&lt;<span style="color:#66d9ef">int</span>&gt; invocationTask = proxy.CancellableOp(<span style="color:#ae81ff">4</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">9</span><span style="color:#ae81ff">6</span>, cancellationTokenSource.Token);
+Task&lt;<span style=color:#66d9ef>int</span>&gt; invocationTask = proxy.CancellableOp(<span style=color:#ae81ff>4096</span>, cancellationTokenSource.Token);
 
-<span style="color:#75715e">// Cancel the operation
-</span><span style="color:#75715e"></span>cancellationTokenSource.Cancel();
+<span style=color:#75715e>// Cancel the operation
+</span><span style=color:#75715e></span>cancellationTokenSource.Cancel();
 
-<span style="color:#66d9ef">await</span> invocationTask.ConfigureAwait(<span style="color:#66d9ef">false</span>);
-</code></pre></div><blockquote>
-<p><strong>Note</strong>: This works also with progressive call results:</p>
-</blockquote>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> ILongCancellableOpService
+<span style=color:#66d9ef>await</span> invocationTask.ConfigureAwait(<span style=color:#66d9ef>false</span>);
+</code></pre></div><blockquote><p><strong>Note</strong>: This works also with progressive call results:</p></blockquote><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> ILongCancellableOpService
 {
-<span style="color:#a6e22e">    [WampProcedure(&#34;com.myapp.cancellableop&#34;)]</span>
-    Task&lt;<span style="color:#66d9ef">int</span>&gt; LongCancellableOp(<span style="color:#66d9ef">int</span> n, IProgress&lt;<span style="color:#66d9ef">int</span>&gt; progress, CancellationToken token);
+<span style=color:#a6e22e>    [WampProcedure(&#34;com.myapp.cancellableop&#34;)]</span>
+    Task&lt;<span style=color:#66d9ef>int</span>&gt; LongCancellableOp(<span style=color:#66d9ef>int</span> n, IProgress&lt;<span style=color:#66d9ef>int</span>&gt; progress, CancellationToken token);
 }
-</code></pre></div><blockquote>
-<p>Cancellation:</p>
-</blockquote>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">ILongCancellableOpService proxy =
+</code></pre></div><blockquote><p>Cancellation:</p></blockquote><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp>ILongCancellableOpService proxy =
     channel.RealmProxy.Services.GetCalleeProxy&lt;ILongCancellableOpService&gt;();
 
-CancellationTokenSource cancellationTokenSource = <span style="color:#66d9ef">new</span> CancellationTokenSource();
+CancellationTokenSource cancellationTokenSource = <span style=color:#66d9ef>new</span> CancellationTokenSource();
 
-Task&lt;<span style="color:#66d9ef">int</span>&gt; invocationTask = proxy.LongCancellableOp(<span style="color:#ae81ff">4</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">9</span><span style="color:#ae81ff">6</span>, <span style="color:#66d9ef">new</span> MyProgress(), cancellationTokenSource.Token);
+Task&lt;<span style=color:#66d9ef>int</span>&gt; invocationTask = proxy.LongCancellableOp(<span style=color:#ae81ff>4096</span>, <span style=color:#66d9ef>new</span> MyProgress(), cancellationTokenSource.Token);
 
-<span style="color:#75715e">// Cancel the operation
-</span><span style="color:#75715e"></span>cancellationTokenSource.Cancel();
+<span style=color:#75715e>// Cancel the operation
+</span><span style=color:#75715e></span>cancellationTokenSource.Cancel();
 
-<span style="color:#66d9ef">await</span> invocationTask.ConfigureAwait(<span style="color:#66d9ef">false</span>);
-</code></pre></div><h3 id="subscriber-authidauthrole-based-blackwhite-listing-issue-119httpsgithubcomcode-sharpwampsharpissues119">Subscriber authid/authrole based black/white-listing (<a href="https://github.com/Code-Sharp/WampSharp/issues/119">Issue #119</a>)</h3>
-<p>From this version, <a href="http://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#rfc.section.14.4.1.3">subscriber authid/authrole based black/white-listing</a> is supported.</p>
-<p>Usage example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#75715e">// Alice
-</span><span style="color:#75715e"></span>IWampTopicProxy aliceHeartBeat =
-    aliceChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style="color:#e6db74">&#34;public.heartbeat.alice&#34;</span>);
+<span style=color:#66d9ef>await</span> invocationTask.ConfigureAwait(<span style=color:#66d9ef>false</span>);
+</code></pre></div><h3 id=subscriber-authidauthrole-based-blackwhite-listing-issue-119httpsgithubcomcode-sharpwampsharpissues119>Subscriber authid/authrole based black/white-listing (<a href=https://github.com/Code-Sharp/WampSharp/issues/119>Issue #119</a>)</h3><p>From this version, <a href=http://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#rfc.section.14.4.1.3>subscriber authid/authrole based black/white-listing</a> is supported.</p><p>Usage example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#75715e>// Alice
+</span><span style=color:#75715e></span>IWampTopicProxy aliceHeartBeat =
+    aliceChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style=color:#e6db74>&#34;public.heartbeat.alice&#34;</span>);
 
-aliceHeartBeat.Publish(<span style="color:#66d9ef">new</span> PublishOptions() { ExcludeMe = <span style="color:#66d9ef">false</span>, ExcludeAuthenticationIds = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">string</span>[] { <span style="color:#e6db74">&#34;bob&#34;</span> } }, <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] { <span style="color:#e6db74">&#34;From C#&#34;</span> });
+aliceHeartBeat.Publish(<span style=color:#66d9ef>new</span> PublishOptions() { ExcludeMe = <span style=color:#66d9ef>false</span>, ExcludeAuthenticationIds = <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>string</span>[] { <span style=color:#e6db74>&#34;bob&#34;</span> } }, <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>object</span>[] { <span style=color:#e6db74>&#34;From C#&#34;</span> });
 
-<span style="color:#75715e">// Bob
-</span><span style="color:#75715e"></span>IWampTopicProxy bobHeartBeat =
-    bobChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style="color:#e6db74">&#34;public.heartbeat.bob&#34;</span>);
+<span style=color:#75715e>// Bob
+</span><span style=color:#75715e></span>IWampTopicProxy bobHeartBeat =
+    bobChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style=color:#e6db74>&#34;public.heartbeat.bob&#34;</span>);
 
-bobHeartBeat.Publish(<span style="color:#66d9ef">new</span> PublishOptions() { ExcludeAuthenticationRoles = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">string</span>[] { <span style="color:#e6db74">&#34;beta&#34;</span> } }, <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] { <span style="color:#e6db74">&#34;From C#&#34;</span> });
+bobHeartBeat.Publish(<span style=color:#66d9ef>new</span> PublishOptions() { ExcludeAuthenticationRoles = <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>string</span>[] { <span style=color:#e6db74>&#34;beta&#34;</span> } }, <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>object</span>[] { <span style=color:#e6db74>&#34;From C#&#34;</span> });
 
-<span style="color:#75715e">// Carol
-</span><span style="color:#75715e"></span>IWampTopicProxy carolHeartBeat =
-    carolChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style="color:#e6db74">&#34;public.heartbeat.carol&#34;</span>);
+<span style=color:#75715e>// Carol
+</span><span style=color:#75715e></span>IWampTopicProxy carolHeartBeat =
+    carolChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style=color:#e6db74>&#34;public.heartbeat.carol&#34;</span>);
 
-carolHeartBeat.Publish(<span style="color:#66d9ef">new</span> PublishOptions(), <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] { <span style="color:#e6db74">&#34;From C#&#34;</span> });
+carolHeartBeat.Publish(<span style=color:#66d9ef>new</span> PublishOptions(), <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>object</span>[] { <span style=color:#e6db74>&#34;From C#&#34;</span> });
 
-<span style="color:#75715e">// Dave
-</span><span style="color:#75715e"></span>IWampTopicProxy daveHeartBeat =
-    daveChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style="color:#e6db74">&#34;public.heartbeat.dave&#34;</span>);
+<span style=color:#75715e>// Dave
+</span><span style=color:#75715e></span>IWampTopicProxy daveHeartBeat =
+    daveChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style=color:#e6db74>&#34;public.heartbeat.dave&#34;</span>);
 
-daveHeartBeat.Publish(<span style="color:#66d9ef">new</span> PublishOptions() { ExcludeAuthenticationIds = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">string</span>[] { <span style="color:#e6db74">&#34;alice&#34;</span>, <span style="color:#e6db74">&#34;bob&#34;</span> } }, <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] { <span style="color:#e6db74">&#34;From C#&#34;</span> });
+daveHeartBeat.Publish(<span style=color:#66d9ef>new</span> PublishOptions() { ExcludeAuthenticationIds = <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>string</span>[] { <span style=color:#e6db74>&#34;alice&#34;</span>, <span style=color:#e6db74>&#34;bob&#34;</span> } }, <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>object</span>[] { <span style=color:#e6db74>&#34;From C#&#34;</span> });
 
-<span style="color:#75715e">// Erin
-</span><span style="color:#75715e"></span>IWampTopicProxy erinHeartBeat =
-    erinChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style="color:#e6db74">&#34;public.heartbeat.erin&#34;</span>);
+<span style=color:#75715e>// Erin
+</span><span style=color:#75715e></span>IWampTopicProxy erinHeartBeat =
+    erinChannel.RealmProxy.TopicContainer.GetTopicByUri(<span style=color:#e6db74>&#34;public.heartbeat.erin&#34;</span>);
 
-erinHeartBeat.Publish(<span style="color:#66d9ef">new</span> PublishOptions() { ExcludeMe = <span style="color:#66d9ef">false</span>, EligibleAuthenticationIds = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">string</span>[] { <span style="color:#e6db74">&#34;alice&#34;</span>, <span style="color:#e6db74">&#34;bob&#34;</span>, <span style="color:#e6db74">&#34;dave&#34;</span> } }, <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] { <span style="color:#e6db74">&#34;From C#&#34;</span> });
-erinHeartBeat.Publish(<span style="color:#66d9ef">new</span> PublishOptions() { ExcludeMe = <span style="color:#66d9ef">false</span>, EligibleAuthenticationRoles = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">string</span>[] { <span style="color:#e6db74">&#34;beta&#34;</span> } }, <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] { <span style="color:#e6db74">&#34;From C#&#34;</span> });
-</code></pre></div><blockquote>
-<p>The sample code is based on <a href="https://github.com/crossbario/crossbar-examples/tree/db85ad1b7f517d5ab46bf239559fa9155e599817/exclude_subscribers">this Crossbar example</a>.</p>
-</blockquote>
-<h3 id="testament-service">Testament service</h3>
-<p>From this version, the <a href="http://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#rfc.section.14.4.11">Testament feature</a> is supported.</p>
-<p>This feature allows a client to request the router to publish some predefined events when the client disconnects.</p>
-<p>In order to enable it from router-side, call HostTestamentService extension method of the relevant realm (this is similiar to the <a href="https://wampsharp.net/wamp2/meta-api-service/#exposing-meta-api">Router-side meta-api usage</a>):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp">DefaultWampHost host = <span style="color:#66d9ef">new</span> DefaultWampHost(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>);
+erinHeartBeat.Publish(<span style=color:#66d9ef>new</span> PublishOptions() { ExcludeMe = <span style=color:#66d9ef>false</span>, EligibleAuthenticationIds = <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>string</span>[] { <span style=color:#e6db74>&#34;alice&#34;</span>, <span style=color:#e6db74>&#34;bob&#34;</span>, <span style=color:#e6db74>&#34;dave&#34;</span> } }, <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>object</span>[] { <span style=color:#e6db74>&#34;From C#&#34;</span> });
+erinHeartBeat.Publish(<span style=color:#66d9ef>new</span> PublishOptions() { ExcludeMe = <span style=color:#66d9ef>false</span>, EligibleAuthenticationRoles = <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>string</span>[] { <span style=color:#e6db74>&#34;beta&#34;</span> } }, <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>object</span>[] { <span style=color:#e6db74>&#34;From C#&#34;</span> });
+</code></pre></div><blockquote><p>The sample code is based on <a href=https://github.com/crossbario/crossbar-examples/tree/db85ad1b7f517d5ab46bf239559fa9155e599817/exclude_subscribers>this Crossbar example</a>.</p></blockquote><h3 id=testament-service>Testament service</h3><p>From this version, the <a href=http://wamp-proto.org/static/rfc/draft-oberstet-hybi-crossbar-wamp.html#rfc.section.14.4.11>Testament feature</a> is supported.</p><p>This feature allows a client to request the router to publish some predefined events when the client disconnects.</p><p>In order to enable it from router-side, call HostTestamentService extension method of the relevant realm (this is similiar to the <a href=https://wampsharp.net/wamp2/meta-api-service/#exposing-meta-api>Router-side meta-api usage</a>):</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp>DefaultWampHost host = <span style=color:#66d9ef>new</span> DefaultWampHost(<span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>);
 
-IWampHostedRealm realm = host.RealmContainer.GetRealmByName(<span style="color:#e6db74">&#34;realm1&#34;</span>);
+IWampHostedRealm realm = host.RealmContainer.GetRealmByName(<span style=color:#e6db74>&#34;realm1&#34;</span>);
 
 IDisposable disposable = realm.HostTestamentService();
 
-<span style="color:#75715e">// Uncomment to unregister the Testament service. 
-</span><span style="color:#75715e"></span><span style="color:#75715e">// disposable.Dispose(); 
-</span><span style="color:#75715e"></span>
+<span style=color:#75715e>// Uncomment to unregister the Testament service. 
+</span><span style=color:#75715e>// disposable.Dispose(); 
+</span><span style=color:#75715e></span>
 host.Open();
-</code></pre></div><p>In order to consume the Testament service, one can define its contract and consume it using the CalleeProxy method. Another option is to use the GetTestamentServiceProxy extension method of IWampRealmProxy which returns such a proxy:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
+</code></pre></div><p>In order to consume the Testament service, one can define its contract and consume it using the CalleeProxy method. Another option is to use the GetTestamentServiceProxy extension method of IWampRealmProxy which returns such a proxy:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Run()
 {
-    WampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> WampChannelFactory();
+    WampChannelFactory channelFactory = <span style=color:#66d9ef>new</span> WampChannelFactory();
 
     IWampChannel channel =
-        channelFactory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
-                      .WebSocketTransport(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>)
+        channelFactory.ConnectToRealm(<span style=color:#e6db74>&#34;realm1&#34;</span>)
+                      .WebSocketTransport(<span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>)
                       .JsonSerialization()
                       .Build();
 
-    <span style="color:#66d9ef">long?</span> sessionId = <span style="color:#66d9ef">null</span>;
+    <span style=color:#66d9ef>long?</span> sessionId = <span style=color:#66d9ef>null</span>;
 
     channel.RealmProxy.Monitor.ConnectionEstablished += (sender, args) =&gt; { sessionId = args.SessionId; }; 
 
-    <span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
+    <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
     IWampTestamentServiceProxy proxy = channel.RealmProxy.GetTestamentServiceProxy();
 
-    <span style="color:#66d9ef">string</span> testamentTopic = <span style="color:#e6db74">&#34;com.example.testament&#34;</span>;
+    <span style=color:#66d9ef>string</span> testamentTopic = <span style=color:#e6db74>&#34;com.example.testament&#34;</span>;
 
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; <span style="color:#ae81ff">5</span>; ++i)
+    <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i = <span style=color:#ae81ff>0</span>; i &lt; <span style=color:#ae81ff>5</span>; ++i)
     {
-        <span style="color:#66d9ef">object</span>[] testamentArgs = <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[] {<span style="color:#e6db74">&#34;this is my testament!&#34;</span>};
+        <span style=color:#66d9ef>object</span>[] testamentArgs = <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>object</span>[] {<span style=color:#e6db74>&#34;this is my testament!&#34;</span>};
 
-        Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">object</span>&gt; testamentKwArgs =
-            <span style="color:#66d9ef">new</span> Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">object</span>&gt; {{<span style="color:#e6db74">&#34;foo&#34;</span>, i}, {<span style="color:#e6db74">&#34;bar&#34;</span>, <span style="color:#e6db74">&#34;baz&#34;</span>}, {<span style="color:#e6db74">&#34;sess&#34;</span>, sessionId}};
+        Dictionary&lt;<span style=color:#66d9ef>string</span>, <span style=color:#66d9ef>object</span>&gt; testamentKwArgs =
+            <span style=color:#66d9ef>new</span> Dictionary&lt;<span style=color:#66d9ef>string</span>, <span style=color:#66d9ef>object</span>&gt; {{<span style=color:#e6db74>&#34;foo&#34;</span>, i}, {<span style=color:#e6db74>&#34;bar&#34;</span>, <span style=color:#e6db74>&#34;baz&#34;</span>}, {<span style=color:#e6db74>&#34;sess&#34;</span>, sessionId}};
 
-        <span style="color:#66d9ef">try</span>
+        <span style=color:#66d9ef>try</span>
         {
-            <span style="color:#66d9ef">await</span> proxy.AddTestamentAsync(testamentTopic, testamentArgs, testamentKwArgs)
-                       .ConfigureAwait(<span style="color:#66d9ef">false</span>);
+            <span style=color:#66d9ef>await</span> proxy.AddTestamentAsync(testamentTopic, testamentArgs, testamentKwArgs)
+                       .ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
-            Console.WriteLine(<span style="color:#e6db74">&#34;testament added&#34;</span>);
+            Console.WriteLine(<span style=color:#e6db74>&#34;testament added&#34;</span>);
         }
-        <span style="color:#66d9ef">catch</span> (Exception ex)
+        <span style=color:#66d9ef>catch</span> (Exception ex)
         {
-            Console.WriteLine(<span style="color:#e6db74">&#34;adding testament failed! &#34;</span> + ex);
+            Console.WriteLine(<span style=color:#e6db74>&#34;adding testament failed! &#34;</span> + ex);
         }
     }
 
-    Console.WriteLine(<span style="color:#e6db74">@&#34;Press any key to close channel. 5 events should be published to &#34;&#34;com.example.testament&#34;&#34;&#34;</span>);
+    Console.WriteLine(<span style=color:#e6db74>@&#34;Press any key to close channel. 5 events should be published to &#34;&#34;com.example.testament&#34;&#34;&#34;</span>);
     Console.ReadKey();
     channel.Close();
 }
-</code></pre></div><blockquote>
-<p>This sample is based on this <a href="https://github.com/crossbario/crossbar-examples/tree/240c1f015990a859683a74de40e51a9f9ab3b5f9/pubsub/testament">Crossbar example</a>.</p>
-</blockquote>
-<h3 id="event-retention-support">Event Retention support</h3>
-<p>From this version WampSharp supports <a href="https://github.com/wamp-proto/wamp-proto/blob/da34d9bd833beeb6f9cc8bc89faf8138d710aa78/rfc/text/advanced/ap_pubsub_event_retention.md">Event Retention</a>, both on router-side and on client-side. This feature allows new subscribers of a given topic to receive upon subscribe the lastest retained event published to the topic before they subscribed to it.</p>
-<p>A subscriber can indicate that it is interested in getting the retained event by specifying <code>GetRetained = true</code> in the SubscribeOptions argument.</p>
-<p>A publisher can indicate that it is interested in retaining a publication by specifying <code>Retain = true</code> in the PublisherOptions argument.</p>
-<p>An example for a subscription which requests getting a retained event (Using <a href="https://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/">Reflection-based Subscriber</a>):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MySubscriber</span>
+</code></pre></div><blockquote><p>This sample is based on this <a href=https://github.com/crossbario/crossbar-examples/tree/240c1f015990a859683a74de40e51a9f9ab3b5f9/pubsub/testament>Crossbar example</a>.</p></blockquote><h3 id=event-retention-support>Event Retention support</h3><p>From this version WampSharp supports <a href=https://github.com/wamp-proto/wamp-proto/blob/da34d9bd833beeb6f9cc8bc89faf8138d710aa78/rfc/text/advanced/ap_pubsub_event_retention.md>Event Retention</a>, both on router-side and on client-side. This feature allows new subscribers of a given topic to receive upon subscribe the lastest retained event published to the topic before they subscribed to it.</p><p>A subscriber can indicate that it is interested in getting the retained event by specifying <code>GetRetained = true</code> in the SubscribeOptions argument.</p><p>A publisher can indicate that it is interested in retaining a publication by specifying <code>Retain = true</code> in the PublisherOptions argument.</p><p>An example for a subscription which requests getting a retained event (Using <a href=https://wampsharp.net/wamp2/roles/subscriber/reflection-based-subscriber/>Reflection-based Subscriber</a>):</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>MySubscriber</span>
 {
-<span style="color:#a6e22e">    [WampTopic(&#34;com.example.topic1&#34;)]</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> OnCounter(<span style="color:#66d9ef">int</span> counter)
+<span style=color:#a6e22e>    [WampTopic(&#34;com.example.topic1&#34;)]</span>
+    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> OnCounter(<span style=color:#66d9ef>int</span> counter)
     {
         EventDetails details = WampEventContext.Current.EventDetails;
 
-        <span style="color:#66d9ef">if</span> (details.Retained == <span style="color:#66d9ef">true</span>)
+        <span style=color:#66d9ef>if</span> (details.Retained == <span style=color:#66d9ef>true</span>)
         {
-            Console.WriteLine(<span style="color:#e6db74">&#34;RETAINED event received! &#34;</span> + counter);
+            Console.WriteLine(<span style=color:#e6db74>&#34;RETAINED event received! &#34;</span> + counter);
         }
-        <span style="color:#66d9ef">else</span>
+        <span style=color:#66d9ef>else</span>
         {
-            Console.WriteLine(<span style="color:#e6db74">&#34;regular event received &#34;</span> + counter);
+            Console.WriteLine(<span style=color:#e6db74>&#34;regular event received &#34;</span> + counter);
         }
     }
 }
 
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
+<span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Run()
 {
-    WampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> WampChannelFactory();
+    WampChannelFactory channelFactory = <span style=color:#66d9ef>new</span> WampChannelFactory();
 
     IWampChannel channel =
-        channelFactory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
-                      .WebSocketTransport(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>)
+        channelFactory.ConnectToRealm(<span style=color:#e6db74>&#34;realm1&#34;</span>)
+                      .WebSocketTransport(<span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>)
                       .JsonSerialization()
                       .Build();
 
-    <span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
+    <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
-    <span style="color:#66d9ef">try</span>
+    <span style=color:#66d9ef>try</span>
     {
         IAsyncDisposable disposable =
-            <span style="color:#66d9ef">await</span> channel.RealmProxy.Services.RegisterSubscriber(<span style="color:#66d9ef">new</span> MySubscriber(),
-                                                                 <span style="color:#66d9ef">new</span> SubscriberRegistrationInterceptor(
-                                                                     <span style="color:#66d9ef">new</span> SubscribeOptions()
+            <span style=color:#66d9ef>await</span> channel.RealmProxy.Services.RegisterSubscriber(<span style=color:#66d9ef>new</span> MySubscriber(),
+                                                                 <span style=color:#66d9ef>new</span> SubscriberRegistrationInterceptor(
+                                                                     <span style=color:#66d9ef>new</span> SubscribeOptions()
                                                                      {
-                                                                         GetRetained = <span style="color:#66d9ef">true</span>
+                                                                         GetRetained = <span style=color:#66d9ef>true</span>
                                                                      }))
-                         .ConfigureAwait(<span style="color:#66d9ef">false</span>);
+                         .ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
-        Console.WriteLine(<span style="color:#e6db74">&#34;subscribed successfully&#34;</span>);
+        Console.WriteLine(<span style=color:#e6db74>&#34;subscribed successfully&#34;</span>);
     }
-    <span style="color:#66d9ef">catch</span> (Exception ex)
+    <span style=color:#66d9ef>catch</span> (Exception ex)
     {
-        Console.WriteLine(<span style="color:#e6db74">&#34;failed to subscribed: &#34;</span> + ex);
-        <span style="color:#66d9ef">throw</span>;
+        Console.WriteLine(<span style=color:#e6db74>&#34;failed to subscribed: &#34;</span> + ex);
+        <span style=color:#66d9ef>throw</span>;
     }
 }
-</code></pre></div><p>An example for a publisher which publishes retained events (Using <a href="https://wampsharp.net/wamp2/roles/publisher/reflection-based-publisher/">Reflection-based Publisher</a>):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyPublisher</span>
+</code></pre></div><p>An example for a publisher which publishes retained events (Using <a href=https://wampsharp.net/wamp2/roles/publisher/reflection-based-publisher/>Reflection-based Publisher</a>):</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>MyPublisher</span>
 {
-    <span style="color:#66d9ef">public</span> MyPublisher()
+    <span style=color:#66d9ef>public</span> MyPublisher()
     {
-        IObservable&lt;<span style="color:#66d9ef">long</span>&gt; timer =
-            Observable.Timer(TimeSpan.FromMilliseconds(<span style="color:#ae81ff">0</span>),
-                             TimeSpan.FromMilliseconds(<span style="color:#ae81ff">2</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>));
+        IObservable&lt;<span style=color:#66d9ef>long</span>&gt; timer =
+            Observable.Timer(TimeSpan.FromMilliseconds(<span style=color:#ae81ff>0</span>),
+                             TimeSpan.FromMilliseconds(<span style=color:#ae81ff>2000</span>));
 
         timer.Select((x, i) =&gt; i)
              .Subscribe(i =&gt; OnCounter(i));
     }
-<span style="color:#a6e22e">
-</span><span style="color:#a6e22e">    [WampTopic(&#34;com.example.topic1&#34;)]</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">event</span> Action&lt;<span style="color:#66d9ef">int</span>&gt; Counter;
+<span style=color:#a6e22e>
+</span><span style=color:#a6e22e>    [WampTopic(&#34;com.example.topic1&#34;)]</span>
+    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>event</span> Action&lt;<span style=color:#66d9ef>int</span>&gt; Counter;
 
-    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> OnCounter(<span style="color:#66d9ef">int</span> obj)
+    <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>void</span> OnCounter(<span style=color:#66d9ef>int</span> obj)
     {
         Counter?.Invoke(obj);
     }
 }
 
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">async</span> Task Run()
+<span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>async</span> Task Run()
 {
-    WampChannelFactory channelFactory = <span style="color:#66d9ef">new</span> WampChannelFactory();
+    WampChannelFactory channelFactory = <span style=color:#66d9ef>new</span> WampChannelFactory();
 
     IWampChannel channel =
-        channelFactory.ConnectToRealm(<span style="color:#e6db74">&#34;realm1&#34;</span>)
-                      .WebSocketTransport(<span style="color:#e6db74">&#34;ws://127.0.0.1:8080/ws&#34;</span>)
+        channelFactory.ConnectToRealm(<span style=color:#e6db74>&#34;realm1&#34;</span>)
+                      .WebSocketTransport(<span style=color:#e6db74>&#34;ws://127.0.0.1:8080/ws&#34;</span>)
                       .JsonSerialization()
                       .Build();
 
-    <span style="color:#66d9ef">await</span> channel.Open().ConfigureAwait(<span style="color:#66d9ef">false</span>);
+    <span style=color:#66d9ef>await</span> channel.Open().ConfigureAwait(<span style=color:#66d9ef>false</span>);
 
-    channel.RealmProxy.Services.RegisterPublisher(<span style="color:#66d9ef">new</span> MyPublisher(),
-        <span style="color:#66d9ef">new</span> PublisherRegistrationInterceptor(<span style="color:#66d9ef">new</span> PublishOptions(){Retain = <span style="color:#66d9ef">true</span>}));
+    channel.RealmProxy.Services.RegisterPublisher(<span style=color:#66d9ef>new</span> MyPublisher(),
+        <span style=color:#66d9ef>new</span> PublisherRegistrationInterceptor(<span style=color:#66d9ef>new</span> PublishOptions(){Retain = <span style=color:#66d9ef>true</span>}));
 }
-</code></pre></div><blockquote>
-<p><strong>Note</strong>: These samples are based on this <a href="https://github.com/crossbario/crossbar-examples/tree/4d498d72ecc3d46a35f146c7c9244d5319cf7cb5/pubsub/retained">Crossbar example</a>.</p>
-</blockquote>
-<blockquote>
-<p><strong>Note</strong>: These samples only demonstrate the reflection-based api, but this also works with other overloads receiving SubscribeOptions/PublishOptions</p>
-</blockquote>
-<h2 id="internalbreaking-changes">Internal/Breaking changes</h2>
-<ul>
-<li>In order to support CANCEL/INTERRUPT, <code>IWampRpcOperation</code>'s <code>Invoke</code> methods now return <code>IWampCancellableInvocation</code>. If you don't want to support cancellation, you can simply return <code>null</code> from these methods.</li>
-<li>The following properties of <code>InvocationDetails</code> have been removed: <code>AuthenticationRole</code>, <code>AuthenticationId</code>, <code>AuthenticationMethod</code>. Instead, the following properties are available: <code>CallerAuthenticationRole</code>, <code>CallerAuthenticationId</code>. Similarly, the following properties of <code>EventDetails</code> have been removed: <code>AuthenticationRole</code>, <code>AuthenticationId</code>, <code>AuthenticationMethod</code>. Instead, the following properties are available: <code>PublisherAuthenticationRole</code>, <code>PublisherAuthenticationId</code>.
-This has been done in order to make WampSharp compatible with the <a href="https://github.com/wamp-proto/wamp-proto/issues/57#issuecomment-234710359">recent changes</a> done in Crossbar and Autobahn variants.</li>
-<li>Publishing to a topic having no subscribers no longer throws an exception and no longer sends a publish error to the publisher if the latter has requested publication acknowledgement. This is also Crossbar's behavior regarding topics without subscribers. This change also resolves <a href="https://github.com/Code-Sharp/WampSharp/issues/192">Issue #192</a> implicitly.</li>
-<li><a href="https://github.com/damianh/LibLog/">LibLog</a> has been modified with some performance optimizations (see Pull Requests <a href="https://github.com/damianh/LibLog/pull/140">#140</a> <a href="https://github.com/damianh/LibLog/pull/141">#141</a>).</li>
-</ul>
-
-				</section>
-			</article>
-		</main>
-	</div> 
-
-	
-
-<div class="col-sm-3 col-sm-offset-1 doc-sidebar">
-	<div id="sidebar">
-	<div class="sidebar-module">
-		<div class="sidebar-toc">
-			<h4 class="sidebar-heading">Table of Contents</h4>
-			<ul>
-				<li><strong><a href="#title">WampSharp v1.2.6.41-beta release notes</a></strong></li>
-			</ul>
-			<nav id="TableOfContents">
-  <ul>
-    <li><a href="#new-features">New features</a>
-      <ul>
-        <li><a href="#new-transports">New transports</a></li>
-        <li><a href="#cancelinterrupt-support">CANCEL/INTERRUPT support</a></li>
-        <li><a href="#subscriber-authidauthrole-based-blackwhite-listing-issue-119httpsgithubcomcode-sharpwampsharpissues119">Subscriber authid/authrole based black/white-listing (Issue #119)</a></li>
-        <li><a href="#testament-service">Testament service</a></li>
-        <li><a href="#event-retention-support">Event Retention support</a></li>
-      </ul>
-    </li>
-    <li><a href="#internalbreaking-changes">Internal/Breaking changes</a></li>
-  </ul>
-</nav>
-		</div>
-	</div>
-	<div class="sidebar-module">
-		<h4 class="sidebar-heading">Pages in Categories</h4>
-		<ul class="sidebar-category-list">
-		
-			<li>
-				<a href="https://wampsharp.net/categories/authentication">
-					<span class="doc-list-category">Authentication</span>
-				</a>
-				<ul>
-					<li><a href="/wamp2/client/client-side-authentication/">Client-side authentication</a>
-					</li>
-				
-					<li><a href="/wamp2/router/cookie-based-router-side-authentication/">Cookie based router-side authentication</a>
-					</li>
-				
-					<li><a href="/wamp2/router/router-side-authentication/">Router-side authentication</a>
-					</li>
-				
-					<li><a href="/wamp2/client/wamp-cra-client-side-authentication/">WAMP-CRA client side authentication</a>
-					</li>
-				
-					<li><a href="/wamp2/router/wamp-cra-router-side-authentication/">WAMP-CRA router-side authentication</a>
-					</li>
-				
-				</ul>
-			</li>
-		
-			<li>
-				<a href="https://wampsharp.net/categories/callee">
-					<span class="doc-list-category">Callee</span>
-				</a>
-				<ul>
-					<li><a href="/wamp2/roles/callee/getting-started-with-callee/">Getting started with Callee</a>
-					</li>
-				
-					<li><a href="/wamp2/roles/callee/raw-callee/">Raw Callee</a>
-					</li>
-				
-					<li><a href="/wamp2/roles/callee/reflection-based-callee/">Reflection-based Callee</a>
-					</li>
-				
-				</ul>
-			</li>
-		
-			<li>
-				<a href="https://wampsharp.net/categories/caller">
-					<span class="doc-list-category">Caller</span>
-				</a>
-				<ul>
-					<li><a href="/wamp2/roles/caller/getting-started-with-caller/">Getting started with Caller</a>
-					</li>
-				
-					<li><a href="/wamp2/roles/caller/raw-caller/">Raw Caller</a>
-					</li>
-				
-					<li><a href="/wamp2/roles/caller/reflection-based-caller/">Reflection-based Caller</a>
-					</li>
-				
-				</ul>
-			</li>
-		
-			<li>
-				<a href="https://wampsharp.net/categories/client">
-					<span class="doc-list-category">Client</span>
-				</a>
-				<ul>
-					<li><a href="/wamp2/router/transports/rawsocket/">RawSocket transport</a>
-					</li>
-				
-					<li><a href="/wamp2/client/client-side-authentication/">Client-side authentication</a>
-					</li>
-				
-					<li><a href="/wamp2/meta-api-service/">Meta-api descriptor service</a>
-					</li>
-				
-					<li><a href="/wamp2/testament-service/">Testament service</a>
-					</li>
-				
-					<li><a href="/wamp2/client/wamp-cra-client-side-authentication/">WAMP-CRA client side authentication</a>
-					</li>
-				
-					<li><a href="/wamp2/client/wampchannel/">WampChannel</a>
-					</li>
-				
-					<li><a href="/wamp2/client/wampchannelreconnector/">WampChannelReconnector</a>
-					</li>
-				
-				</ul>
-			</li>
-		
-			<li>
-				<a href="https://wampsharp.net/categories/getting-started">
-					<span class="doc-list-category">Getting-Started</span>
-				</a>
-				<ul>
-					<li><a href="/wamp2/roles/callee/getting-started-with-callee/">Getting started with Callee</a>
-					</li>
-				
-					<li><a href="/wamp2/roles/caller/getting-started-with-caller/">Getting started with Caller</a>
-					</li>
-				
-					<li><a href="/wamp2/roles/publisher/getting-started-with-publisher/">Getting started with Publisher</a>
-					</li>
-				
-					<li><a href="/wamp2/roles/subscriber/getting-started-with-subscriber/">Getting started with Subscriber</a>
-					</li>
-				
-					<li><a href="/wamp2/getting-started-with-wampv2/">Getting started with WAMPv2</a>
-					</li>
-				
-				</ul>
-			</li>
-		
-			<li>
-				<a href="https://wampsharp.net/categories/publisher">
-					<span class="doc-list-category">Publisher</span>
-				</a>
-				<ul>
-					<li><a href="/wamp2/roles/publisher/getting-started-with-publisher/">Getting started with Publisher</a>
-					</li>
-				
-					<li><a href="/wamp2/roles/publisher/raw-publisher/">Raw Publisher</a>
-					</li>
-				
-					<li><a href="/wamp2/roles/publisher/reflection-based-publisher/">Reflection-based Publisher</a>
-					</li>
-				
-					<li><a href="/wamp2/roles/publisher/rx-based-publisher/">Rx-based Publisher</a>
-					</li>
-				
-				</ul>
-			</li>
-		
-			<li>
-				<a href="https://wampsharp.net/categories/release-notes">
-					<span class="doc-list-category">Release-Notes</span>
-				</a>
-				<ul>
-					<li><a href="/release-notes/wampsharp-v20.1.1-release-notes/">WampSharp v20.1.1 release notes</a>
-					</li>
-				
-					<li><a href="/release-notes/wampsharp-v18.6.1-release-notes/">WampSharp v18.6.1 release notes</a>
-					</li>
-				
-					<li>
-						<span class="active">WampSharp v1.2.6.41-beta release notes</span>
-						</li>
-				
-					<li><a href="/release-notes/wampsharp-v1.2.5.21-beta-release-notes/">WampSharp v1.2.5.21-beta release notes</a>
-					</li>
-				
-					<li><a href="/release-notes/wampsharp-v1.2.4.18-beta-release-notes/">WampSharp v1.2.4.18-beta release notes</a>
-					</li>
-				
-					<li><a href="/release-notes/wampsharp-v1.2.3.12-beta-release-notes/">WampSharp v1.2.3.12-beta release notes</a>
-					</li>
-				
-					<li><a href="/release-notes/wampsharp-v1.2.2.8-beta-release-notes/">WampSharp v1.2.2.8-beta release notes</a>
-					</li>
-				
-					<li><a href="/release-notes/wampsharp-v1.2.1.6-beta-release-notes/">WampSharp v1.2.1.6-beta release notes</a>
-					</li>
-				
-				</ul>
-			</li>
-		
-			<li>
-				<a href="https://wampsharp.net/categories/roadmap">
-					<span class="doc-list-category">Roadmap</span>
-				</a>
-				<ul>
-					<li><a href="/roadmap/">Roadmap</a>
-					</li>
-				
-				</ul>
-			</li>
-		
-			<li>
-				<a href="https://wampsharp.net/categories/router">
-					<span class="doc-list-category">Router</span>
-				</a>
-				<ul>
-					<li><a href="/wamp2/router/transports/rawsocket/">RawSocket transport</a>
-					</li>
-				
-					<li><a href="/wamp2/router/transports/websocket/">WebSocket transports</a>
-					</li>
-				
-					<li><a href="/wamp2/router/cookie-based-router-side-authentication/">Cookie based router-side authentication</a>
-					</li>
-				
-					<li><a href="/wamp2/meta-api-service/">Meta-api descriptor service</a>
-					</li>
-				
-					<li><a href="/wamp2/router/router-side-authentication/">Router-side authentication</a>
-					</li>
-				
-					<li><a href="/wamp2/testament-service/">Testament service</a>
-					</li>
-				
-					<li><a href="/wamp2/router/wamp-cra-router-side-authentication/">WAMP-CRA router-side authentication</a>
-					</li>
-				
-					<li><a href="/wamp2/router/wamphost/">WampHost</a>
-					</li>
-				
-				</ul>
-			</li>
-		
-			<li>
-				<a href="https://wampsharp.net/categories/subscriber">
-					<span class="doc-list-category">Subscriber</span>
-				</a>
-				<ul>
-					<li><a href="/wamp2/roles/subscriber/getting-started-with-subscriber/">Getting started with Subscriber</a>
-					</li>
-				
-					<li><a href="/wamp2/roles/subscriber/raw-subscriber/">Raw Subscriber</a>
-					</li>
-				
-					<li><a href="/wamp2/roles/subscriber/reflection-based-subscriber/">Reflection-based Subscriber</a>
-					</li>
-				
-					<li><a href="/wamp2/roles/subscriber/rx-based-subscriber/">Rx-based Subscriber</a>
-					</li>
-				
-				</ul>
-			</li>
-		
-			<li>
-				<a href="https://wampsharp.net/categories/wamp1">
-					<span class="doc-list-category">Wamp1</span>
-				</a>
-				<ul>
-					<li><a href="/wamp1/getting-started-with-wampv1/">Getting started with WAMPv1</a>
-					</li>
-				
-					<li><a href="/wamp1/getting-started-with-wampv1-client/">Getting started with WAMPv1 client</a>
-					</li>
-				
-					<li><a href="/wamp1/notes-for-wampv1-users/">Notes for WAMP1 users</a>
-					</li>
-				
-					<li><a href="/wamp1/server-pubsub-hosting-wampv1/">Server PubSub hosting (WAMPv1)</a>
-					</li>
-				
-					<li><a href="/wamp1/server-rpc-hosting-wampv1/">Server RPC hosting (WAMPv1)</a>
-					</li>
-				
-				</ul>
-			</li>
-		
-		</ul>
-	</div>
-	<div class="sidebar-module">
-		<h4 class="sidebar-heading">Tags</h4>
-		<div class="tag-box">
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/authentication">authentication</a>
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/callee">callee</a>
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/caller">caller</a>
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/client">client</a>
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/publisher">publisher</a>
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/raw-api">raw-api</a>
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/reflection">reflection</a>
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/roadmap">roadmap</a>
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/router">router</a>
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/rx">rx</a>
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/services">services</a>
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/subscriber">subscriber</a>
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/transports">transports</a>
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/wamp1">wamp1</a>
-		
-			<a class="tag-item" href="https://wampsharp.net/tags/wampcra">wampcra</a>
-		
-		</div>
-	</div>
-	</div>
-</div>
-
-</div> 
-
-
-<hr />
-
-<div class="row">
-	<div class="col-sm-8">
-		<p class="doc-footer-em"><a href="#" onclick="resetSidebarPos()">Back to TOP</a></p>
-	</div>
-</div>
-
-</div> 
-
-<footer class="doc-footer">
-	<p class="doc-footer-em">Browse <strong><a href="https://github.com/Code-Sharp/WampSharp.net/">Repository</a></strong></p>
-	<p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p>
-	<p>Powered by <strong><a href="https://github.com/progrhyme/hugo-theme-bootie-docs">Bootie Docs</a></strong> - theme for <a href="http://gohugo.io/">Hugo</a> by <a href="https://github.com/progrhyme/">progrhyme</a>.</p>
-</footer>
-
-<script>
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-98663639-2', 'auto');
-	ga('send', 'pageview');
-</script>
-
-<script src="https://wampsharp.net/js/jquery.min.js"></script>
-<script src="https://wampsharp.net/js/bootstrap.min.js"></script>
-
-<script src="https://wampsharp.net/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-<script src="https://wampsharp.net/js/ie10-viewport-bug-workaround.js"></script>
-<script src="https://wampsharp.net/js/bootie-docs.js"></script>
-
-</body>
-</html>
+</code></pre></div><blockquote><p><strong>Note</strong>: These samples are based on this <a href=https://github.com/crossbario/crossbar-examples/tree/4d498d72ecc3d46a35f146c7c9244d5319cf7cb5/pubsub/retained>Crossbar example</a>.</p></blockquote><blockquote><p><strong>Note</strong>: These samples only demonstrate the reflection-based api, but this also works with other overloads receiving SubscribeOptions/PublishOptions</p></blockquote><h2 id=internalbreaking-changes>Internal/Breaking changes</h2><ul><li>In order to support CANCEL/INTERRUPT, <code>IWampRpcOperation</code>'s <code>Invoke</code> methods now return <code>IWampCancellableInvocation</code>. If you don&rsquo;t want to support cancellation, you can simply return <code>null</code> from these methods.</li><li>The following properties of <code>InvocationDetails</code> have been removed: <code>AuthenticationRole</code>, <code>AuthenticationId</code>, <code>AuthenticationMethod</code>. Instead, the following properties are available: <code>CallerAuthenticationRole</code>, <code>CallerAuthenticationId</code>. Similarly, the following properties of <code>EventDetails</code> have been removed: <code>AuthenticationRole</code>, <code>AuthenticationId</code>, <code>AuthenticationMethod</code>. Instead, the following properties are available: <code>PublisherAuthenticationRole</code>, <code>PublisherAuthenticationId</code>.
+This has been done in order to make WampSharp compatible with the <a href=https://github.com/wamp-proto/wamp-proto/issues/57#issuecomment-234710359>recent changes</a> done in Crossbar and Autobahn variants.</li><li>Publishing to a topic having no subscribers no longer throws an exception and no longer sends a publish error to the publisher if the latter has requested publication acknowledgement. This is also Crossbar&rsquo;s behavior regarding topics without subscribers. This change also resolves <a href=https://github.com/Code-Sharp/WampSharp/issues/192>Issue #192</a> implicitly.</li><li><a href=https://github.com/damianh/LibLog/>LibLog</a> has been modified with some performance optimizations (see Pull Requests <a href=https://github.com/damianh/LibLog/pull/140>#140</a> <a href=https://github.com/damianh/LibLog/pull/141>#141</a>).</li></ul></section></article></main></div><div class="col-sm-3 col-sm-offset-1 doc-sidebar"><div id=sidebar><div class=sidebar-module><div class=sidebar-toc><h4 class=sidebar-heading>Table of Contents</h4><ul><li><strong><a href=#title>WampSharp v1.2.6.41-beta release notes</a></strong></li></ul><nav id=TableOfContents><ul><li><a href=#new-features>New features</a><ul><li><a href=#new-transports>New transports</a></li><li><a href=#cancelinterrupt-support>CANCEL/INTERRUPT support</a></li><li><a href=#subscriber-authidauthrole-based-blackwhite-listing-issue-119httpsgithubcomcode-sharpwampsharpissues119>Subscriber authid/authrole based black/white-listing (<a href=https://github.com/Code-Sharp/WampSharp/issues/119>Issue #119</a>)</a></li><li><a href=#testament-service>Testament service</a></li><li><a href=#event-retention-support>Event Retention support</a></li></ul></li><li><a href=#internalbreaking-changes>Internal/Breaking changes</a></li></ul></nav></div></div><div class=sidebar-module><h4 class=sidebar-heading>Pages in Categories</h4><ul class=sidebar-category-list><li><a href=https://wampsharp.net/categories/authentication><span class=doc-list-category>Authentication</span></a><ul><li><a href=/wamp2/client/client-side-authentication/>Client-side authentication</a></li><li><a href=/wamp2/router/cookie-based-router-side-authentication/>Cookie based router-side authentication</a></li><li><a href=/wamp2/router/router-side-authentication/>Router-side authentication</a></li><li><a href=/wamp2/client/wamp-cra-client-side-authentication/>WAMP-CRA client side authentication</a></li><li><a href=/wamp2/router/wamp-cra-router-side-authentication/>WAMP-CRA router-side authentication</a></li></ul></li><li><a href=https://wampsharp.net/categories/callee><span class=doc-list-category>Callee</span></a><ul><li><a href=/wamp2/roles/callee/getting-started-with-callee/>Getting started with Callee</a></li><li><a href=/wamp2/roles/callee/raw-callee/>Raw Callee</a></li><li><a href=/wamp2/roles/callee/reflection-based-callee/>Reflection-based Callee</a></li></ul></li><li><a href=https://wampsharp.net/categories/caller><span class=doc-list-category>Caller</span></a><ul><li><a href=/wamp2/roles/caller/getting-started-with-caller/>Getting started with Caller</a></li><li><a href=/wamp2/roles/caller/raw-caller/>Raw Caller</a></li><li><a href=/wamp2/roles/caller/reflection-based-caller/>Reflection-based Caller</a></li></ul></li><li><a href=https://wampsharp.net/categories/client><span class=doc-list-category>Client</span></a><ul><li><a href=/wamp2/router/transports/rawsocket/>RawSocket transport</a></li><li><a href=/wamp2/client/client-side-authentication/>Client-side authentication</a></li><li><a href=/wamp2/meta-api-service/>Meta-api descriptor service</a></li><li><a href=/wamp2/testament-service/>Testament service</a></li><li><a href=/wamp2/client/wamp-cra-client-side-authentication/>WAMP-CRA client side authentication</a></li><li><a href=/wamp2/client/wampchannel/>WampChannel</a></li><li><a href=/wamp2/client/wampchannelreconnector/>WampChannelReconnector</a></li></ul></li><li><a href=https://wampsharp.net/categories/getting-started><span class=doc-list-category>Getting-Started</span></a><ul><li><a href=/wamp2/roles/callee/getting-started-with-callee/>Getting started with Callee</a></li><li><a href=/wamp2/roles/caller/getting-started-with-caller/>Getting started with Caller</a></li><li><a href=/wamp2/roles/publisher/getting-started-with-publisher/>Getting started with Publisher</a></li><li><a href=/wamp2/roles/subscriber/getting-started-with-subscriber/>Getting started with Subscriber</a></li><li><a href=/wamp2/getting-started-with-wampv2/>Getting started with WAMPv2</a></li></ul></li><li><a href=https://wampsharp.net/categories/publisher><span class=doc-list-category>Publisher</span></a><ul><li><a href=/wamp2/roles/publisher/getting-started-with-publisher/>Getting started with Publisher</a></li><li><a href=/wamp2/roles/publisher/raw-publisher/>Raw Publisher</a></li><li><a href=/wamp2/roles/publisher/reflection-based-publisher/>Reflection-based Publisher</a></li><li><a href=/wamp2/roles/publisher/rx-based-publisher/>Rx-based Publisher</a></li></ul></li><li><a href=https://wampsharp.net/categories/release-notes><span class=doc-list-category>Release-Notes</span></a><ul><li><a href=/release-notes/wampsharp-v20.1.1-release-notes/>WampSharp v20.1.1 release notes</a></li><li><a href=/release-notes/wampsharp-v18.6.1-release-notes/>WampSharp v18.6.1 release notes</a></li><li><span class=active>WampSharp v1.2.6.41-beta release notes</span></li><li><a href=/release-notes/wampsharp-v1.2.5.21-beta-release-notes/>WampSharp v1.2.5.21-beta release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.4.18-beta-release-notes/>WampSharp v1.2.4.18-beta release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.3.12-beta-release-notes/>WampSharp v1.2.3.12-beta release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.2.8-beta-release-notes/>WampSharp v1.2.2.8-beta release notes</a></li><li><a href=/release-notes/wampsharp-v1.2.1.6-beta-release-notes/>WampSharp v1.2.1.6-beta release notes</a></li></ul></li><li><a href=https://wampsharp.net/categories/roadmap><span class=doc-list-category>Roadmap</span></a><ul><li><a href=/roadmap/>Roadmap</a></li></ul></li><li><a href=https://wampsharp.net/categories/router><span class=doc-list-category>Router</span></a><ul><li><a href=/wamp2/router/transports/rawsocket/>RawSocket transport</a></li><li><a href=/wamp2/router/transports/websocket/>WebSocket transports</a></li><li><a href=/wamp2/router/cookie-based-router-side-authentication/>Cookie based router-side authentication</a></li><li><a href=/wamp2/meta-api-service/>Meta-api descriptor service</a></li><li><a href=/wamp2/router/router-side-authentication/>Router-side authentication</a></li><li><a href=/wamp2/testament-service/>Testament service</a></li><li><a href=/wamp2/router/wamp-cra-router-side-authentication/>WAMP-CRA router-side authentication</a></li><li><a href=/wamp2/router/wamphost/>WampHost</a></li></ul></li><li><a href=https://wampsharp.net/categories/subscriber><span class=doc-list-category>Subscriber</span></a><ul><li><a href=/wamp2/roles/subscriber/getting-started-with-subscriber/>Getting started with Subscriber</a></li><li><a href=/wamp2/roles/subscriber/raw-subscriber/>Raw Subscriber</a></li><li><a href=/wamp2/roles/subscriber/reflection-based-subscriber/>Reflection-based Subscriber</a></li><li><a href=/wamp2/roles/subscriber/rx-based-subscriber/>Rx-based Subscriber</a></li></ul></li><li><a href=https://wampsharp.net/categories/wamp1><span class=doc-list-category>Wamp1</span></a><ul><li><a href=/wamp1/getting-started-with-wampv1/>Getting started with WAMPv1</a></li><li><a href=/wamp1/getting-started-with-wampv1-client/>Getting started with WAMPv1 client</a></li><li><a href=/wamp1/notes-for-wampv1-users/>Notes for WAMP1 users</a></li><li><a href=/wamp1/server-pubsub-hosting-wampv1/>Server PubSub hosting (WAMPv1)</a></li><li><a href=/wamp1/server-rpc-hosting-wampv1/>Server RPC hosting (WAMPv1)</a></li></ul></li></ul></div><div class=sidebar-module><h4 class=sidebar-heading>Tags</h4><div class=tag-box><a class=tag-item href=https://wampsharp.net/tags/authentication>authentication</a>
+<a class=tag-item href=https://wampsharp.net/tags/callee>callee</a>
+<a class=tag-item href=https://wampsharp.net/tags/caller>caller</a>
+<a class=tag-item href=https://wampsharp.net/tags/client>client</a>
+<a class=tag-item href=https://wampsharp.net/tags/publisher>publisher</a>
+<a class=tag-item href=https://wampsharp.net/tags/raw-api>raw-api</a>
+<a class=tag-item href=https://wampsharp.net/tags/reflection>reflection</a>
+<a class=tag-item href=https://wampsharp.net/tags/roadmap>roadmap</a>
+<a class=tag-item href=https://wampsharp.net/tags/router>router</a>
+<a class=tag-item href=https://wampsharp.net/tags/rx>rx</a>
+<a class=tag-item href=https://wampsharp.net/tags/services>services</a>
+<a class=tag-item href=https://wampsharp.net/tags/subscriber>subscriber</a>
+<a class=tag-item href=https://wampsharp.net/tags/transports>transports</a>
+<a class=tag-item href=https://wampsharp.net/tags/wamp1>wamp1</a>
+<a class=tag-item href=https://wampsharp.net/tags/wampcra>wampcra</a></div></div></div></div></div><hr><div class=row><div class=col-sm-8><p class=doc-footer-em><a href=# onclick=resetSidebarPos()>Back to TOP</a></p></div></div></div><footer class=doc-footer><p class=doc-footer-em>Browse <strong><a href=https://github.com/Code-Sharp/WampSharp.net/>Repository</a></strong></p><p>Copyright (c) 2013-2020, Elad Zelingher; All rights reserved.</p><p>Powered by <strong><a href=https://github.com/progrhyme/hugo-theme-bootie-docs>Bootie Docs</a></strong> - theme for <a href=http://gohugo.io/>Hugo</a> by <a href=https://github.com/progrhyme/>progrhyme</a>.</p></footer><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-98663639-2','auto');ga('send','pageview');</script><script src=https://wampsharp.net/js/jquery.min.js></script><script src=https://wampsharp.net/js/bootstrap.min.js></script><script src=https://wampsharp.net/js/highlight.pack.js></script><script>hljs.initHighlightingOnLoad();</script><script src=https://wampsharp.net/js/ie10-viewport-bug-workaround.js></script><script src=https://wampsharp.net/js/bootie-docs.js></script></body></html>
