@@ -24,9 +24,7 @@ public class MyClass
 
     public override string ToString()
     {
-        return string.Format("counter: {0}, foo: [{1}]",
-            Counter,
-            string.Join(", ", Foo));
+        return $"counter: {Counter}, foo: [{string.Join(", ", Foo)}]";
     }
 }
 
@@ -44,33 +42,40 @@ public class MySubscriber : IMySubscriber
     public void OnHeartbeat()
     {
         long publicationId = WampEventContext.Current.PublicationId;
-        Console.WriteLine("Got heartbeat (publication ID " + publicationId + ")");
+        Console.WriteLine($"Got heartbeat (publication ID {publicationId})");
     }
 
     public void OnTopic2(int number1, int number2, string c, MyClass d)
     {
-        Console.WriteLine("Got event: number1:{0}, number2:{1}, c:{2}, d:{3}",
-            number1, number2, c, d);
+        Console.WriteLine($"Got event: number1:{number1}, number2:{number2}, c:{c}, d:{d}");
     }
 }
 
-public static async Task Run()
+public static async Task Main()
 {
     DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
 
     IWampChannel channel =
         factory.CreateJsonChannel("ws://localhost:8080/ws", "realm1");
 
-    await channel.Open();
+    await channel.Open().ConfigureAwait(false);
 
     Task<IAsyncDisposable> subscriptionTask =
         channel.RealmProxy.Services.RegisterSubscriber(new MySubscriber());
 
-    IAsyncDisposable asyncDisposable = await subscriptionTask;
+    IAsyncDisposable asyncDisposable = await subscriptionTask.ConfigureAwait(false);
 
-    // call await asyncDisposable.DisposeAsync(); to unsubscribe from the topic.
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.WriteLine("Press enter to unsubscribe");
+
+    Console.ReadLine();
+
+    await asyncDisposable.DisposeAsync().ConfigureAwait(false);
+
+    Console.WriteLine("Unsubscribed!");
 }
-
 ```
 
 >Note:  This sample is based on [this](https://github.com/tavendo/AutobahnPython/tree/master/examples/twisted/wamp/pubsub/complex) AutobahnJS sample
@@ -114,34 +119,39 @@ The following sections discuss subscribe options modifications that can be used 
 In order to use it, pass SubscribeOptions with Match = "exact"/"prefix"/"wildcard" depending on your criteria (these are also available in a static class called WampMatchPattern):
 
 ```csharp
-public async Task Run()
+public static async Task Main()
 {
     DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
 
     IWampChannel channel =
         channelFactory.CreateJsonChannel("ws://127.0.0.1:8080/ws",
-            "realm1");
+                                         "realm1");
 
     await channel.Open().ConfigureAwait(false);
 
     await channel.RealmProxy.Services.RegisterSubscriber(new Subscriber1())
-        .ConfigureAwait(false);
+                 .ConfigureAwait(false);
 
     await channel.RealmProxy.Services.RegisterSubscriber
-        (new Subscriber2(),
-         new SubscriberRegistrationInterceptor(new SubscribeOptions
-         {
-             Match = WampMatchPattern.Prefix
-         }))
-         .ConfigureAwait(false);
+                     (new Subscriber2(),
+                      new SubscriberRegistrationInterceptor(new SubscribeOptions
+                                                            {
+                                                                Match = WampMatchPattern.Prefix
+                                                            }))
+                 .ConfigureAwait(false);
 
     await channel.RealmProxy.Services.RegisterSubscriber
-        (new Subscriber3(),
-         new SubscriberRegistrationInterceptor(new SubscribeOptions
-         {
-             Match = WampMatchPattern.Wildcard
-         }))
-         .ConfigureAwait(false);
+                     (new Subscriber3(),
+                      new SubscriberRegistrationInterceptor(new SubscribeOptions
+                                                            {
+                                                                Match = WampMatchPattern.Wildcard
+                                                            }))
+                 .ConfigureAwait(false);
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.ReadLine();
 }
 
 public class Subscriber1
@@ -149,8 +159,7 @@ public class Subscriber1
     [WampTopic("com.example.topic1")]
     public void Handler1(string message)
     {
-        Console.WriteLine("handler1: msg = '{0}', topic = '{1}'", message,
-                          WampEventContext.Current.EventDetails.Topic);
+        Console.WriteLine($"handler1: msg = '{message}', topic = '{WampEventContext.Current.EventDetails.Topic}'");
     }
 }
 
@@ -159,8 +168,7 @@ public class Subscriber2
     [WampTopic("com.example")]
     public void Handler2(string message)
     {
-        Console.WriteLine("handler2: msg = '{0}', topic = '{1}'", message,
-                          WampEventContext.Current.EventDetails.Topic);
+        Console.WriteLine($"handler2: msg = '{message}', topic = '{WampEventContext.Current.EventDetails.Topic}'");
     }             
 }
 
@@ -169,8 +177,7 @@ public class Subscriber3
     [WampTopic("com..topic1")]
     public void Handler3(string message)
     {
-        Console.WriteLine("handler3: msg = '{0}', topic = '{1}'", message,
-                          WampEventContext.Current.EventDetails.Topic);
+        Console.WriteLine($"handler3: msg = '{message}', topic = '{WampEventContext.Current.EventDetails.Topic}'");
     }             
 }
 ```
