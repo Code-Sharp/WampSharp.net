@@ -20,18 +20,15 @@ After that, register it using Register method of RpcOperationCatalog property of
 ```csharp
 internal class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
-        const string location = "ws://127.0.0.1:8080/";
+        const string location = "ws://127.0.0.1:8080/ws";
 
         DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
 
         IWampChannel channel = channelFactory.CreateJsonChannel(location, "realm1");
 
-        Task openTask = channel.Open();
-
-        // await openTask;
-        openTask.Wait();
+        Task openTask = await channel.Open().ConfigureAwait(false);
 
         ArgLenOperation operation = new ArgLenOperation();
 
@@ -39,11 +36,18 @@ internal class Program
 
         RegisterOptions registerOptions = new RegisterOptions();
 
-        Task<IAsyncDisposable> registrationTask = realm.RpcCatalog.Register(operation, registerOptions);
-        // await registrationTask;
-        registrationTask.Wait();
+        IAsyncDisposable disposable = await realm.RpcCatalog.Register(operation, registerOptions).ConfigureAwait(false);
+
+        // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+        await Task.Yield();
+
+        Console.WriteLine("Press enter to unregister");
 
         Console.ReadLine();
+
+        await disposable.DisposeAsync().ConfigureAwait(false);
+
+        Console.WriteLine("Unregistered!");        
     }
 }
 ```
@@ -54,9 +58,9 @@ internal class Program
 ```csharp
 internal class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
-        const string location = "ws://127.0.0.1:8080/";
+        const string location = "ws://127.0.0.1:8080/ws";
 
         using (IWampHost host = new DefaultWampHost(location))
         {
@@ -64,9 +68,7 @@ internal class Program
 
             IWampHostedRealm realm = host.RealmContainer.GetRealmByName("realm1");
 
-            Task<IAsyncDisposable> registrationTask = realm.Services.RegisterCallee(operation);
-            // await registrationTask;
-            registrationTask.Wait();
+            IAsyncDisposable registrationTask = await realm.Services.RegisterCallee(operation).ConfigureAwait(false);
 
             host.Open();
 
