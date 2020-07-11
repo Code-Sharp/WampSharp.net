@@ -10,7 +10,7 @@ date = "2017-07-30T00:16:09+03:00"
 ## Basic usage
 
 ```csharp
-private static async Task RunAsync()
+private static async Task Main()
 {
     DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
 
@@ -26,11 +26,18 @@ private static async Task RunAsync()
     IDisposable subscription =
         realmProxy.Services.GetSubject<int>("com.myapp.topic1")
                   .Subscribe(x =>
-                  {
-                      Console.WriteLine("Got Event: " + x);
-                  });
+                             {
+                                 Console.WriteLine($"Got Event: {x}");
+                             });
 
-    // Call subscription.Dispose(); to unsubscribe.
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.WriteLine("Press enter to unsubscribe");
+
+    Console.ReadLine();
+    
+    subscription.Dispose();
 }
 ```
 
@@ -53,36 +60,41 @@ Luckily enough, in order to implement this interface, it suffices to derive from
 Then, just pass an instance of your IWampEventValueTupleConverter to the overload of IWampRealmServiceProvider's GetSubject method, which receives the topic's uri and an instance of IWampEventValueTupleConverter, in order to receive a ISubject<> instance of your desired tuple type.
 
 ```csharp
-public async Task Run()
+public static async Task Main()
 {
-	DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
+    DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
 
-	IWampChannel channel =
-		factory.CreateJsonChannel("ws://localhost:8080/ws", "realm1");
+    IWampChannel channel =
+        factory.CreateJsonChannel("ws://localhost:8080/ws", "realm1");
 
-	await channel.Open();
+    await channel.Open().ConfigureAwait(false);
 
-	ISubject<(int, int)> topic1Subject =
-		channel.RealmProxy.Services.GetSubject
-				("com.myapp.topic1",
-				new MyPositionalTupleEventConverter());
+    ISubject<(int, int)> topic1Subject =
+        channel.RealmProxy.Services.GetSubject
+            ("com.myapp.topic1",
+             new MyPositionalTupleEventConverter());
 
-	topic1Subject.Subscribe(value =>
-	{
-		(int number1, int number2) = value;
-		Console.WriteLine($">com.myapp.topic1: Got event: number1:{number1}, number2:{number2}");
-	});
+    topic1Subject.Subscribe(value =>
+                            {
+                                (int number1, int number2) = value;
+                                Console.WriteLine($">com.myapp.topic1: Got event: number1:{number1}, number2:{number2}");
+                            });
 
-	ISubject<(int number1, int number2, string c, ComplexContract d)> topic2Subject =
-		channel.RealmProxy.Services.GetSubject
-				("com.myapp.topic2",
-				new MyKeywordTupleEventConverter());
+    ISubject<(int number1, int number2, string c, ComplexContract d)> topic2Subject =
+        channel.RealmProxy.Services.GetSubject
+            ("com.myapp.topic2",
+             new MyKeywordTupleEventConverter());
 
-	topic2Subject.Subscribe(value =>
-	{
-		(int number1, int number2, string c, ComplexContract d) = value;
-		Console.WriteLine($">com.myapp.topic2: Got event: number1:{number1}, number2:{number2}, c:{c}, d:{d}");
-	});
+    topic2Subject.Subscribe(value =>
+                            {
+                                (int number1, int number2, string c, ComplexContract d) = value;
+                                Console.WriteLine($">com.myapp.topic2: Got event: number1:{number1}, number2:{number2}, c:{c}, d:{d}");
+                            });
+
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.ReadLine();
 }
 
 public class MyPositionalTupleEventConverter : WampEventValueTupleConverter<(int, int)>
@@ -104,8 +116,8 @@ public class ComplexContract
     public override string ToString()
     {
         return string.Format("counter: {0}, foo: [{1}]",
-            Counter,
-            string.Join(", ", Foo));
+                             Counter,
+                             string.Join(", ", Foo));
     }
 }
 ```
