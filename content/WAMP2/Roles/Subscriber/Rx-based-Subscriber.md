@@ -146,14 +146,7 @@ setInterval(function () {
 Specifying no generic type to the GetSubject method will a return a IWampSubject, that is a IObservable of a IWampSerializedEvent. IWampSerializedEvent is an interface representing an incoming WAMP EVENT message. It has properties of type ISerializedValue that can be deserialized.
 
 ```csharp
-public static void Main(string[] args)
-{
-    IDisposable disposable = RunAsync().Result;
-    Console.ReadLine();
-    disposable.Dispose();
-}
-
-private static async Task<IDisposable> RunAsync()
+public static async Task Main(string[] args)
 {
     DefaultWampChannelFactory factory = new DefaultWampChannelFactory();
 
@@ -169,17 +162,23 @@ private static async Task<IDisposable> RunAsync()
     IWampSubject topic =
         realmProxy.Services.GetSubject("com.myapp.topic2");
 
-    IDisposable disposable =
-        topic.Subscribe(OnTopic2);
+    IDisposable disposable = topic.Subscribe(OnTopic2);
 
-    return disposable;
+    // This line is required in order to release the WebSocket thread, otherwise it will be blocked by the following Console.ReadLine() line.
+    await Task.Yield();
+
+    Console.WriteLine("Press enter to unsubscribe");
+
+    Console.ReadLine();
+
+    disposable.Dispose();
 }
 
 private static void OnTopic2(IWampSerializedEvent serializedEvent)
 {
     int[] arguments =
         serializedEvent.Arguments.Select(argument => argument.Deserialize<int>())
-         .ToArray();
+                       .ToArray();
 
     string c =
         serializedEvent.ArgumentsKeywords["c"].Deserialize<string>();
@@ -192,10 +191,10 @@ private static void OnTopic2(IWampSerializedEvent serializedEvent)
         {
             arguments,
             argumentsKeywords = new
-            {
-                c,
-                d
-            }
+                                {
+                                    c,
+                                    d
+                                }
         };
 
     Console.WriteLine("Got event: args: [{0}], kwargs: {{ {1} }}",
