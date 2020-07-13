@@ -49,7 +49,7 @@ public class ArgumentsService : IArgumentsService
 
 public static async Task Main()
 {
-    const string location = "ws://127.0.0.1:8080/";
+    const string location = "ws://127.0.0.1:8080/ws";
 
     DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
 

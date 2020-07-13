@@ -29,7 +29,7 @@ Other tutorials describe how to consume WAMP roles from realm api.
 In order to Add WAMPv2 router capabilities to your application, create a WampHost:
 
 ```csharp
-const string location = "ws://127.0.0.1:8080/";
+const string location = "ws://127.0.0.1:8080/ws";
 using (IWampHost host = new DefaultWampHost(location))
 {
     IWampHostedRealm realm = host.RealmContainer.GetRealmByName("realm1");
@@ -54,7 +54,7 @@ The realms are accessible from the WampHost's RealmContainer property.
 In order to connect to a router's realm, create a WampChannel that connects to the realm.
 
 ```csharp
-const string location = "ws://127.0.0.1:8080/";
+const string location = "ws://127.0.0.1:8080/ws";
 
 DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
 
