@@ -103,11 +103,7 @@ public class Startup
 
         app.Map("/ws", builder =>
         {
-            // Comment this out to test native server implementations
-            builder.UseWebSockets(new WebSocketOptions
-            {
-                ReplaceFeature = true
-            });
+            builder.UseWebSockets();
 
             host.RegisterTransport(new AspNetCoreWebSocketTransport(builder),
                                    new JTokenJsonBinding(),
