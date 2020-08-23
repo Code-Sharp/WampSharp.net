@@ -53,11 +53,7 @@ host.Open();
 
         app.Map(<span style=color:#e6db74>&#34;/ws&#34;</span>, builder =&gt;
         {
-            <span style=color:#75715e>// Comment this out to test native server implementations
-</span><span style=color:#75715e></span>            builder.UseWebSockets(<span style=color:#66d9ef>new</span> WebSocketOptions
-            {
-                ReplaceFeature = <span style=color:#66d9ef>true</span>
-            });
+            builder.UseWebSockets();
 
             host.RegisterTransport(<span style=color:#66d9ef>new</span> AspNetCoreWebSocketTransport(builder),
                                    <span style=color:#66d9ef>new</span> JTokenJsonBinding(),
